@@ -36,5 +36,9 @@ public final class DataVisualizer extends ApplicationTemplate {
 
         uiComponent.initialize();
     }
+    
+    public static void main(String[] args) {
+        launch();
+    }
 
 }
