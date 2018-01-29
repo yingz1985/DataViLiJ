@@ -5,6 +5,8 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>hw1</name>
             <source-roots>
+                <root id="src.resources.dir"/>
+                <root id="src.resources2.dir"/>
                 <root id="src.src3.dir"/>
                 <root id="src.src.dir"/>
                 <root id="src.src2.dir"/>
