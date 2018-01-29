@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.scene.layout.FlowPane;
 
 /**
  *
@@ -32,9 +33,17 @@ public class Recitation1 extends Application
                 System.out.println("Hello World!");
             }
         });
+        Button second = new Button("Goodbye Cruel World!");
+        second.setOnAction(new EventHandler<ActionEvent>()
+        {
+            public void handle(ActionEvent event)
+            {
+                System.out.println("Goodbye Cruel World!");
+            }
+        });
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        FlowPane root = new FlowPane();
+        root.getChildren().addAll(btn,second);
         
         Scene scene = new Scene(root, 300, 250);
         
