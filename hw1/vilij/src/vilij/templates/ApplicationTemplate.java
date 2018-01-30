@@ -94,4 +94,9 @@ public class ApplicationTemplate extends Application {
         }
         return dialog;
     }
+    
+    public static void main(String[] args) {
+        launch();
+    }
+    
 }
