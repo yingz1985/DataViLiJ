@@ -116,10 +116,10 @@ public class UITemplate implements UIComponent {
         printiconPath = String.join(separator, iconsPath, manager.getPropertyValue(PRINT_ICON.name()));
         logoPath = String.join(separator, iconsPath, manager.getPropertyValue(LOGO.name()));
 
-        cssPath = separator + String.join(separator,
-                                          manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
-                                          manager.getPropertyValue(CSS_RESOURCE_PATH.name()),
-                                          manager.getPropertyValue(CSS_RESOURCE_FILENAME.name()));
+        cssPath = "/" + String.join(separator,
+                                    manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+                                    manager.getPropertyValue(CSS_RESOURCE_PATH.name()),
+                                    manager.getPropertyValue(CSS_RESOURCE_FILENAME.name()));
 
         logo = new Image(getClass().getResourceAsStream(logoPath));
     }
