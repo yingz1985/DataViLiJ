@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import vilij.components.UIComponent;
 import vilij.propertymanager.PropertyManager;
 import vilij.settings.PropertyTypes;
-
 import static java.io.File.separator;
 import static vilij.settings.PropertyTypes.*;
 
@@ -59,6 +58,7 @@ public class UITemplate implements UIComponent {
      */
     public UITemplate(Stage primaryStage, ApplicationTemplate applicationTemplate) {
         PropertyManager manager = applicationTemplate.manager;
+        
         this.windowWidth = manager.getPropertyValueAsInt(PropertyTypes.WINDOW_WIDTH.name());
         this.windowHeight = manager.getPropertyValueAsInt(PropertyTypes.WINDOW_HEIGHT.name());
         this.applicationTitle = manager.getPropertyValue(PropertyTypes.TITLE.name());
@@ -84,21 +84,26 @@ public class UITemplate implements UIComponent {
     public void initialize() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(UI_NOT_INITIALIZABLE_FOR_TEMPLATES);
     }
-
+    
+    //passes argument into setToolbarButton and makes buttons
+    //notes that some buttons are disabled, can be noted in ui 
     protected void setToolBar(ApplicationTemplate applicationTemplate) {
         PropertyManager manager = applicationTemplate.manager;
         newButton = setToolbarButton(newiconPath, manager.getPropertyValue(NEW_TOOLTIP.name()), true);
         saveButton = setToolbarButton(saveiconPath, manager.getPropertyValue(SAVE_TOOLTIP.name()), true);
-        loadButton = setToolbarButton(loadiconPath, manager.getPropertyValue(LOAD_TOOLTIP.name()), false);
+        loadButton = setToolbarButton(loadiconPath, manager.getPropertyValue(LOAD_TOOLTIP.name()),false);//
         printButton = setToolbarButton(printiconPath, manager.getPropertyValue(PRINT_TOOLTIP.name()), true);
         exitButton = setToolbarButton(exiticonPath, manager.getPropertyValue(EXIT_TOOLTIP.name()), false);
         toolBar = new ToolBar(newButton, saveButton, loadButton, printButton, exitButton);
     }
 
     protected Button setToolbarButton(String iconPath, String tooltip, boolean disabled) {
+        //creates a button with no text but instead with an image 
         Button button = new Button(null, new ImageView(new Image(getClass().getResourceAsStream(iconPath))));
         button.getStyleClass().add("toolbar-button");
+        //when hovered over button a tip is shown 
         button.setTooltip(new Tooltip(tooltip));
+        //note that currently only two buttons are enabled 
         button.setDisable(disabled);
         return button;
     }
@@ -121,12 +126,15 @@ public class UITemplate implements UIComponent {
                                           manager.getPropertyValue(CSS_RESOURCE_PATH.name()),
                                           manager.getPropertyValue(CSS_RESOURCE_FILENAME.name()));
 
+        
         logo = new Image(getClass().getResourceAsStream(logoPath));
     }
 
     /** Initialization is not provided at the template-level, and must be implemented by a child class. */
     protected void setToolbarHandlers(ApplicationTemplate applicationTemplate) { /* squelch */ }
-
+    //ToolbarHandlers are events triggered by when users press on a button
+    //see Lambda handler demo java file 
+    
     protected void setWindow(ApplicationTemplate applicationTemplate) {
         primaryStage.setTitle(applicationTitle);
         primaryStage.setResizable(applicationTemplate.manager.getPropertyValueAsBoolean(IS_WINDOW_RESIZABLE.name()));
