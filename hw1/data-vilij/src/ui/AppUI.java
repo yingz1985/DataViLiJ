@@ -2,22 +2,25 @@ package ui;
 
 import actions.AppActions;
 import static java.io.File.separator;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart;
+
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vilij.propertymanager.PropertyManager;
-import static vilij.settings.PropertyTypes.EXIT_TOOLTIP;
-import static vilij.settings.PropertyTypes.LOAD_TOOLTIP;
-import static vilij.settings.PropertyTypes.NEW_TOOLTIP;
-import static vilij.settings.PropertyTypes.PRINT_TOOLTIP;
-import static vilij.settings.PropertyTypes.SAVE_TOOLTIP;
 import settings.AppPropertyTypes;
-import vilij.settings.PropertyTypes;
 import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
 import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
-import static vilij.settings.PropertyTypes.PRINT_ICON;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
@@ -85,13 +88,126 @@ public final class AppUI extends UITemplate {
     @Override
     public void clear() {
         // TODO for homework 1
+
+      
     }
 
     private void layout() {
         // TODO for homework 1
+        super.setWindow(applicationTemplate);
+        VBox dataField = new VBox(5);
+        dataField.setPadding(new Insets(10,10,10,10));
+        Label text = new Label("Data File",textArea);
+        textArea = new TextArea();
+        displayButton = new Button("display");
+        dataField.getChildren().addAll
+        (text,textArea,displayButton);
+        textArea.setMaxWidth(300);
+
+        VBox chartArea = new VBox(5);
+        chartArea.setPadding(new Insets(10,10,10,10));
+        Label visual = new Label("Data Visualization",chart);
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        chart = new ScatterChart<Number,Number>(xAxis,yAxis);
+        chartArea.getChildren().addAll(visual,chart);
+        chartArea.setAlignment(Pos.TOP_CENTER);
+        
+        HBox workSpace = new HBox(5);
+        workSpace.getChildren().addAll(dataField,chartArea);
+        
+        VBox wholeScene = new VBox();
+        wholeScene.getChildren().addAll(toolBar,workSpace);
+        
+        primaryStage.setScene(new Scene(wholeScene,1000,600));
+    
     }
 
     private void setWorkspaceActions() {
         // TODO for homework 1
+        displayButton.setOnAction((ActionEvent event)->
+        {
+            if(!textArea.getText().isEmpty())
+            {
+                String[] line = textArea.getText().split("@");
+                String[] part = null;
+                XYChart.Series series = new XYChart.Series();
+                for(int i = 1;i<line.length;i++)//first one is empty
+                 {
+               
+                     part = line[i].split("	");
+                     String[] coordinate = part[2].split(",");
+                     if(series.getName() != null)
+                     {
+                         if( (!series.getData().isEmpty()) && (!series.getName().equals(part[1])))
+                         {
+                             if(!(chart.getData().contains(series)))
+                             {
+                                 chart.getData().add(series); 
+                                 System.out.println("Adding series"+series.getName());
+                             }   
+        
+                                 
+                                 series = new XYChart.Series();   
+                        
+                         }
+                         else
+                         {
+                             Object[] serie = chart.getData().toArray();
+                             for(Object s:serie)
+                             {
+                                 System.out.print(((XYChart.Series)s).getName());
+                                 if(((XYChart.Series)s).getName().equals(part[1]))
+                                 {
+                                        System.out.println("found match "+((XYChart.Series)s).getName());
+                                        series = (XYChart.Series)s;
+                                 }
+                             }
+                             Double x = Double.parseDouble(coordinate[0]);
+                             Double y = Double.parseDouble(coordinate[1]);
+                             series.getData().add(new XYChart.Data(x,y));
+                             System.out.println("added new coordinates"+x+" "+y);
+                            
+                             continue;
+                         }
+                     }
+                     if(!chart.getData().isEmpty())
+                     { 
+                         Object[] serie = chart.getData().toArray();
+                     
+                         for(Object s:serie)
+                         {
+                            System.out.print(((XYChart.Series)s).getName());
+                            if(((XYChart.Series)s).getName().equals(part[1]))
+                             {
+                                  System.out.println("found match "+((XYChart.Series)s).getName());
+                                  series = (XYChart.Series)s;
+                             }
+                         }
+                     }
+                     series.setName(part[1]);
+                     System.out.println("new Name "+series.getName());
+                     Double x = Double.parseDouble(coordinate[0]);
+                     Double y = Double.parseDouble(coordinate[1]);
+                     series.getData().add(new XYChart.Data(x,y));
+
+                    
+                    
+                }
+                if(!(chart.getData().contains(series)))
+                {
+                  chart.getData().add(series); 
+                }
+  
+            }
+            
+            
+            else
+            {
+                System.out.println("no data to be displayed");
+            }
+        }
+            );
+        	
     }
 }

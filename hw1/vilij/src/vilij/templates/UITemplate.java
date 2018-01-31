@@ -146,6 +146,7 @@ public class UITemplate implements UIComponent {
         primaryStage.getIcons().add(logo);
         primaryStage.setScene(primaryScene);
         primaryStage.show();
+
     }
 
     /**
