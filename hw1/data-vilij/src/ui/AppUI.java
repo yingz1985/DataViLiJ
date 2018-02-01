@@ -1,15 +1,18 @@
 package ui;
 
 import actions.AppActions;
+import dataprocessors.AppData;
 import static java.io.File.separator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -39,7 +42,7 @@ public final class AppUI extends UITemplate {
     private ScatterChart<Number, Number> chart;          // the chart where data will be displayed
     private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
-    private boolean                      hasNewText;     // whether or not the text area has any new data since last display
+    private boolean                      hasNewText = true ;     // whether or not the text area has any new data since last display
 
     public ScatterChart<Number, Number> getChart() { return chart; }
 
@@ -126,7 +129,42 @@ public final class AppUI extends UITemplate {
     private void setWorkspaceActions() {
         // TODO for homework 1
         displayButton.setOnAction((ActionEvent event)->
-        {
+        {   
+
+            textArea.textProperty().addListener(new ChangeListener<String>() {
+
+            public void changed(ObservableValue<? extends String> observable,
+            String oldValue, String newValue) 
+            {
+                hasNewText = true;
+            }});
+            
+            AppData data = new AppData(applicationTemplate);
+            if(!textArea.getText().isEmpty() && hasNewText)
+            {
+                try
+                {
+                    chart.getData().clear();
+                    data.loadData(textArea.getText());
+                    data.displayData();
+                    hasNewText = false;
+                }
+                catch (Exception ex)
+                {
+                    Logger.getLogger(AppUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+            /*I originally coded my own version of the processor.loadData
+                but later discovered the class TSDProcessor. 
+                My version does not make new labels each time Display is pressed
+                Even with the presence of old Data 
+               I now realize that I'm suppose to use the hasNewText so data isnt repeated
+               Very sad but I'm afraid I have to use the provided code :'(
+                but I'm keeping the code I wrote below
+            */
+            
+            /*
             if(!textArea.getText().isEmpty())
             {
                 String[] line = textArea.getText().split("@");
@@ -205,7 +243,7 @@ public final class AppUI extends UITemplate {
             else
             {
                 System.out.println("no data to be displayed");
-            }
+            }*/
         }
             );
         	
