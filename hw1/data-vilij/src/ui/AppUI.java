@@ -157,100 +157,12 @@ public final class AppUI extends UITemplate {
                 }
                 catch (Exception ex)
                 {
-                    Logger.getLogger(AppUI.class.getName()).log(Level.SEVERE, null, ex);
+                   
                 }
+          
                 
-            }
-            /*I originally coded my own version of the processor.loadData
-                but later discovered the class TSDProcessor. 
-                My version does not make new labels each time Display is pressed
-                Even with the presence of old Data 
-               I now realize that I'm suppose to use the hasNewText so data isnt repeated
-               Very sad but I'm afraid I have to use the provided code :'(
-                but I'm keeping the code I wrote below
-            */
-            
-            /*
-            if(!textArea.getText().isEmpty())
-            {
-                String[] line = textArea.getText().split("@");
-                String[] part = null;
-                XYChart.Series series = new XYChart.Series();
-                for(int i = 1;i<line.length;i++)//first one is empty
-                 {
-               
-                     part = line[i].split("	");
-                     String[] coordinate = part[2].split(",");
-                     if(series.getName() != null)
-                     {
-                         if( (!series.getData().isEmpty()) && (!series.getName().equals(part[1])))
-                         {
-                             if(!(chart.getData().contains(series)))
-                             {
-                                 chart.getData().add(series); 
-                                 System.out.println("Adding series"+series.getName());
-                             }   
-        
-                                 
-                                 series = new XYChart.Series();   
-                        
-                         }
-                         else
-                         {
-                             Object[] serie = chart.getData().toArray();
-                             for(Object s:serie)
-                             {
-                                 System.out.print(((XYChart.Series)s).getName());
-                                 if(((XYChart.Series)s).getName().equals(part[1]))
-                                 {
-                                        System.out.println("found match "+((XYChart.Series)s).getName());
-                                        series = (XYChart.Series)s;
-                                 }
-                             }
-                             Double x = Double.parseDouble(coordinate[0]);
-                             Double y = Double.parseDouble(coordinate[1]);
-                             series.getData().add(new XYChart.Data(x,y));
-                             System.out.println("added new coordinates"+x+" "+y);
-                            
-                             continue;
-                         }
-                     }
-                     if(!chart.getData().isEmpty())
-                     { 
-                         Object[] serie = chart.getData().toArray();
-                     
-                         for(Object s:serie)
-                         {
-                            System.out.print(((XYChart.Series)s).getName());
-                            if(((XYChart.Series)s).getName().equals(part[1]))
-                             {
-                                  System.out.println("found match "+((XYChart.Series)s).getName());
-                                  series = (XYChart.Series)s;
-                             }
-                         }
-                     }
-                     series.setName(part[1]);
-                     System.out.println("new Name "+series.getName());
-                     Double x = Double.parseDouble(coordinate[0]);
-                     Double y = Double.parseDouble(coordinate[1]);
-                     series.getData().add(new XYChart.Data(x,y));
+            } 
 
-                    
-                    
-                }
-                if(!(chart.getData().contains(series)))
-                {
-                  chart.getData().add(series); 
-                }
-  
-            }
-            
-            
-            else
-            {
-                System.out.println("no data to be displayed");
-            }*/
-            
             
         }
             );

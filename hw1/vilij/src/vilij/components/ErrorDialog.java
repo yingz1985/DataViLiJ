@@ -53,7 +53,7 @@ public class ErrorDialog extends Stage implements Dialog {
         messagePane.setAlignment(Pos.CENTER);
         messagePane.getChildren().add(errorMessage);
         messagePane.getChildren().add(closeButton);
-        messagePane.setPadding(new Insets(80, 60, 80, 60));
+        messagePane.setPadding(new Insets(40, 30, 40, 30));
         messagePane.setSpacing(20);
 
         Scene messageScene = new Scene(messagePane);

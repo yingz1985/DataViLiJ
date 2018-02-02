@@ -6,6 +6,8 @@ import javafx.scene.chart.XYChart;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
+import vilij.components.Dialog;
+import vilij.components.ErrorDialog;
 
 /**
  * The data files used by this data visualization applications follow a tab-separated format, where each data point is
@@ -45,20 +47,33 @@ public final class TSDProcessor {
     public void processString(String tsdString) throws Exception {
         AtomicBoolean hadAnError   = new AtomicBoolean(false);
         StringBuilder errorMessage = new StringBuilder();
+
         Stream.of(tsdString.split("\n"))
               .map(line -> Arrays.asList(line.split("\t")))
               .forEach(list -> {
-                  try {
-                      String   name  = checkedname(list.get(0));
+                  
+                  try{
+                      String  name  = checkedname(list.get(0));
                       String   label = list.get(1);
                       String[] pair  = list.get(2).split(",");
                       Point2D  point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
                       dataLabels.put(name, label);
                       dataPoints.put(name, point);
-                  } catch (Exception e) {
-                      errorMessage.setLength(0);
+                  } 
+                      catch(InvalidDataNameException x)
+                      {
+                          ErrorDialog dialog = ErrorDialog.getDialog();
+                          dialog.show("Invalid Data Name Exception",InvalidDataNameException.NAME_ERROR_MSG);
+          
+                      }
+                      catch (Exception e) {
+                      /*errorMessage.setLength(0);
                       errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
+                     */
                       hadAnError.set(true);
+                      ErrorDialog dialog = ErrorDialog.getDialog();
+                      dialog.show("Invalid Spacing Errors"
+                      ,"Text must be in tab-separated format");
                   }
               });
         if (errorMessage.length() > 0)
@@ -88,9 +103,11 @@ public final class TSDProcessor {
         dataLabels.clear();
     }
 
-    private String checkedname(String name) throws InvalidDataNameException {
+    private String checkedname(String name) throws InvalidDataNameException  {
         if (!name.startsWith("@"))
-            throw new InvalidDataNameException(name);
+        
+         throw new InvalidDataNameException(name);
+        
         return name;
     }
 }

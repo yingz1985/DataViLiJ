@@ -30,6 +30,7 @@ public final class AppActions implements ActionComponent {
     public void handleNewRequest()
     {
         //clears whether the button clicked on is "yes" or "no"
+        
        if(promptToSave())
          ((AppUI) applicationTemplate.getUIComponent()).clear();
        
@@ -40,17 +41,7 @@ public final class AppActions implements ActionComponent {
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
         
-        FileChooser fileChooser = new FileChooser();
-              FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter
-                    ("Tab-Separated Data File", ".*.tsd");
-              
-              fileChooser.getExtensionFilters().add(extFilter);
-              
-
-              File file = fileChooser.showSaveDialog((
-                      (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
-
-              
+        
     }
 
     @Override
@@ -96,7 +87,6 @@ public final class AppActions implements ActionComponent {
     private boolean promptToSave()  {
         // TODO for homework 1
         
-        // TODO remove the placeholder line below after you have implemented this method
         
         //returns true if the eventHandler should keep executing
         //(clear scene or exit window)
@@ -112,9 +102,16 @@ public final class AppActions implements ActionComponent {
        {
            if(dialog.getSelectedOption().toString().equals("YES"))   
            {
-              handleSaveRequest();
+              FileChooser fileChooser = new FileChooser();
+              FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter
+                    ("Tab-Separated Data File(.*.tsd)", ".*.tsd");
+              
+              fileChooser.getExtensionFilters().add(extFilter);
+              
 
-              return true;
+              File file = fileChooser.showSaveDialog((
+                      (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
+              return file != null;
            }
          
        }
