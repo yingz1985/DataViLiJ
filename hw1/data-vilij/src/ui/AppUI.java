@@ -91,8 +91,11 @@ public final class AppUI extends UITemplate {
     @Override
     public void clear() {
         // TODO for homework 1
-
-      
+        
+        newButton.setDisable(true);
+        saveButton.setDisable(true);
+        chart.getData().clear();
+        textArea.clear();
     }
 
     private void layout() {
@@ -142,11 +145,14 @@ public final class AppUI extends UITemplate {
             AppData data = new AppData(applicationTemplate);
             if(!textArea.getText().isEmpty() && hasNewText)
             {
+                
                 try
                 {
                     chart.getData().clear();
                     data.loadData(textArea.getText());
                     data.displayData();
+                    newButton.setDisable(false);
+                    saveButton.setDisable(false);
                     hasNewText = false;
                 }
                 catch (Exception ex)
@@ -244,6 +250,8 @@ public final class AppUI extends UITemplate {
             {
                 System.out.println("no data to be displayed");
             }*/
+            
+            
         }
             );
         	

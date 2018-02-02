@@ -1,10 +1,13 @@
 package actions;
 
+import java.io.File;
 import vilij.components.ActionComponent;
 import vilij.templates.ApplicationTemplate;
-
 import java.io.IOException;
 import java.nio.file.Path;
+import javafx.stage.FileChooser;
+import ui.AppUI;
+import vilij.components.ConfirmationDialog;
 
 /**
  * This is the concrete implementation of the action handlers required by the application.
@@ -24,13 +27,30 @@ public final class AppActions implements ActionComponent {
     }
 
     @Override
-    public void handleNewRequest() {
-        // TODO for homework 1
+    public void handleNewRequest()
+    {
+        //clears whether the button clicked on is "yes" or "no"
+       if(promptToSave())
+         ((AppUI) applicationTemplate.getUIComponent()).clear();
+       
+       
     }
 
     @Override
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
+        
+        FileChooser fileChooser = new FileChooser();
+              FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter
+                    ("Tab-Separated Data File", ".*.tsd");
+              
+              fileChooser.getExtensionFilters().add(extFilter);
+              
+
+              File file = fileChooser.showSaveDialog((
+                      (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
+
+              
     }
 
     @Override
@@ -41,6 +61,15 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleExitRequest() {
         // TODO for homework 1
+        
+        //I wanted to prompt Confirmation dialog even when exiting 
+       /* if( ! ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().isEmpty()   )
+        {
+            if(promptToSave())
+            {*/
+                 ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
+            // }
+       // }
     }
 
     @Override
@@ -64,9 +93,32 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
-    private boolean promptToSave() throws IOException {
+    private boolean promptToSave()  {
         // TODO for homework 1
+        
         // TODO remove the placeholder line below after you have implemented this method
+        
+        //returns true if the eventHandler should keep executing
+        //(clear scene or exit window)
+
+       ConfirmationDialog dialog = ConfirmationDialog.getDialog();
+       dialog.show("Save Current Work","Would you like to save current work?");
+       
+       if(dialog.getSelectedOption().toString().equals("NO"))
+       {
+           return true;
+       }
+       else
+       {
+           if(dialog.getSelectedOption().toString().equals("YES"))   
+           {
+              handleSaveRequest();
+
+              return true;
+           }
+         
+       }
         return false;
+    
     }
 }
