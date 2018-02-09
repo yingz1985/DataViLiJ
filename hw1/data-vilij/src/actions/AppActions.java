@@ -6,6 +6,7 @@ import vilij.templates.ApplicationTemplate;
 import java.io.IOException;
 import java.nio.file.Path;
 import javafx.stage.FileChooser;
+import settings.AppPropertyTypes;
 import ui.AppUI;
 import vilij.components.ConfirmationDialog;
 
@@ -30,18 +31,35 @@ public final class AppActions implements ActionComponent {
     public void handleNewRequest()
     {
         //clears whether the button clicked on is "yes" or "no"
-        
+       try{
        if(promptToSave())
          ((AppUI) applicationTemplate.getUIComponent()).clear();
-       
+       }
+       catch(Exception x)
+       {
+          //do nothing;
+       }
        
     }
 
     @Override
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
-        
-        
+       try{
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
+                    (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name())+"(*.tsd)",
+                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name()));
+              
+              
+              fileChooser.getExtensionFilters().add(save);
+              
+
+              File file = fileChooser.showSaveDialog((
+                      (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
+       }
+       catch(Exception x)
+       {}
     }
 
     @Override
@@ -84,15 +102,17 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
-    private boolean promptToSave()  {
+    private boolean promptToSave()  throws Exception{
         // TODO for homework 1
         
-        
+
         //returns true if the eventHandler should keep executing
         //(clear scene or exit window)
 
        ConfirmationDialog dialog = ConfirmationDialog.getDialog();
-       dialog.show("Save Current Work","Would you like to save current work?");
+       
+       dialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()),
+                   applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK.name()));
        
        if(dialog.getSelectedOption().toString().equals("NO"))
        {
@@ -102,16 +122,22 @@ public final class AppActions implements ActionComponent {
        {
            if(dialog.getSelectedOption().toString().equals("YES"))   
            {
+              try{
               FileChooser fileChooser = new FileChooser();
-              FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter
-                    ("Tab-Separated Data File(.*.tsd)", ".*.tsd");
+              FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
+                    (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
+                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name()));
               
-              fileChooser.getExtensionFilters().add(extFilter);
+              fileChooser.getExtensionFilters().add(save);
               
 
               File file = fileChooser.showSaveDialog((
                       (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
-              return file != null;
+              return file != null;}
+              catch(Exception x)
+              {
+                   throw new Exception();
+              }
            }
          
        }

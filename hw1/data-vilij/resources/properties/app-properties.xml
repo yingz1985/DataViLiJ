@@ -19,7 +19,9 @@ functionality within the main workspace. -->
 
         <!-- ERROR MESSAGES -->
         <property name="RESOURCE_SUBDIR_NOT_FOUND" value="Directory not found under resources."/>
-
+        <property name="NUMBER_FORMAT_EXCEPTION" value="Invalid Coordinates entered."/>
+        <property name="INVALID_SPACING_ERRORS" value = "Text must be in tab-separated format."/>
+        
         <!-- APPLICATION-SPECIFIC MESSAGE TITLES -->
         <property name="SAVE_UNSAVED_WORK_TITLE" value="Save Current Work"/>
 

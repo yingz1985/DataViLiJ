@@ -3,8 +3,6 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 import static java.io.File.separator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -37,7 +35,6 @@ public final class AppUI extends UITemplate {
     /** The application to which this class of actions belongs. */
     ApplicationTemplate applicationTemplate;
 
-    @SuppressWarnings("FieldCanBeLocal")
     private Button                       scrnshotButton; // toolbar button to take a screenshot of the data
     private ScatterChart<Number, Number> chart;          // the chart where data will be displayed
     private Button                       displayButton;  // workspace button to display data on the chart
@@ -131,36 +128,46 @@ public final class AppUI extends UITemplate {
 
     private void setWorkspaceActions() {
         // TODO for homework 1
-        displayButton.setOnAction((ActionEvent event)->
-        {   
-
-            textArea.textProperty().addListener(new ChangeListener<String>() {
+        textArea.textProperty().addListener(new ChangeListener<String>() {
 
             public void changed(ObservableValue<? extends String> observable,
             String oldValue, String newValue) 
             {
                 hasNewText = true;
+                if(!textArea.getText().isEmpty())
+                {
+                    newButton.setDisable(false);
+                    saveButton.setDisable(false);
+                }
+                else
+                {
+                    newButton.setDisable(true);
+                    saveButton.setDisable(true);
+                }
             }});
+                
+        displayButton.setOnAction((ActionEvent event)->
+        {   
+
             
             AppData data = new AppData(applicationTemplate);
             if(!textArea.getText().isEmpty() && hasNewText)
             {
                 
-                try
-                {
-                    chart.getData().clear();
+                try{
+                    //chart.getData().clear();
                     data.loadData(textArea.getText());
+                    //data.displayData();
+                    chart.getData().clear();
                     data.displayData();
                     newButton.setDisable(false);
                     saveButton.setDisable(false);
                     hasNewText = false;
                 }
-                catch (Exception ex)
+                catch(Exception x)
                 {
-                   
+                    //chart.getData().clear();
                 }
-          
-                
             } 
 
             

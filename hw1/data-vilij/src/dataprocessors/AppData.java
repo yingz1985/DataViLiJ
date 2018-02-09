@@ -5,6 +5,8 @@ import vilij.components.DataComponent;
 import vilij.templates.ApplicationTemplate;
 
 import java.nio.file.Path;
+import settings.AppPropertyTypes;
+import vilij.components.ErrorDialog;
 
 /**
  * This is the concrete application-specific implementation of the data component defined by the Vilij framework.
@@ -27,12 +29,20 @@ public class AppData implements DataComponent {
         // TODO: NOT A PART OF HW 1
     }
 
-    public void loadData(String dataString) throws Exception {
+    public void loadData(String dataString)throws Exception {
         // TODO for homework 1
-        processor.processString(dataString);
+
+          processor.processString(dataString);
+          
+         // ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
+          
+          
         
+
     }
 
+    
+     
     @Override
     public void saveData(Path dataFilePath) {
         // TODO: NOT A PART OF HW 1
