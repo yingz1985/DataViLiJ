@@ -59,10 +59,15 @@ public final class AppUI extends UITemplate {
         super.setToolBar(applicationTemplate);
         PropertyManager manager = applicationTemplate.manager;
         String screenshotPath = String.join(
-            separator, separator + String.join(separator,
-            manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
-            manager.getPropertyValue(ICONS_RESOURCE_PATH.name())),
+            separator, "/" + String.join(separator,
+                                             manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+                                             manager.getPropertyValue(ICONS_RESOURCE_PATH.name())),
             manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_ICON.name()));
+        //screenshotPath = "/gui/icons/screenshot.png";
+        //a string rep of the screenShotPath frmo above 
+        //System.out.print(screenshotPath);
+        
+
         scrnshotButton = setToolbarButton(screenshotPath,AppPropertyTypes.SCREENSHOT_TOOLTIP.name(),true);
         toolBar = new ToolBar(newButton, saveButton, loadButton, printButton, exitButton,scrnshotButton);
         
