@@ -67,7 +67,6 @@ public final class AppUI extends UITemplate {
         //a string rep of the screenShotPath frmo above 
         //System.out.print(screenshotPath);
         
-
         scrnshotButton = setToolbarButton(screenshotPath,AppPropertyTypes.SCREENSHOT_TOOLTIP.name(),true);
         toolBar = new ToolBar(newButton, saveButton, loadButton, printButton, exitButton,scrnshotButton);
         
@@ -179,5 +178,9 @@ public final class AppUI extends UITemplate {
         }
             );
         	
+    }
+
+    public String getText() {
+        return textArea.getText(); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -1,9 +1,11 @@
 package actions;
 
 import java.io.File;
+import static java.io.File.separator;
 import vilij.components.ActionComponent;
 import vilij.templates.ApplicationTemplate;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import javafx.stage.FileChooser;
 import settings.AppPropertyTypes;
@@ -22,6 +24,7 @@ public final class AppActions implements ActionComponent {
 
     /** Path to the data file currently active. */
     Path dataFilePath;
+    
 
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
@@ -127,16 +130,29 @@ public final class AppActions implements ActionComponent {
               FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
                     (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
                      applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name()));
-              
+             
               fileChooser.getExtensionFilters().add(save);
-              
+             // fileChooser.setInitialDirectory(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
+              String filePath =  String.join(separator,
+                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCES_RESOURCE_PATH.name()),
+                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
 
-              File file = fileChooser.showSaveDialog((
+                                           
+             // dataFilePath = dataFilePath.getFileName();
+              File file = new File(filePath);
+              fileChooser.setInitialDirectory(file);
+                     
+               file = fileChooser.showSaveDialog((
                       (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
+              PrintWriter writer = new PrintWriter(file);
+              //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
+              writer.write(((AppUI) applicationTemplate.getUIComponent()).getText());
+              writer.close();
               return file != null;}
               catch(Exception x)
               {
-                   throw new Exception();
+                   //throw new Exception();
+                 // System.out.println(x.toString());
               }
            }
          
