@@ -30,6 +30,7 @@ public enum AppPropertyTypes {
 
     /* application-specific messages */
     SAVE_UNSAVED_WORK,
+    EXIT_WHILE_RUNNING_WARNING ,
 
     /* application-specific parameters */
     DATA_FILE_EXT,

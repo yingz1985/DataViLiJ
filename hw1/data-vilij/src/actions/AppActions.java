@@ -21,9 +21,10 @@ public final class AppActions implements ActionComponent {
 
     /** The application to which this class of actions belongs. */
     private ApplicationTemplate applicationTemplate;
-
+    private boolean saved = false;
     /** Path to the data file currently active. */
     Path dataFilePath;
+    
     
 
     public AppActions(ApplicationTemplate applicationTemplate) {
@@ -71,6 +72,7 @@ public final class AppActions implements ActionComponent {
               //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
               writer.write(((AppUI) applicationTemplate.getUIComponent()).getText());
               writer.close();
+              saved = true;
         }
               catch(Exception x)
               {
@@ -89,14 +91,18 @@ public final class AppActions implements ActionComponent {
         // TODO for homework 1
         
         //I wanted to prompt Confirmation dialog even when exiting 
-       //ConfirmationDialog dialog = ConfirmationDialog.getDialog();
+       if(!((AppUI) applicationTemplate.getUIComponent()).getText().isEmpty()
+          && !saved){
+       ConfirmationDialog dialog = ConfirmationDialog.getDialog();
        
-       //dialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()),
-        //           applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK.name()));
-      // if(dialog.getSelectedOption().toString().equals("YES"))   
+       dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
+                   applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
+       if(dialog.getSelectedOption().toString().equals("YES"))   
                  ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
            
-       // }
+        }
+       else
+           ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
     }
 
     @Override
