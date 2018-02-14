@@ -48,21 +48,35 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
-       try{
-        FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
-                    (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name())+"(*.tsd)",
+        try{
+              FileChooser fileChooser = new FileChooser();
+              FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
+                    (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
                      applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name()));
-              
-              
+             
               fileChooser.getExtensionFilters().add(save);
-              
+             // fileChooser.setInitialDirectory(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
+              String filePath =  String.join(separator,
+                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCES_RESOURCE_PATH.name()),
+                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
 
-              File file = fileChooser.showSaveDialog((
+                                           
+             // dataFilePath = dataFilePath.getFileName();
+              File file = new File(filePath);
+              fileChooser.setInitialDirectory(file);
+                     
+               file = fileChooser.showSaveDialog((
                       (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
-       }
-       catch(Exception x)
-       {}
+              PrintWriter writer = new PrintWriter(file);
+              //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
+              writer.write(((AppUI) applicationTemplate.getUIComponent()).getText());
+              writer.close();
+        }
+              catch(Exception x)
+              {
+                   //throw new Exception();
+                 // System.out.println(x.toString());
+              }
     }
 
     @Override
@@ -75,12 +89,13 @@ public final class AppActions implements ActionComponent {
         // TODO for homework 1
         
         //I wanted to prompt Confirmation dialog even when exiting 
-       /* if( ! ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().isEmpty()   )
-        {
-            if(promptToSave())
-            {*/
+       //ConfirmationDialog dialog = ConfirmationDialog.getDialog();
+       
+       //dialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK_TITLE.name()),
+        //           applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SAVE_UNSAVED_WORK.name()));
+      // if(dialog.getSelectedOption().toString().equals("YES"))   
                  ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
-            // }
+           
        // }
     }
 

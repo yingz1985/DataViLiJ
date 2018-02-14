@@ -104,16 +104,20 @@ public final class AppUI extends UITemplate {
         super.setWindow(applicationTemplate);
         VBox dataField = new VBox(5);
         dataField.setPadding(new Insets(10,10,10,10));
-        Label text = new Label("Data File",textArea);
+        Label text = new Label(applicationTemplate.manager.getPropertyValue
+        (AppPropertyTypes.TEXT_AREA.name()),textArea);
         textArea = new TextArea();
-        displayButton = new Button("display");
+        displayButton = new Button(applicationTemplate.manager.getPropertyValue
+        (AppPropertyTypes.DISPLAY.name()));
         dataField.getChildren().addAll
         (text,textArea,displayButton);
         textArea.setMaxWidth(300);
 
         VBox chartArea = new VBox(5);
         chartArea.setPadding(new Insets(10,10,10,10));
-        Label visual = new Label("Data Visualization",chart);
+        Label visual = new Label(
+          applicationTemplate.manager.getPropertyValue(
+          AppPropertyTypes.DATA_VISUALIZATION.name()),chart);
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         chart = new ScatterChart<Number,Number>(xAxis,yAxis);

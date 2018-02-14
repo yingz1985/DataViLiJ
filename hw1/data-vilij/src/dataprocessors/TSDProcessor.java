@@ -73,7 +73,9 @@ public final class TSDProcessor {
                           errorMessage.append(x.getClass().getSimpleName()).append(": ").append(x.getMessage());
                     
                           ErrorDialog dialog = ErrorDialog.getDialog();
-                          dialog.show("Invalid Data Name Exception",InvalidDataNameException.NAME_ERROR_MSG);
+                          dialog.show(template.manager.getPropertyValue(
+                            AppPropertyTypes.INVALID_DATA_EXCEPTION.name()),
+                            InvalidDataNameException.NAME_ERROR_MSG);
                          
                   }
                   catch(NumberFormatException e)

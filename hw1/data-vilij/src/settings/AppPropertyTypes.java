@@ -23,6 +23,7 @@ public enum AppPropertyTypes {
     RESOURCE_SUBDIR_NOT_FOUND,
     NUMBER_FORMAT_EXCEPTION,
     INVALID_SPACING_ERRORS,
+    INVALID_DATA_EXCEPTION,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,
@@ -34,5 +35,8 @@ public enum AppPropertyTypes {
     DATA_FILE_EXT,
     DATA_FILE_EXT_DESC,
     TEXT_AREA,
-    SPECIFIED_FILE
+    SPECIFIED_FILE,
+    DATA_VISUALIZATION,
+    DISPLAY
+    
 }
