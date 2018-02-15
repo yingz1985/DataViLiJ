@@ -92,13 +92,15 @@ public final class AppActions implements ActionComponent {
         
         //I wanted to prompt Confirmation dialog even when exiting 
        if(!((AppUI) applicationTemplate.getUIComponent()).getText().isEmpty()
-          && !saved){
-       ConfirmationDialog dialog = ConfirmationDialog.getDialog();
-       
-       dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
-                   applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
-       if(dialog.getSelectedOption().toString().equals("YES"))   
-                 ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
+          && !saved)
+       {
+          ConfirmationDialog dialog = ConfirmationDialog.getDialog();
+        
+         dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
+                   applicationTemplate.manager.getPropertyValue(
+                   AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
+         if(dialog.getSelectedOption().toString().equals("YES"))   
+              ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
            
         }
        else
