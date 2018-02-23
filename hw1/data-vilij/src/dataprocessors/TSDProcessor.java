@@ -5,10 +5,12 @@ import javafx.scene.chart.XYChart;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import javax.naming.InvalidNameException;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Tooltip;
 import settings.AppPropertyTypes;
-import ui.AppUI;
 import vilij.components.ErrorDialog;
 import vilij.templates.ApplicationTemplate;
 
@@ -35,15 +37,20 @@ public final class TSDProcessor {
 
     private Map<String, String>  dataLabels;
     private Map<String, Point2D> dataPoints;
-
-
+    private String name;
+    private AtomicInteger counter;
+    
     public TSDProcessor() {
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
+        counter = new AtomicInteger();
     }
     
  
-
+    public int getLineNum()
+    {
+        return counter.intValue();
+    }
     /**
      * Processes the data and populated two {@link Map} objects with the data.
      *
@@ -54,18 +61,23 @@ public final class TSDProcessor {
         AtomicBoolean hadAnError   = new AtomicBoolean(false);
         StringBuilder errorMessage = new StringBuilder();
         ApplicationTemplate template = new ApplicationTemplate();
-    
+        counter = new AtomicInteger();
+        //counter.getAndIncrement();  //initialized at 1 
         Stream.of(tsdString.split("\n"))
               .map(line -> Arrays.asList(line.split("\t")))
               .forEach(list -> {
                   try
                   {
-                      String  name  = checkedname(list.get(0));
+                      counter.incrementAndGet();
+                      name  = checkedname(list.get(0));
                       String   label = list.get(1);
                       String[] pair  = list.get(2).split(",");
                       Point2D  point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
+                      if(dataLabels.containsKey(name))    //if name already exists in hash, throw new exception
+                          throw new IllegalArgumentException();
                       dataLabels.put(name, label);
                       dataPoints.put(name, point);
+                      
                   }
                   catch(InvalidDataNameException x)
                   {
@@ -75,30 +87,50 @@ public final class TSDProcessor {
                           ErrorDialog dialog = ErrorDialog.getDialog();
                           dialog.show(template.manager.getPropertyValue(
                             AppPropertyTypes.INVALID_DATA_EXCEPTION.name()),
-                            InvalidDataNameException.NAME_ERROR_MSG);
+                            InvalidDataNameException.NAME_ERROR_MSG+"\n"+
+                            template.manager.getPropertyValue(
+                            AppPropertyTypes.ERROR_LINE.name())+counter);
+                          
+                          
                          
                   }
                   catch(NumberFormatException e)
-        {
+                 {
                         errorMessage.setLength(0);
                         errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
                     
                         ErrorDialog dialog = ErrorDialog.getDialog();
                           dialog.show(AppPropertyTypes.NUMBER_FORMAT_EXCEPTION.toString(),
-                                  template.manager.getPropertyValue(AppPropertyTypes.NUMBER_FORMAT_EXCEPTION.name()));
+                                  template.manager.getPropertyValue(AppPropertyTypes.NUMBER_FORMAT_EXCEPTION.name())+
+                                  "\n"+template.manager.getPropertyValue(
+                        AppPropertyTypes.ERROR_LINE.name())+counter);
                          
-        }
-        catch (Exception e)
-        {
+                   }
+                  
+                  catch(IllegalArgumentException k)
+                  {
+                        errorMessage.setLength(0);
+                        errorMessage.append(k.getClass().getSimpleName()).append(": ").append(k.getMessage());
+                    
+                        ErrorDialog dialog = ErrorDialog.getDialog();
+                          dialog.show(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.toString(),
+                                  template.manager.getPropertyValue(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.name())+
+                                  name+"\n"+template.manager.getPropertyValue(
+                            AppPropertyTypes.ERROR_LINE.name())+counter);
+                  }
+                  catch (Exception e)
+                  {
                       errorMessage.setLength(0);
                       errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
                     
                     
                       ErrorDialog dialog = ErrorDialog.getDialog();
                       dialog.show(AppPropertyTypes.INVALID_SPACING_ERRORS.toString()
-                      ,template.manager.getPropertyValue(AppPropertyTypes.INVALID_SPACING_ERRORS.name()));
+                      ,template.manager.getPropertyValue(AppPropertyTypes.INVALID_SPACING_ERRORS.name())
+                      +"\n"+template.manager.getPropertyValue(
+                            AppPropertyTypes.ERROR_LINE.name())+counter);
                        
-       }
+                   }
                   
                   
                     
@@ -121,7 +153,7 @@ public final class TSDProcessor {
      *
      * @param chart the specified chart
      */
-    void toChartData(XYChart<Number, Number> chart) {
+    public void toChartData(XYChart<Number, Number> chart) {
         Set<String> labels = new HashSet<>(dataLabels.values());
         for (String label : labels) {
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
@@ -131,12 +163,21 @@ public final class TSDProcessor {
                 series.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
             });
             chart.getData().add(series);
+            
+            
         }
+        
+        
+
+       
+        
+        
     }
 
     void clear() {
         dataPoints.clear();
         dataLabels.clear();
+        counter.set(0);
     }
 
     private String checkedname(String name) throws InvalidDataNameException  {

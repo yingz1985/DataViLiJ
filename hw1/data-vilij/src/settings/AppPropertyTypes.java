@@ -18,12 +18,14 @@ public enum AppPropertyTypes {
 
     /* tooltips for user interface buttons */
     SCREENSHOT_TOOLTIP,
+    READ_ONLY,
 
     /* error messages */
     RESOURCE_SUBDIR_NOT_FOUND,
     NUMBER_FORMAT_EXCEPTION,
     INVALID_SPACING_ERRORS,
     INVALID_DATA_EXCEPTION,
+    IDENTICAL_NAME_EXCEPTION,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,
@@ -31,10 +33,15 @@ public enum AppPropertyTypes {
     /* application-specific messages */
     SAVE_UNSAVED_WORK,
     EXIT_WHILE_RUNNING_WARNING ,
+    ERROR_LINE,
+    DATA_OVERFLOW_1,
+    DATA_OVERFLOW_2,
 
     /* application-specific parameters */
     DATA_FILE_EXT,
     DATA_FILE_EXT_DESC,
+    SCREENSHOT_EXT_DESC,
+    SCREENSHOT_EXT,
     TEXT_AREA,
     SPECIFIED_FILE,
     DATA_VISUALIZATION,

@@ -1,5 +1,8 @@
 package dataprocessors;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import ui.AppUI;
 import vilij.components.DataComponent;
 import vilij.templates.ApplicationTemplate;
@@ -24,7 +27,10 @@ public class AppData implements DataComponent {
 
     @Override
     public void loadData(Path dataFilePath) {
+        
         // TODO: NOT A PART OF HW 1
+        
+        
     }
 
     public void loadData(String dataString)throws Exception {
@@ -38,13 +44,24 @@ public class AppData implements DataComponent {
         
 
     }
+    public int lineNum(){
+        return processor.getLineNum();
+    }
 
     
      
     @Override
     public void saveData(Path dataFilePath) {
         // TODO: NOT A PART OF HW 1
+        
+        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath))) {
+            writer.write(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
+
+    
 
     @Override
     public void clear() {

@@ -1,17 +1,25 @@
 package actions;
 
+import dataprocessors.AppData;
+import dataprocessors.TSDProcessor;
 import java.io.File;
 import static java.io.File.separator;
 import vilij.components.ActionComponent;
 import vilij.templates.ApplicationTemplate;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
+import javax.imageio.ImageIO;
 import settings.AppPropertyTypes;
 import ui.AppUI;
 import vilij.components.ConfirmationDialog;
-
+import vilij.components.ErrorDialog;
+ 
 /**
  * This is the concrete implementation of the action handlers required by the application.
  *
@@ -24,11 +32,31 @@ public final class AppActions implements ActionComponent {
     private boolean saved = false;
     /** Path to the data file currently active. */
     Path dataFilePath;
+    //private String fileName ;
+    private File file;
+    private FileChooser fileChooser;
+    //fileName is initialized to empty string
     
     
 
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
+       // fileName = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DEFAULT_FILE_NAME.name());
+        String filePath =  String.join(separator,
+                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCES_RESOURCE_PATH.name()),
+                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
+
+        dataFilePath = Paths.get(filePath);
+              
+        file = new File(dataFilePath.toString());   
+        
+        fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
+                    (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
+                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name()));
+        fileChooser.getExtensionFilters().add(save);
+        fileChooser.setInitialDirectory(file);
+              
     }
 
     @Override
@@ -36,8 +64,13 @@ public final class AppActions implements ActionComponent {
     {
         //clears whether the button clicked on is "yes" or "no"
        try{
-       if(promptToSave())
-         ((AppUI) applicationTemplate.getUIComponent()).clear();
+             if(promptToSave())
+            {
+                saved = false;
+                ((AppUI) applicationTemplate.getUIComponent()).clear();
+                 file = new File(dataFilePath.toString());
+
+             }
        }
        catch(Exception x)
        {
@@ -49,41 +82,104 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
+        //if(((AppUI) applicationTemplate.getUIComponent()).newText()){
+      
         try{
-              FileChooser fileChooser = new FileChooser();
-              FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
-                    (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
-                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name()));
-             
-              fileChooser.getExtensionFilters().add(save);
-             // fileChooser.setInitialDirectory(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
-              String filePath =  String.join(separator,
-                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCES_RESOURCE_PATH.name()),
-                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
-
-                                           
-             // dataFilePath = dataFilePath.getFileName();
-              File file = new File(filePath);
-              fileChooser.setInitialDirectory(file);
-                     
-               file = fileChooser.showSaveDialog((
+            TSDProcessor processor = new TSDProcessor();
+            processor.processString(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
+            //process string and see if there's an error 
+            
+            fileChooser.setInitialFileName(file.getName());
+               
+             File  tempfile = fileChooser.showSaveDialog((
                       (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
-              PrintWriter writer = new PrintWriter(file);
+
+              if (tempfile!=null) {
+                  file = tempfile;
+                PrintWriter writer = new PrintWriter(file);
               //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
-              writer.write(((AppUI) applicationTemplate.getUIComponent()).getText());
+              
+              
+              writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
               writer.close();
               saved = true;
+              ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
+              }
+              //disables the save button
+              
         }
               catch(Exception x)
               {
                    //throw new Exception();
                  // System.out.println(x.toString());
               }
+       
     }
+    //}
+    
 
     @Override
     public void handleLoadRequest() {
-        // TODO: NOT A PART OF HW 1
+        String text = "";
+        //TSDProcessor processor = new TSDProcessor();
+        File  tempfile = fileChooser.showOpenDialog(((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
+       // System.out.println(tempfile.toString());
+        if (tempfile!=null)
+        {
+            file = tempfile;
+            try
+            {
+                Scanner scanner = new Scanner(tempfile);
+                while(scanner.hasNextLine())
+                {
+                    text+=scanner.nextLine()+"\n";
+                }
+                AppData processor = new AppData(applicationTemplate);
+                processor.loadData(text);
+                ((AppUI) applicationTemplate.getUIComponent()).setActualText(text);
+               // ((AppUI) applicationTemplate.getUIComponent()).getProcessor().loadData(text);
+                //processes the whole string
+                ((AppUI) applicationTemplate.getUIComponent()).LoadedData();
+                if(processor.lineNum()>10)
+                {
+                    ErrorDialog dialog = ErrorDialog.getDialog();
+                    dialog.show(applicationTemplate.manager.getPropertyValue
+                    (AppPropertyTypes.SPECIFIED_FILE.name()), 
+                    applicationTemplate.manager.getPropertyValue
+                    (AppPropertyTypes.DATA_OVERFLOW_1.name())
+                    +processor.lineNum()
+                    +applicationTemplate.manager.getPropertyValue
+                    (AppPropertyTypes.DATA_OVERFLOW_2.name()));
+                    int i = 0;
+                    text = "";
+                    scanner = new Scanner(tempfile);
+                    while(i<10)
+                    {
+                        text+=scanner.nextLine()+"\n";
+                        //load only the first 10 lines into the textArea
+                        i++;
+                    }
+                    
+                    
+                }
+                //System.out.println(text);
+                ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(text);
+                
+                ((AppUI) applicationTemplate.getUIComponent()).setProcessor(processor);
+                //if read correctly without errors paste it into the text area
+                //saved = true; //no need to save it when you first load it, since it was originally saved
+                ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
+               // loaded = true; //loaded new data
+            }
+            catch(Exception x)
+            {
+                //System.out.println(x.getCause());
+            }
+        }
+        
+        
+        
+        
     }
 
     @Override
@@ -91,7 +187,7 @@ public final class AppActions implements ActionComponent {
         // TODO for homework 1
         
         //I wanted to prompt Confirmation dialog even when exiting 
-       if(!((AppUI) applicationTemplate.getUIComponent()).getText().isEmpty()
+       if(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()
           && !saved)
        {
           ConfirmationDialog dialog = ConfirmationDialog.getDialog();
@@ -112,8 +208,32 @@ public final class AppActions implements ActionComponent {
         // TODO: NOT A PART OF HW 1
     }
 
-    public void handleScreenshotRequest() throws IOException {
+    public void handleScreenshotRequest()  {
         // TODO: NOT A PART OF HW 1
+        
+        WritableImage image = ((AppUI) applicationTemplate.getUIComponent())
+                .getChart().snapshot(new SnapshotParameters(), null);
+
+       FileChooser fileChoose = new FileChooser();
+       
+       FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
+                    (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_EXT_DESC.name()),
+                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.SCREENSHOT_EXT.name()));
+       //fileChoose.setSelectedExtensionFilter(save);
+       fileChoose.getExtensionFilters().add(save);
+       File f = fileChoose.showSaveDialog((
+                      (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
+       
+       if(f!=null){
+       try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", f);
+        } 
+        catch (Exception e) {
+            
+            System.out.print(e.getCause());
+        
+        }
+       }
     }
 
     /**
@@ -130,7 +250,9 @@ public final class AppActions implements ActionComponent {
      */
     private boolean promptToSave()  throws Exception{
         // TODO for homework 1
-        
+        //System.out.println((((AppUI) applicationTemplate.getUIComponent()).newText()));
+        if(((AppUI) applicationTemplate.getUIComponent()).newText()) saved = false;
+        if(!saved){
 
         //returns true if the eventHandler should keep executing
         //(clear scene or exit window)
@@ -149,38 +271,36 @@ public final class AppActions implements ActionComponent {
            if(dialog.getSelectedOption().toString().equals("YES"))   
            {
               try{
-              FileChooser fileChooser = new FileChooser();
-              FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
-                    (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
-                     applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name()));
-             
-              fileChooser.getExtensionFilters().add(save);
-             // fileChooser.setInitialDirectory(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
-              String filePath =  String.join(separator,
-                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCES_RESOURCE_PATH.name()),
-                                             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
-
-                                           
-             // dataFilePath = dataFilePath.getFileName();
-              File file = new File(filePath);
-              fileChooser.setInitialDirectory(file);
-                     
+              TSDProcessor processor = new TSDProcessor();
+              processor.processString(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
+                //process string and see if there's an error 
+              
+              fileChooser.setInitialFileName(file.getName());
+              
+              
                file = fileChooser.showSaveDialog((
                       (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
+              if(file!=null){
               PrintWriter writer = new PrintWriter(file);
               //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
-              writer.write(((AppUI) applicationTemplate.getUIComponent()).getText());
-              writer.close();
+              writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
+              writer.close();}
+              saved = true;
               return file != null;}
               catch(Exception x)
               {
                    //throw new Exception();
-                 // System.out.println(x.toString());
+                  //System.out.println(x.toString());
               }
            }
          
-       }
-        return false;
-    
+       }}
+        // else if(saved)
+        //if saved, or does not have new text
+        //return false;
+        
+       return saved;    
+        
     }
+
 }

@@ -14,7 +14,8 @@ functionality within the main workspace. -->
 
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="SCREENSHOT_TOOLTIP" value="Screenshot"/> <!-- will print current view of image to a file -->
-
+        <property name="READ_ONLY" value = "read-only"/>
+        
         <!-- WARNING MESSAGES -->
         <property name="EXIT_WHILE_RUNNING_WARNING"
                   value="An algorithm is running. If you exit now, all unsaved changes will be lost. Are you sure?"/>
@@ -24,20 +25,26 @@ functionality within the main workspace. -->
         <property name="NUMBER_FORMAT_EXCEPTION" value="Invalid Coordinates entered."/>
         <property name="INVALID_SPACING_ERRORS" value = "Text must be in tab-separated format."/>
         <property name="INVALID_DATA_EXCEPTION" value = "Invalid Data Name Exception"/>
-        
+        <property name="IDENTICAL_NAME_EXCEPTION" value = "Duplicated names have been entered"/>
         <!-- APPLICATION-SPECIFIC MESSAGE TITLES -->
         <property name="SAVE_UNSAVED_WORK_TITLE" value="Save Current Work"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>
-
+        <property name="ERROR_LINE" value = "Error occurred in line "/>
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
         <property name="DATA_FILE_EXT" value="*.tsd"/>
         <property name="DATA_FILE_EXT_DESC" value="Tab-Separated Data File(*.tsd)"/>
+        <property name="SCREENSHOT_EXT" value="*.png"/>
+        <property name="SCREENSHOT_EXT_DESC" value ="Portable Network Graphics(*.png)"/>
         <property name="TEXT_AREA" value="Data File"/>
         <property name="SPECIFIED_FILE" value=" specified file"/>
         <property name="DATA_VISUALIZATION" value = "Data Visualization"/>
         <property name="DISPLAY" value = "display"/>
+        <property name="DATA_OVERFLOW_1" value = "Loaded data consists of "/>
+        <property name="DATA_OVERFLOW_2" value = " lines showing only the first 10 in the text area"/>
+        
+        
 
     </property_list>
     <property_options_list/>
