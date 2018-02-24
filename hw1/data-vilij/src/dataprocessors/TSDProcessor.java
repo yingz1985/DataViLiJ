@@ -1,14 +1,16 @@
 package dataprocessors;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Tooltip;
 import settings.AppPropertyTypes;
 import vilij.components.ErrorDialog;
@@ -39,6 +41,9 @@ public final class TSDProcessor {
     private Map<String, Point2D> dataPoints;
     private String name;
     private AtomicInteger counter;
+    private double averageY = 0;
+    private double minX=0;
+    private double maxX=0;
     
     public TSDProcessor() {
         dataLabels = new HashMap<>();
@@ -58,23 +63,36 @@ public final class TSDProcessor {
      * @throws Exception if the input string does not follow the <code>.tsd</code> data format
      */
     public void processString(String tsdString) throws Exception {
+        averageY = 0;
         AtomicBoolean hadAnError   = new AtomicBoolean(false);
         StringBuilder errorMessage = new StringBuilder();
         ApplicationTemplate template = new ApplicationTemplate();
+        
         counter = new AtomicInteger();
         //counter.getAndIncrement();  //initialized at 1 
         Stream.of(tsdString.split("\n"))
               .map(line -> Arrays.asList(line.split("\t")))
-              .forEach(list -> {
+              .forEach((List<String> list) -> {
                   try
                   {
                       counter.incrementAndGet();
                       name  = checkedname(list.get(0));
                       String   label = list.get(1);
                       String[] pair  = list.get(2).split(",");
-                      Point2D  point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
+                      Double x = Double.parseDouble(pair[0]);
+                      Double y = Double.parseDouble(pair[1]);
+                      Point2D  point = new Point2D(x,y);
                       if(dataLabels.containsKey(name))    //if name already exists in hash, throw new exception
                           throw new IllegalArgumentException();
+                      if(counter.get()==1)
+                      {
+                          minX = x;
+                      }
+                      if(x<minX)
+                              minX = x;
+                      if(x>maxX)
+                              maxX = x;
+                      averageY+=Double.parseDouble(pair[1]);
                       dataLabels.put(name, label);
                       dataPoints.put(name, point);
                       
@@ -90,7 +108,7 @@ public final class TSDProcessor {
                             InvalidDataNameException.NAME_ERROR_MSG+"\n"+
                             template.manager.getPropertyValue(
                             AppPropertyTypes.ERROR_LINE.name())+counter);
-                          
+                            
                           
                          
                   }
@@ -111,12 +129,13 @@ public final class TSDProcessor {
                   {
                         errorMessage.setLength(0);
                         errorMessage.append(k.getClass().getSimpleName()).append(": ").append(k.getMessage());
-                    
+                        hadAnError.set(true);
                         ErrorDialog dialog = ErrorDialog.getDialog();
                           dialog.show(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.toString(),
                                   template.manager.getPropertyValue(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.name())+
                                   name+"\n"+template.manager.getPropertyValue(
-                            AppPropertyTypes.ERROR_LINE.name())+counter);
+                                AppPropertyTypes.ERROR_LINE.name())+counter+
+                                          "\n");
                   }
                   catch (Exception e)
                   {
@@ -131,10 +150,11 @@ public final class TSDProcessor {
                             AppPropertyTypes.ERROR_LINE.name())+counter);
                        
                    }
-                  
-                  
-                    
+                 
+                   
+        
               }
+                      
                       
         );
                 
@@ -161,16 +181,49 @@ public final class TSDProcessor {
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
                 Point2D point = dataPoints.get(entry.getKey());
                 series.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+                
+                
+   
             });
+
             chart.getData().add(series);
-            
+            for (XYChart.Series<Number, Number> s : chart.getData()) {
+            s.getNode().setStyle("   -fx-stroke-width: 0; ");
+            s.getNode().setStyle("-fx-stroke: transparent; ");
+
+            } 
+
             
         }
-        
-        
+            chart.setAnimated(false);
+            XYChart.Series<Number,Number> serie = new XYChart.Series<>();
+            averageY = averageY/counter.get();
+            XYChart.Data dataMin = new XYChart.Data<>(minX,averageY);
+            //dataMin.getNode().setStyle("-fx-fill:transparent;");
+            XYChart.Data dataMax = new XYChart.Data<>(maxX,averageY);
+            //dataMax.getNode().setStyle("-fx-fill:transparent;");
+            
+            
+            
+            serie.getData().add(dataMin);
+            serie.getData().add(dataMax);
+            //serie.setName("average:"+averageY*100/100);
+            NumberFormat formatter = new DecimalFormat("#0.0");   
+            serie.setName("averageY:"+formatter.format(averageY));
+            
+            chart.getData().add(serie);
+            
+            dataMin.getNode().setStyle("-fx-background-color: transparent;");
+            dataMax.getNode().setStyle("-fx-background-color: transparent;");
+            
+            
+            serie.getNode().setStyle("-fx-stroke-width: 1px; ");
+            //serie.getNode().setStyle("-fx-stroke: pink; ");
 
-       
-        
+            //serie.getNode().lookup(".chart-line-symbol").setStyle("-fx-fill:transparent;");
+            //series.getChart().setStyle("-fx-stroke:transparent");
+
+          
         
     }
 

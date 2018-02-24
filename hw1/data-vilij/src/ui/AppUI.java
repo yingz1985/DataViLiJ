@@ -1,8 +1,7 @@
 package ui;
-
+//@author Ying Zhang
 import actions.AppActions;
 import dataprocessors.AppData;
-import dataprocessors.TSDProcessor;
 import static java.io.File.separator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.Button;
@@ -38,7 +38,7 @@ public final class AppUI extends UITemplate {
     ApplicationTemplate applicationTemplate;
 
     private Button                       scrnshotButton; // toolbar button to take a screenshot of the data
-    private ScatterChart<Number, Number> chart;          // the chart where data will be displayed
+    private LineChart<Number, Number> chart;          // the chart where data will be displayed
     private Button                       displayButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText = true ;     // whether or not the text area has any new data since last display
@@ -46,7 +46,7 @@ public final class AppUI extends UITemplate {
     private boolean                      loadedData = false;
     private AppData                      processor;
     private String                       actualText = "";//actual text is used when loading from file 
-    public ScatterChart<Number, Number> getChart() { return chart; }
+    public LineChart<Number, Number> getChart() { return chart; }
 
     public void LoadedData()
     {
@@ -155,7 +155,8 @@ public final class AppUI extends UITemplate {
           AppPropertyTypes.DATA_VISUALIZATION.name()),chart);
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
-        chart = new ScatterChart<Number,Number>(xAxis,yAxis);
+        chart = new LineChart<Number,Number>(xAxis,yAxis);
+        
         chartArea.getChildren().addAll(visual,chart);
         chartArea.setAlignment(Pos.TOP_CENTER);
         
@@ -164,8 +165,9 @@ public final class AppUI extends UITemplate {
         
         VBox wholeScene = new VBox();
         wholeScene.getChildren().addAll(toolBar,workSpace);
-        
-        primaryStage.setScene(new Scene(wholeScene,1000,600));
+        Scene current = new Scene(wholeScene,1000,600);
+        current.getStylesheets().add("ui/chart.css");
+        primaryStage.setScene(current);
     
     }
 
@@ -199,7 +201,7 @@ public final class AppUI extends UITemplate {
         {   
             
            
-            if(!loadedData || actualText.isEmpty()) 
+            if(!loadedData || actualText.isEmpty() || processor.lineNum()<=10) 
             {
                  actualText=textArea.getText();
                  processor =  new AppData(applicationTemplate);
@@ -252,7 +254,7 @@ public final class AppUI extends UITemplate {
                     //data.loadData(textArea.getText());
                     
                     processor.displayData();
-
+                    //chart.lookup(".default.chart-series-line").setStyle("-fxstroke: transparent");
                     
                     //data.displayData();
                     newButton.setDisable(false);
@@ -303,3 +305,8 @@ public final class AppUI extends UITemplate {
         return actualText;
     }
 }
+/*
+-fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+*/

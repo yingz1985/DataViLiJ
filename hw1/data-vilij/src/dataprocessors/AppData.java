@@ -34,10 +34,11 @@ public class AppData implements DataComponent {
     }
 
     public void loadData(String dataString)throws Exception {
-        // TODO for homework 1
+
 
           processor.processString(dataString);
-          
+       
+
          // ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
           
           

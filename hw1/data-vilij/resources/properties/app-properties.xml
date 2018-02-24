@@ -28,6 +28,7 @@ functionality within the main workspace. -->
         <property name="IDENTICAL_NAME_EXCEPTION" value = "Duplicated names have been entered"/>
         <!-- APPLICATION-SPECIFIC MESSAGE TITLES -->
         <property name="SAVE_UNSAVED_WORK_TITLE" value="Save Current Work"/>
+        <property name="ERROR_DUPLICATE" value="All occurrances after the first will be ignored"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>

@@ -26,6 +26,8 @@ public enum AppPropertyTypes {
     INVALID_SPACING_ERRORS,
     INVALID_DATA_EXCEPTION,
     IDENTICAL_NAME_EXCEPTION,
+    ERROR_DUPLICATE,
+    INVALID_DATA_EXCEPT,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,
@@ -36,6 +38,7 @@ public enum AppPropertyTypes {
     ERROR_LINE,
     DATA_OVERFLOW_1,
     DATA_OVERFLOW_2,
+    
 
     /* application-specific parameters */
     DATA_FILE_EXT,
