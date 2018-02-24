@@ -3,20 +3,24 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 import static java.io.File.separator;
+import java.util.Date;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -173,6 +177,22 @@ public final class AppUI extends UITemplate {
 
     private void setWorkspaceActions() {
         // TODO for homework 1
+       /* for (XYChart.Series<Number, Number> s : chart.getData()) {
+            for (XYChart.Data<Number, Number> d : s.getData()) {
+
+                
+                d.getNode().setOnMouseEntered(event ->  ((AppUI)applicationTemplate.getUIComponent()).getPrimaryScene().setCursor(Cursor.MOVE));
+                  
+                //Removing class on exit
+                d.getNode().setOnMouseExited(event -> ((AppUI)applicationTemplate.getUIComponent()).getPrimaryScene().setCursor(Cursor.DEFAULT));
+          
+                
+            }
+           }
+        
+        */
+        
+        
         textArea.textProperty().addListener(new ChangeListener<String>() {
 
             public void changed(ObservableValue<? extends String> observable,

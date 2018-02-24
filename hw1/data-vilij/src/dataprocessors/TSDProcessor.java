@@ -8,9 +8,8 @@ import javafx.scene.chart.XYChart;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
+import javafx.scene.Cursor;
 import javafx.scene.control.Tooltip;
 import settings.AppPropertyTypes;
 import vilij.components.ErrorDialog;
@@ -175,15 +174,20 @@ public final class TSDProcessor {
      */
     public void toChartData(XYChart<Number, Number> chart) {
         Set<String> labels = new HashSet<>(dataLabels.values());
+        Object[] names =  dataPoints.keySet().toArray();
+        
         for (String label : labels) {
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(label);
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
                 Point2D point = dataPoints.get(entry.getKey());
-                series.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+                
+                XYChart.Data data = new XYChart.Data<>(point.getX(), point.getY());      
+                series.getData().add(data);
                 
                 
-   
+               
+                
             });
 
             chart.getData().add(series);
@@ -193,11 +197,12 @@ public final class TSDProcessor {
 
             } 
 
-            
+
         }
             chart.setAnimated(false);
             XYChart.Series<Number,Number> serie = new XYChart.Series<>();
-            averageY = averageY/counter.get();
+            NumberFormat formatter = new DecimalFormat("#0.0"); 
+            averageY = Double.parseDouble(formatter.format(averageY/counter.get()));
             XYChart.Data dataMin = new XYChart.Data<>(minX,averageY);
             //dataMin.getNode().setStyle("-fx-fill:transparent;");
             XYChart.Data dataMax = new XYChart.Data<>(maxX,averageY);
@@ -208,7 +213,7 @@ public final class TSDProcessor {
             serie.getData().add(dataMin);
             serie.getData().add(dataMax);
             //serie.setName("average:"+averageY*100/100);
-            NumberFormat formatter = new DecimalFormat("#0.0");   
+              
             serie.setName("averageY:"+formatter.format(averageY));
             
             chart.getData().add(serie);
@@ -218,11 +223,63 @@ public final class TSDProcessor {
             
             
             serie.getNode().setStyle("-fx-stroke-width: 1px; ");
-            //serie.getNode().setStyle("-fx-stroke: pink; ");
+            
+           /*
+            for (XYChart.Series<Number, Number> s : chart.getData()) {
+            for (XYChart.Data<Number, Number> d : s.getData()) {
+                Tooltip.install(d.getNode(), new Tooltip(
+                        d.getXValue().toString() + "\n" +
+                                "Number Of Events : " + d.getYValue()));
 
-            //serie.getNode().lookup(".chart-line-symbol").setStyle("-fx-fill:transparent;");
-            //series.getChart().setStyle("-fx-stroke:transparent");
+                //Adding class on hover
+                d.getNode().setOnMouseEntered(event -> d.getNode().getStyleClass().add("onHover"));
 
+                //Removing class on exit
+                d.getNode().setOnMouseExited(event -> d.getNode().getStyleClass().remove("onHover"));
+            }
+        }
+           
+           */ 
+           
+           
+           
+           /*
+           
+           for (Object name : names)
+                {
+                    if(dataPoints.get((String)name) == point)
+                    {
+                        Tooltip.install(data.getNode(),new Tooltip((String)name));
+                        
+                        
+                    }
+                }
+               
+           
+           
+           
+           
+           */
+
+           
+           for (XYChart.Series<Number, Number> s : chart.getData()) {
+            for (XYChart.Data<Number, Number> d : s.getData()) {
+
+                for(Object name: names)
+                {
+                    if(dataPoints.get((String)name).getX()==d.getXValue().doubleValue()
+                       && dataPoints.get((String)name).getY()==d.getYValue().doubleValue())
+                    {
+                        Tooltip.install(d.getNode(),new Tooltip((String)name));
+                    }
+                    
+                    
+                }
+                d.getNode().setCursor(Cursor.CROSSHAIR);
+                
+                
+            }
+           }
           
         
     }
