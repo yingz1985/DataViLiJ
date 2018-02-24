@@ -8,6 +8,8 @@ import vilij.components.DataComponent;
 import vilij.templates.ApplicationTemplate;
 
 import java.nio.file.Path;
+import settings.AppPropertyTypes;
+import vilij.components.ErrorDialog;
 
 /**
  * This is the concrete application-specific implementation of the data component defined by the Vilij framework.
@@ -33,12 +35,65 @@ public class AppData implements DataComponent {
         
     }
 
-    public void loadData(String dataString)throws Exception {
-
-
+    public void loadData(String dataString) throws Exception{
+        Boolean caught = false;
+        try
+        {
           processor.processString(dataString);
-       
-
+        }
+         catch(NumberFormatException e)
+         {
+                       
+                        ErrorDialog dialog = ErrorDialog.getDialog();
+                          dialog.show(AppPropertyTypes.NUMBER_FORMAT_EXCEPTION.toString(),
+                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.NUMBER_FORMAT_EXCEPTION.name())+
+                                  "\n"+applicationTemplate.manager.getPropertyValue(
+                        AppPropertyTypes.ERROR_LINE.name())+processor.getLineNum());
+                        caught = true;
+                         
+        }
+        catch(IllegalArgumentException x)
+        {
+                         
+                          ErrorDialog dialog = ErrorDialog.getDialog();
+                          dialog.show(applicationTemplate.manager.getPropertyValue(
+                            AppPropertyTypes.INVALID_DATA_EXCEPTION.name()),
+                            applicationTemplate.manager.getPropertyValue(
+                            AppPropertyTypes.NAME_ERROR_MSG.name())+"\n"+
+                            applicationTemplate.manager.getPropertyValue(
+                            AppPropertyTypes.ERROR_LINE.name())+processor.getLineNum());
+                            caught = true;
+                          
+                         
+        }
+               
+                  
+        catch(NullPointerException k)
+        {
+                        caught=true;
+                        ErrorDialog dialog = ErrorDialog.getDialog();
+                          dialog.show(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.toString(),
+                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.name())+
+                                  processor.getName()+"\n"+applicationTemplate.manager.getPropertyValue(
+                                AppPropertyTypes.ERROR_LINE.name())+processor.getLineNum()+
+                                          "\n");
+        }
+        catch (Exception e)
+        {
+                      
+                        caught=true;
+                      ErrorDialog dialog = ErrorDialog.getDialog();
+                      dialog.show(AppPropertyTypes.INVALID_SPACING_ERRORS.toString()
+                      ,applicationTemplate.manager.getPropertyValue(AppPropertyTypes.INVALID_SPACING_ERRORS.name())
+                      +"\n"+applicationTemplate.manager.getPropertyValue(
+                            AppPropertyTypes.ERROR_LINE.name())+processor.getLineNum());
+                       
+        }
+        if(caught)
+        {
+            processor.clear();
+            throw new Exception();
+        }
          // ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().clear();
           
           

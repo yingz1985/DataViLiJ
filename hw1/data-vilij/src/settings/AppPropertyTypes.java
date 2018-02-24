@@ -28,6 +28,7 @@ public enum AppPropertyTypes {
     IDENTICAL_NAME_EXCEPTION,
     ERROR_DUPLICATE,
     INVALID_DATA_EXCEPT,
+    NAME_ERROR_MSG,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,

@@ -11,8 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import javafx.scene.Cursor;
 import javafx.scene.control.Tooltip;
-import settings.AppPropertyTypes;
-import vilij.components.ErrorDialog;
 import vilij.templates.ApplicationTemplate;
 
 /**
@@ -34,6 +32,10 @@ public final class TSDProcessor {
         public InvalidDataNameException(String name) {
             super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
         }
+        public InvalidDataNameException()
+        {
+            
+        }
     }
 
     private Map<String, String>  dataLabels;
@@ -50,7 +52,10 @@ public final class TSDProcessor {
         counter = new AtomicInteger();
     }
     
- 
+    public String getName()
+    {
+        return name;
+    }
     public int getLineNum()
     {
         return counter.intValue();
@@ -72,17 +77,18 @@ public final class TSDProcessor {
         Stream.of(tsdString.split("\n"))
               .map(line -> Arrays.asList(line.split("\t")))
               .forEach((List<String> list) -> {
-                  try
-                  {
+                  
                       counter.incrementAndGet();
-                      name  = checkedname(list.get(0));
+                      name  = list.get(0);
+                      if (!name.startsWith("@"))
+                            throw new IllegalArgumentException();
                       String   label = list.get(1);
                       String[] pair  = list.get(2).split(",");
                       Double x = Double.parseDouble(pair[0]);
                       Double y = Double.parseDouble(pair[1]);
                       Point2D  point = new Point2D(x,y);
                       if(dataLabels.containsKey(name))    //if name already exists in hash, throw new exception
-                          throw new IllegalArgumentException();
+                          throw new NullPointerException();
                       if(counter.get()==1)
                       {
                           minX = x;
@@ -95,60 +101,8 @@ public final class TSDProcessor {
                       dataLabels.put(name, label);
                       dataPoints.put(name, point);
                       
-                  }
-                  catch(InvalidDataNameException x)
-                  {
-                          errorMessage.setLength(0);
-                          errorMessage.append(x.getClass().getSimpleName()).append(": ").append(x.getMessage());
-                    
-                          ErrorDialog dialog = ErrorDialog.getDialog();
-                          dialog.show(template.manager.getPropertyValue(
-                            AppPropertyTypes.INVALID_DATA_EXCEPTION.name()),
-                            InvalidDataNameException.NAME_ERROR_MSG+"\n"+
-                            template.manager.getPropertyValue(
-                            AppPropertyTypes.ERROR_LINE.name())+counter);
-                            
-                          
-                         
-                  }
-                  catch(NumberFormatException e)
-                 {
-                        errorMessage.setLength(0);
-                        errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
-                    
-                        ErrorDialog dialog = ErrorDialog.getDialog();
-                          dialog.show(AppPropertyTypes.NUMBER_FORMAT_EXCEPTION.toString(),
-                                  template.manager.getPropertyValue(AppPropertyTypes.NUMBER_FORMAT_EXCEPTION.name())+
-                                  "\n"+template.manager.getPropertyValue(
-                        AppPropertyTypes.ERROR_LINE.name())+counter);
-                         
-                   }
                   
-                  catch(IllegalArgumentException k)
-                  {
-                        errorMessage.setLength(0);
-                        errorMessage.append(k.getClass().getSimpleName()).append(": ").append(k.getMessage());
-                        hadAnError.set(true);
-                        ErrorDialog dialog = ErrorDialog.getDialog();
-                          dialog.show(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.toString(),
-                                  template.manager.getPropertyValue(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.name())+
-                                  name+"\n"+template.manager.getPropertyValue(
-                                AppPropertyTypes.ERROR_LINE.name())+counter+
-                                          "\n");
-                  }
-                  catch (Exception e)
-                  {
-                      errorMessage.setLength(0);
-                      errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
-                    
-                    
-                      ErrorDialog dialog = ErrorDialog.getDialog();
-                      dialog.show(AppPropertyTypes.INVALID_SPACING_ERRORS.toString()
-                      ,template.manager.getPropertyValue(AppPropertyTypes.INVALID_SPACING_ERRORS.name())
-                      +"\n"+template.manager.getPropertyValue(
-                            AppPropertyTypes.ERROR_LINE.name())+counter);
-                       
-                   }
+                  
                  
                    
         

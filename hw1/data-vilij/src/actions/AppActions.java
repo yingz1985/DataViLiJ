@@ -85,8 +85,8 @@ public final class AppActions implements ActionComponent {
         //if(((AppUI) applicationTemplate.getUIComponent()).newText()){
       
         try{
-            TSDProcessor processor = new TSDProcessor();
-            processor.processString(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
+             AppData processor = new AppData(applicationTemplate);
+             processor.loadData(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
             //process string and see if there's an error 
             
             fileChooser.setInitialFileName(file.getName());
@@ -271,8 +271,8 @@ public final class AppActions implements ActionComponent {
            if(dialog.getSelectedOption().toString().equals("YES"))   
            {
               try{
-              TSDProcessor processor = new TSDProcessor();
-              processor.processString(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
+                    AppData processor = new AppData(applicationTemplate);
+                    processor.loadData(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
                 //process string and see if there's an error 
               
               fileChooser.setInitialFileName(file.getName());
