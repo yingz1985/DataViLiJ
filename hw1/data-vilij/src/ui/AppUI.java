@@ -255,7 +255,7 @@ public final class AppUI extends UITemplate {
                 
                 try{
                     //chart.getData().clear();
-                  /*      if(loadedData && processor.lineNum()>10)
+                        if(loadedData && processor.lineNum()>10)
                     { 
                         
                         String[] result = actualText.split("\n");
@@ -268,6 +268,8 @@ public final class AppUI extends UITemplate {
                         }
                         
                         actualText = tempText;
+                    }
+                        /*
                         result = actualText.split("\n");
                         tempText="";
                         if(result.length>10){
