@@ -1,7 +1,6 @@
 package actions;
 
 import dataprocessors.AppData;
-import dataprocessors.TSDProcessor;
 import java.io.File;
 import static java.io.File.separator;
 import vilij.components.ActionComponent;
@@ -139,9 +138,12 @@ public final class AppActions implements ActionComponent {
                 ((AppUI) applicationTemplate.getUIComponent()).setActualText(text);
                // ((AppUI) applicationTemplate.getUIComponent()).getProcessor().loadData(text);
                 //processes the whole string
-                ((AppUI) applicationTemplate.getUIComponent()).LoadedData();
+                
+                
+                //((AppUI) applicationTemplate.getUIComponent()).LoadedData();
                 if(processor.lineNum()>10)
                 {
+                    ((AppUI) applicationTemplate.getUIComponent()).LoadedData();
                     ErrorDialog dialog = ErrorDialog.getDialog();
                     dialog.show(applicationTemplate.manager.getPropertyValue
                     (AppPropertyTypes.SPECIFIED_FILE.name()), 

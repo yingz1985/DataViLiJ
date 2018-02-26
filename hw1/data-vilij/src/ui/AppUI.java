@@ -3,24 +3,19 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 import static java.io.File.separator;
-import java.util.Date;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToolBar;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -177,21 +172,6 @@ public final class AppUI extends UITemplate {
 
     private void setWorkspaceActions() {
         // TODO for homework 1
-       /* for (XYChart.Series<Number, Number> s : chart.getData()) {
-            for (XYChart.Data<Number, Number> d : s.getData()) {
-
-                
-                d.getNode().setOnMouseEntered(event ->  ((AppUI)applicationTemplate.getUIComponent()).getPrimaryScene().setCursor(Cursor.MOVE));
-                  
-                //Removing class on exit
-                d.getNode().setOnMouseExited(event -> ((AppUI)applicationTemplate.getUIComponent()).getPrimaryScene().setCursor(Cursor.DEFAULT));
-          
-                
-            }
-           }
-        
-        */
-        
         
         textArea.textProperty().addListener(new ChangeListener<String>() {
 
@@ -200,7 +180,6 @@ public final class AppUI extends UITemplate {
             {
                 
                 //actualText = textArea.getText();
-                
                 
                 hasNewText = true;
                 if(!textArea.getText().isEmpty())
@@ -214,6 +193,50 @@ public final class AppUI extends UITemplate {
                     newButton.setDisable(true);
                     saveButton.setDisable(true);
                 }
+               
+                 String[] result = actualText.split("\n");
+                 if(loadedData && result.length>10)
+                    { 
+                        String[] check = textArea.getText().split("\n");
+                        if(check.length<10){
+                        
+                        result = actualText.split("\n");
+                        //System.out.println(textArea.getText()+"2");
+                        String tempText = "";
+                        tempText+= textArea.getText();
+                        
+                        if(result.length>10)
+                        {
+                            for(int i=10;i<result.length;i++)
+                            {
+                              tempText+=result[i]+"\n";
+                            }
+                        }
+                        actualText = tempText;
+                        result = actualText.split("\n");
+                        tempText="";
+                        if(result.length>10){
+                            for(int i = 0;i<10;i++)
+                                tempText+=result[i]+"\n";
+                        }
+                        
+                        else
+                        {
+                            if(result.length>1)
+                            {
+                                for(int i = 0;i<result.length;i++)
+                                 tempText+=result[i]+"\n";
+                            }
+                            else tempText = "";
+                        }
+                        textArea.setText(tempText);
+                        
+                        
+                    }
+                
+                
+                    }
+                
             }});
         
                 
@@ -232,7 +255,7 @@ public final class AppUI extends UITemplate {
                 
                 try{
                     //chart.getData().clear();
-                        if(loadedData && processor.lineNum()>10)
+                  /*      if(loadedData && processor.lineNum()>10)
                     { 
                         
                         String[] result = actualText.split("\n");
@@ -261,7 +284,7 @@ public final class AppUI extends UITemplate {
                         
                         
                     }
-                       
+                       */
                     
                     processor.clear();
                     chart.getData().clear();
