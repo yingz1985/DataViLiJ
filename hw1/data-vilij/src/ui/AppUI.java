@@ -165,9 +165,11 @@ public final class AppUI extends UITemplate {
         VBox wholeScene = new VBox();
         wholeScene.getChildren().addAll(toolBar,workSpace);
         Scene current = new Scene(wholeScene,1000,600);
-        current.getStylesheets().add("ui/chart.css");
         primaryStage.setScene(current);
-    
+        
+        current.getStylesheets().add("css/chart.css");
+       // current.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
+        
     }
 
     private void setWorkspaceActions() {

@@ -127,6 +127,7 @@ public final class TSDProcessor {
      * @param chart the specified chart
      */
     public void toChartData(XYChart<Number, Number> chart) {
+
         Set<String> labels = new HashSet<>(dataLabels.values());
         Object[] names =  dataPoints.keySet().toArray();
         
@@ -233,6 +234,7 @@ public final class TSDProcessor {
                 
                 
             }
+            
            }
           
         
