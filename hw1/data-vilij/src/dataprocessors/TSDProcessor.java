@@ -4,14 +4,11 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
-
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import javafx.scene.Cursor;
 import javafx.scene.control.Tooltip;
-import vilij.templates.ApplicationTemplate;
 
 /**
  * The data files used by this data visualization applications follow a tab-separated format, where each data point is
