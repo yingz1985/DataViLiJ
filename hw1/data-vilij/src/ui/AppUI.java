@@ -123,9 +123,9 @@ public final class AppUI extends UITemplate {
         newButton.setDisable(true);
         saveButton.setDisable(true);
         chart.getData().clear();
+        actualText = "";
         textArea.clear();
         loadedData = false;
-        actualText = "";
         scrnshotButton.setDisable(true);
         
     }
@@ -168,7 +168,7 @@ public final class AppUI extends UITemplate {
         primaryStage.setScene(current);
         
         current.getStylesheets().add("css/chart.css");
-       // current.getStylesheets().add(getClass().getResource("chart.css").toExternalForm());
+       
         
     }
 
@@ -197,6 +197,7 @@ public final class AppUI extends UITemplate {
                 }
                
                  String[] result = actualText.split("\n");
+
                  if(loadedData && result.length>10)
                     { 
                         String[] check = textArea.getText().split("\n");
@@ -352,8 +353,3 @@ public final class AppUI extends UITemplate {
         return actualText;
     }
 }
-/*
--fx-background-insets: 0, 2;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px;
-*/

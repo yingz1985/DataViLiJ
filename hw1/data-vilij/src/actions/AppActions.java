@@ -144,7 +144,9 @@ public final class AppActions implements ActionComponent {
                 if(processor.lineNum()>10)
                 {
                     ((AppUI) applicationTemplate.getUIComponent()).LoadedData();
+                    
                     ErrorDialog dialog = ErrorDialog.getDialog();
+                    
                     dialog.show(applicationTemplate.manager.getPropertyValue
                     (AppPropertyTypes.SPECIFIED_FILE.name()), 
                     applicationTemplate.manager.getPropertyValue
@@ -152,9 +154,11 @@ public final class AppActions implements ActionComponent {
                     +processor.lineNum()
                     +applicationTemplate.manager.getPropertyValue
                     (AppPropertyTypes.DATA_OVERFLOW_2.name()));
+                    
                     int i = 0;
                     text = "";
                     scanner = new Scanner(tempfile);
+                    
                     while(i<10)
                     {
                         text+=scanner.nextLine()+"\n";

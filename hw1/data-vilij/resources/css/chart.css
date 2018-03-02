@@ -66,5 +66,14 @@ and open the template in the editor.
     
 }
 
+.chart-vertical-zero-line
+{
+    -fx-stroke: transparent;
+}
+.chart-horizontal-zero-line
+{
+    -fx-stroke: transparent;
+}
+
 
 

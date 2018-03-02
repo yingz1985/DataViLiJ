@@ -68,16 +68,14 @@ public final class TSDProcessor {
      */
     public void processString(String tsdString) throws Exception {
         averageY = 0;
-        AtomicBoolean hadAnError   = new AtomicBoolean(false);
         StringBuilder errorMessage = new StringBuilder();
-        ApplicationTemplate template = new ApplicationTemplate();
-        
+
         counter = new AtomicInteger();
         //counter.getAndIncrement();  //initialized at 1 
         Stream.of(tsdString.split("\n"))
               .map(line -> Arrays.asList(line.split("\t")))
               .forEach((List<String> list) -> {
-                  
+                    
                       counter.incrementAndGet();
                       name  = list.get(0);
                       if (!name.startsWith("@"))
@@ -92,6 +90,7 @@ public final class TSDProcessor {
                       if(counter.get()==1)
                       {
                           minX = x;
+                          maxX = x;
                       }
                       if(x<minX)
                               minX = x;
@@ -100,11 +99,7 @@ public final class TSDProcessor {
                       averageY+=Double.parseDouble(pair[1]);
                       dataLabels.put(name, label);
                       dataPoints.put(name, point);
-                      
-                  
-                  
-                 
-                   
+ 
         
               }
                       
@@ -131,7 +126,8 @@ public final class TSDProcessor {
         Set<String> labels = new HashSet<>(dataLabels.values());
         Object[] names =  dataPoints.keySet().toArray();
         
-        for (String label : labels) {
+        for (String label : labels) 
+        {
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(label);
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
@@ -147,7 +143,7 @@ public final class TSDProcessor {
 
             chart.getData().add(series);
             for (XYChart.Series<Number, Number> s : chart.getData()) {
-            s.getNode().setStyle("   -fx-stroke-width: 0; ");
+            s.getNode().setStyle("-fx-stroke-width: 0; ");
             s.getNode().setStyle("-fx-stroke: transparent; ");
 
             } 
@@ -179,43 +175,8 @@ public final class TSDProcessor {
             
             serie.getNode().setStyle("-fx-stroke-width: 1px; ");
             
-           /*
-            for (XYChart.Series<Number, Number> s : chart.getData()) {
-            for (XYChart.Data<Number, Number> d : s.getData()) {
-                Tooltip.install(d.getNode(), new Tooltip(
-                        d.getXValue().toString() + "\n" +
-                                "Number Of Events : " + d.getYValue()));
-
-                //Adding class on hover
-                d.getNode().setOnMouseEntered(event -> d.getNode().getStyleClass().add("onHover"));
-
-                //Removing class on exit
-                d.getNode().setOnMouseExited(event -> d.getNode().getStyleClass().remove("onHover"));
-            }
-        }
-           
-           */ 
            
            
-           
-           /*
-           
-           for (Object name : names)
-                {
-                    if(dataPoints.get((String)name) == point)
-                    {
-                        Tooltip.install(data.getNode(),new Tooltip((String)name));
-                        
-                        
-                    }
-                }
-               
-           
-           
-           
-           
-           */
-
            
            for (XYChart.Series<Number, Number> s : chart.getData()) {
             for (XYChart.Data<Number, Number> d : s.getData()) {
