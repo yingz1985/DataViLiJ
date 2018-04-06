@@ -1,0 +1,105 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 26, 2018, 11:13:33 PM
+    Author     : Bagel
+*/
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 23, 2018, 11:44:26 AM
+    Author     : Bagel
+*/
+
+
+.chart-plot-background
+{
+    
+    -fx-border-color:black;
+    -fx-border-width:1.5px;
+    -fx-background-color:white;
+}
+
+
+.chart-horizontal-grid-lines
+{
+    -fx-stroke:transparent;
+}
+
+.chart-vertical-grid-lines
+{
+    -fx-stroke:transparent;
+}
+
+.chart-border
+{
+    -fx-outline-style: solid;
+    -fx-outline-color: black;
+}
+.axis 
+{
+   -fx-tick-label-fill: transparent ;
+   -fx-tick-length: 0;
+   
+
+   
+}
+
+.axis-tick-mark
+{
+    -fx-stroke: transparent;
+    -fx-stroke-width:0;
+
+}
+.axis-minor-tick-mark
+{
+    -fx-stroke:transparent;
+}
+
+.chart-line-symbol { 
+    -fx-fill:#ffffff;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+ 
+    
+}
+
+.chart-vertical-zero-line
+{
+    -fx-stroke: transparent;
+}
+.chart-horizontal-zero-line
+{
+    -fx-stroke: transparent;
+}
+.tool-bar
+{
+    -fx-background-color:black;
+    -fx-background-image: url("../gui/icons/Data-Visualization.gif");
+    -fx-spacing:10;
+    
+    
+}
+.toolbar-button 
+{
+    -fx-effect: dropshadow( one-pass-box , black , 8 , 0.0 , 2 , 0 );
+    -border-radius:40%;
+    -fx-background-color: cadetblue;
+    
+}
+
+.root
+{
+    -fx-background-color:cornsilk;
+    font: 15px arial, sans-serif;
+}
+
+
