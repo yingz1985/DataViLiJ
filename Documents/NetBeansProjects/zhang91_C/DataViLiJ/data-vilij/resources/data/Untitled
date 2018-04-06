@@ -1,9 +1,0 @@
-run:
-labe4lael4labl6lbel3lael1lbel2abel1label1abel2label2label3label4label5label6label7label8label9goodApr 04, 2018 9:54:53 PM javafx.scene.CssStyleHelper calculateValue
-WARNING: Caught 'java.lang.ClassCastException: java.lang.String cannot be cast to javafx.scene.paint.Color' while converting value for '-fx-background-color' from rule '*.scroll-bar:vertical' in stylesheet jar:file:/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/jre/lib/ext/jfxrt.jar!/com/sun/javafx/scene/control/skin/modena/modena.bss
-Apr 04, 2018 9:54:53 PM javafx.scene.CssStyleHelper calculateValue
-WARNING: Caught 'java.lang.ClassCastException: java.lang.String cannot be cast to javafx.scene.paint.Color' while converting value for '-fx-background-color' from rule '*.scroll-bar:horizontal' in stylesheet jar:file:/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/jre/lib/ext/jfxrt.jar!/com/sun/javafx/scene/control/skin/modena/modena.bss
-Apr 04, 2018 9:54:55 PM javafx.scene.CssStyleHelper calculateValue
-WARNING: Caught 'java.lang.ClassCastException: java.lang.String cannot be cast to javafx.scene.paint.Color' while converting value for '-fx-background-color' from rule '*.scroll-bar:vertical' in stylesheet jar:file:/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/jre/lib/ext/jfxrt.jar!/com/sun/javafx/scene/control/skin/modena/modena.bss
-Apr 04, 2018 9:54:55 PM javafx.scene.CssStyleHelper calculateValue
-WARNING: Caught 'java.lang.ClassCastException: java.lang.String cannot be cast to javafx.scene.paint.Color' while converting value for '-fx-background-color' from rule '*.scroll-bar:horizontal' in stylesheet jar:file:/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/jre/lib/ext/jfxrt.jar!/com/sun/javafx/scene/control/skin/modena/modena.bss
