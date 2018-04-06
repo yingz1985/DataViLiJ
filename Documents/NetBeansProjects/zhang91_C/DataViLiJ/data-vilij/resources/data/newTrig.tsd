@@ -1,0 +1,12 @@
+@instance1	label1	10,10
+@instance2	label3	20,20
+@Instance12	label5	10.5,2.2
+@Instance22	label4	20.2,3
+@Instance32	label6	2.48,2.9
+@Instance42	label4	-11,9.42
+@Instance52	label3	10.5,-12.2
+@Instance62	label2	11.8,-13
+@Instance72	label1	-2.5,-14.9
+@Instance82	label2	10,19.12
+@Instance92	label1	11.5,2.2
+@Instance101	label1	11.3,3

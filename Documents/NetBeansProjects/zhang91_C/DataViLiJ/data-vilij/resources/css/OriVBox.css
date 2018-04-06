@@ -1,0 +1,32 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 4, 2018, 2:26:53 PM
+    Author     : Bagel
+*/
+
+.button 
+{
+    -fx-border-color: white;
+    -fx-text-fill: white;
+    -fx-background-color: cadetblue;
+    -fx-alignment:CENTER;
+    -fx-background-radius: 3px,3px,2px,1px;
+    
+}
+.button:pressed
+{
+    -fx-background-color:#99ccff;
+    -fx-scale-y: 0.9;
+    -fx-scale-x: 0.9;
+}
+.label
+{
+    -fx-border-color: white;
+    -fx-text-fill:black;
+    -fx-background-color:gray;
+    -fx-alignment:CENTER;
+}
