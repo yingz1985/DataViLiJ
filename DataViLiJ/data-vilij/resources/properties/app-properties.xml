@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!-- This XML file allows us to easily customize the visual aesthetics of the user interface. Note that this properties
 file is only for the standard high-level controls for an application, so it does not include properties meant for any
 functionality within the main workspace. -->
@@ -70,8 +69,8 @@ functionality within the main workspace. -->
         <property name="RANDOM_CLUSTER" value = "Random Clustering"/>
 
         <!-- APPLICATION-STYLE STRINGS -->
-        <property name="EDIT" value = "-fx-background-color: green; -fx-text-fill:black; -fx-background-radius: 50%;"/>
-        <property name="DONE" value = "-fx-background-color: grey; -fx-text-fill:black; -fx-background-radius: 50%;"/>
+        <property name="EDIT" value = "-fx-background-color: yellowgreen; -fx-text-fill:black; -fx-background-radius: 40%;"/>
+        <property name="DONE" value = "-fx-background-color: grey; -fx-text-fill:black; -fx-background-radius: 40%;"/>
     
     </property_list>
     <property_options_list/>
