@@ -22,8 +22,9 @@ and open the template in the editor.
 .label
 {
 
-    -fx-text-fill: darkorchid;
-    -fx-font-size: 13pt;
+    -fx-text-fill: #ff6666;
+    -fx-font-size: 15pt;
+    -fx-font-family:Didot;
 }
 
 .text-area {

@@ -27,5 +27,12 @@ and open the template in the editor.
 .root
 {
     -fx-background-color: bisque;
+    -fx-background-image: url("../gui/icons/configBackground.jpg");
+    
+}
+.button
+{
+    -fx-background-color: #f0dddd;
+    -fx-border-radius:20%;
     
 }

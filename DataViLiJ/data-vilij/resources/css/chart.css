@@ -88,6 +88,11 @@ and open the template in the editor.
     
     
 }
+.toolbar-button:pressed
+{
+    -fx-scale-y: 0.9;
+    -fx-scale-x: 0.9;
+}
 .toolbar-button 
 {
     -fx-effect: dropshadow( one-pass-box , black , 8 , 0.0 , 2 , 0 );
@@ -98,7 +103,10 @@ and open the template in the editor.
 
 .root
 {
+    -fx-background-image: url("../gui/icons/configBackground1.png");
+    
     -fx-background-color:cornsilk;
+    -fx-background-image: url("../gui/icons/pattern.jpg");
     font: 15px arial, sans-serif;
 }
 
