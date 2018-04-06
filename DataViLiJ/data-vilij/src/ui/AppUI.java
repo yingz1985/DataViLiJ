@@ -439,10 +439,12 @@ public final class AppUI extends UITemplate {
        Label alg = new Label(applicationTemplate.manager.getPropertyValue(
           AppPropertyTypes.ALG_TYPE.name()));
        cluster.setMinSize(clas.getWidth(), clas.getHeight());
-       cluster.setMinWidth(120);
-       clas.setMinWidth(120);
-       alg.setMinWidth(120);
-       alg.setMinHeight(30);
+       cluster.setMinWidth(140);
+       cluster.setMinHeight(30);
+       clas.setMinWidth(140);
+       clas.setMinHeight(30);
+       alg.setMinWidth(140);
+       alg.setMinHeight(40);
        clas.setOnAction(e-> {
             
             ClassContainer.setAlg(clas.getText());;
