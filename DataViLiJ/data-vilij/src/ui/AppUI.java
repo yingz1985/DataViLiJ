@@ -653,6 +653,8 @@ public final class AppUI extends UITemplate {
     }
     public String returnActualText()
     {
+        if(!loadedData)
+            return textArea.getText();
         return actualText;
     }
 }
