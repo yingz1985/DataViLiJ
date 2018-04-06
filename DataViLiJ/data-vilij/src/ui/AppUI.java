@@ -51,9 +51,9 @@ public final class AppUI extends UITemplate {
     private LineChart<Number, Number>    chart;          // the chart where data will be displayed
     private Button                       runButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
-    private boolean                      hasNewText = true ;     // whether or not the text area has any new data since last display
+    private boolean                      hasNewText;     // whether or not the text area has any new data since last display
     private Button                       done;
-    private boolean                      loadedData = false;
+    private boolean                      loadedData;
     private AppData                      processor;
     private String                       actualText = "";//actual text is used when loading from file 
     private ImageView                    emptyChart;

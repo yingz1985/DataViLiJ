@@ -110,6 +110,7 @@ public final class AppActions implements ActionComponent {
               writer.close();
               saved = true;
               ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
+              ((AppUI)applicationTemplate.getUIComponent()).setNewText();
               }
               //disables the save button
               
