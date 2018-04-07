@@ -253,7 +253,7 @@ public final class AppUI extends UITemplate {
         
                 description.setMaxHeight(140);
                 description.setMaxWidth(330);
-                description.setPrefRowCount(5);
+                description.setPrefRowCount(7);
                 description.getStylesheets().add("css/GridPane.css");
                 description.setEditable(false);
         

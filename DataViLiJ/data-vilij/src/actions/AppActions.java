@@ -3,15 +3,17 @@ package actions;
 import dataprocessors.AppData;
 import java.io.File;
 import static java.io.File.separator;
+import java.io.FileNotFoundException;
 import vilij.components.ActionComponent;
 import vilij.templates.ApplicationTemplate;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
@@ -37,6 +39,8 @@ public final class AppActions implements ActionComponent {
     //private String fileName ;
     private File file;
     private FileChooser fileChooser;
+    private String filePath;
+    private boolean savedOnce;
     //fileName is initialized to empty string
     
     
@@ -44,14 +48,14 @@ public final class AppActions implements ActionComponent {
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
        // fileName = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DEFAULT_FILE_NAME.name());
-        String filePath =  String.join(separator,
+        filePath =  String.join(separator,
                                              applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RESOURCES_RESOURCE_PATH.name()),
                                              applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_RESOURCE_PATH.name()));
 
         dataFilePath = Paths.get(filePath);
-              
+             
         file = new File(dataFilePath.toString());   
-        
+        dataFilePath = Paths.get(file.toURI());
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter save = new FileChooser.ExtensionFilter
                     (applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT_DESC.name()),
@@ -69,9 +73,10 @@ public final class AppActions implements ActionComponent {
            
              if(promptToSave())
             {
+                savedOnce = false;
                 saved = false;
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
-                 file = new File(dataFilePath.toString());
+                 file = new File(Paths.get(filePath).toString());
                 ((AppUI) applicationTemplate.getUIComponent()).setLeftPane();
                 loaded = false;
                 ((AppUI) applicationTemplate.getUIComponent()).newPage();
@@ -89,22 +94,22 @@ public final class AppActions implements ActionComponent {
     public void handleSaveRequest() {
         // TODO: NOT A PART OF HW 1
         //if(((AppUI) applicationTemplate.getUIComponent()).newText()){
-      
+      if(!savedOnce){
         try{
              AppData processor = new AppData(applicationTemplate);
              processor.loadData(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
             //process string and see if there's an error 
             
             fileChooser.setInitialFileName(file.getName());
-               
+            
              File  tempfile = fileChooser.showSaveDialog((
                       (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
-
+                
               if (tempfile!=null) {
                   file = tempfile;
                 PrintWriter writer = new PrintWriter(file);
               //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
-              
+              dataFilePath= Paths.get(file.toURI());
               
               writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
               writer.close();
@@ -112,6 +117,7 @@ public final class AppActions implements ActionComponent {
               ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
               ((AppUI)applicationTemplate.getUIComponent()).setNewText();
               }
+              savedOnce = true;
               //disables the save button
               
         }
@@ -120,7 +126,29 @@ public final class AppActions implements ActionComponent {
                    //throw new Exception();
                  // System.out.println(x.toString());
               }
-       
+      }
+      else
+      {
+          PrintWriter writer;
+          try
+          {
+              writer = new PrintWriter(file);
+              dataFilePath= Paths.get(file.toURI());
+              
+              writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
+              writer.close();
+              saved = true;
+              ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
+              ((AppUI)applicationTemplate.getUIComponent()).setNewText();
+              
+          }
+          catch (FileNotFoundException ex)
+          {
+             
+          }
+              //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
+              
+      }
     }
     //}
     
@@ -136,6 +164,9 @@ public final class AppActions implements ActionComponent {
             file = tempfile;
             try
             {
+                
+                dataFilePath = Paths.get(file.toURI());
+                
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
                 Scanner scanner = new Scanner(tempfile);
                 while(scanner.hasNextLine())
@@ -151,10 +182,13 @@ public final class AppActions implements ActionComponent {
                     label+="\n"+"-"+(String)s.toString();
                    // System.out.print(s.toString());
                 }
+                System.out.println(file.toURI().getPath());
+                System.out.println(file.toURI().toString());
+                System.out.println(dataFilePath.toFile().getPath());
                
                 description.setText(processor.getProcessor().getLineNum()+" instances with "
-                    +processor.getProcessor().returnLabels().length+ " labels from "+file.getName()+
-                    ". \nThe labels are:"+label);
+                    +processor.getProcessor().returnLabels().length+ " labels from \n"+dataFilePath.toString()
+                    +". \nThe labels are:"+label);
 
                 ((AppUI)applicationTemplate.getUIComponent()).setDescription(description);
                 

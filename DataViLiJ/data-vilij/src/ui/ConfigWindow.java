@@ -70,6 +70,7 @@ public class ConfigWindow
     {
         config = container;
     }
+    
     public void close()
     {
         stage.close();
@@ -85,6 +86,8 @@ public class ConfigWindow
         }
         
     }
+    //if closed at least once, that means the user has changed config
+    //if closed without configuring, the algorithm filsl the default data
     public boolean closed()
     {
         return closed;
