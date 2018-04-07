@@ -83,6 +83,8 @@ public class ConfigWindow
             updateText.setText(String.valueOf(defaultIt));
             num.setText(String.valueOf(defaultLabels));
             continuous.setSelected(toCont);
+            
+            
         }
         
     }
@@ -228,6 +230,7 @@ public class ConfigWindow
         {
             closed=true;
             checkConfig();
+            ((AppUI)app.getUIComponent()).enableRun();
             stage.close();
             
         });

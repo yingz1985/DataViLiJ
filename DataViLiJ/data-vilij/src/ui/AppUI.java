@@ -6,6 +6,7 @@ import static java.io.File.separator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -269,7 +270,7 @@ public final class AppUI extends UITemplate {
         
         description.setMaxHeight(140);
         description.setMaxWidth(330);
-        description.setPrefRowCount(5);
+        description.setPrefRowCount(7);
         description.getStylesheets().add("css/GridPane.css");
         description.setEditable(false);
         
@@ -370,8 +371,9 @@ public final class AppUI extends UITemplate {
                                              applicationTemplate.manager.getPropertyValue(ICONS_RESOURCE_PATH.name())),
             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_ICON.name()));
 
-        runButton = setToolbarButton(runPath,AppPropertyTypes.RUN_TOOLTIP.name(),false);
-        
+        runButton = setToolbarButton(runPath,AppPropertyTypes.RUN_TOOLTIP.name(),true);
+        pane.setBottom(runButton);
+        runButton.setVisible(false);
         
         Label title = new Label(chosen);
         HBox box = new HBox();
@@ -395,7 +397,7 @@ public final class AppUI extends UITemplate {
             ((ConfigWindow)o).getButton().setOnAction(e->
             {
                 ((ConfigWindow)o).init();
-                
+
             });
         }
         
@@ -404,6 +406,8 @@ public final class AppUI extends UITemplate {
             ((RadioButton)o).setOnAction(e->
             {
                 currentContainer.getWindow((RadioButton)o).getButton().setDisable(false);
+                runButton.setVisible(true);
+
             });
         }
         
@@ -415,13 +419,19 @@ public final class AppUI extends UITemplate {
         
          
         pane.setTop(title);
+
         pane.setCenter(box);
-        pane.setBottom(runButton);
+        BorderPane.setAlignment(box, Pos.TOP_CENTER);
+        //pane.setBottom(runButton);
         BorderPane.setMargin(box, new Insets(10));
         pane.setBorder(new Border(new BorderStroke(Color.ANTIQUEWHITE, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(3))));
         pane.getStylesheets().add("css/GridPane.css");
         return pane;
          
+    }
+    public void enableRun()
+    {
+        runButton.setDisable(false);
     }
     public void setupButtons()
     {

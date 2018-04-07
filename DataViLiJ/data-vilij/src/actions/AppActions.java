@@ -182,9 +182,7 @@ public final class AppActions implements ActionComponent {
                     label+="\n"+"-"+(String)s.toString();
                    // System.out.print(s.toString());
                 }
-                System.out.println(file.toURI().getPath());
-                System.out.println(file.toURI().toString());
-                System.out.println(dataFilePath.toFile().getPath());
+                
                
                 description.setText(processor.getProcessor().getLineNum()+" instances with "
                     +processor.getProcessor().returnLabels().length+ " labels from \n"+dataFilePath.toString()
