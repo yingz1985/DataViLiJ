@@ -19,6 +19,7 @@ public enum AppPropertyTypes {
     CONFIG_ICON,
     RUN_ICON,
     DONE_ICON,
+    CLOSE_ICON,
 
     /* tooltips for user interface buttons */
     SCREENSHOT_TOOLTIP,

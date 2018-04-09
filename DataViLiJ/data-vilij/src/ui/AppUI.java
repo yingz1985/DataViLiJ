@@ -61,13 +61,12 @@ public final class AppUI extends UITemplate {
     private BorderPane                   workSpace;
     private BorderPane                   leftPane = new BorderPane();
     private Label                        description;
-    //private Button                       config;    //click to set up configuration
     private AlgorithmContainer           ClusterContainer; 
     private AlgorithmContainer           ClassContainer;
     private AlgorithmContainer           currentContainer;
     private Button                       clas;
     private Button                       cluster;
-    //private ConfigWindow                 window;
+    private ToggleGroup                  group;
     
     public void disableClassification()
     {
@@ -234,6 +233,7 @@ public final class AppUI extends UITemplate {
     public void newPage()
     {
         leftPane.setBottom(null);
+        leftPane.setCenter(null);
     }
     
     public void setDescription()
@@ -262,7 +262,7 @@ public final class AppUI extends UITemplate {
              leftPane.setCenter(pane);
                 //((AppUI)applicationTemplate.getUIComponent()).setDescription(description);
     }
-    
+
     public void setDescription(TextArea description)
     {
         Pane pane = new Pane();
@@ -312,7 +312,7 @@ public final class AppUI extends UITemplate {
                     }
                     catch (Exception ex)
                     {
-                        
+                        newPage();
                     }
                     if(processor.getProcessor().hasNull() || processor.getProcessor().returnLabels().length!=2)
                 {
@@ -343,9 +343,12 @@ public final class AppUI extends UITemplate {
         workSpace.setLeft(leftPane);
         
     }
+    /*
+    populated choice pane with radio buttons
+    */
     public void populateContainers()
     {
-        ToggleGroup group = new ToggleGroup();
+        group = new ToggleGroup();
         RadioButton c0 = new RadioButton(applicationTemplate.manager.getPropertyValue(
           AppPropertyTypes.RANDOM_CLUSTER.name()));
         RadioButton c1 = new RadioButton(applicationTemplate.manager.getPropertyValue(
@@ -359,12 +362,17 @@ public final class AppUI extends UITemplate {
         
     }
 
-            
+    /**
+     * <dt>Precondition:
+     *  <dd> User has clicked on one of the algorithm types in the algorithm pane
+     * @param chosen chosen algorithm type from the algorithm pane event action
+     * @return  returns a border pane object to be set as the node on the lower left of the workspace
+     */
     public BorderPane choicePane(String chosen)
     {
         
         BorderPane pane = new BorderPane();
-
+        group.selectToggle(null);
         String runPath = String.join(
             separator, "/" + String.join(separator,
                                              applicationTemplate.manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
@@ -397,6 +405,7 @@ public final class AppUI extends UITemplate {
             ((ConfigWindow)o).getButton().setOnAction(e->
             {
                 ((ConfigWindow)o).init();
+                
 
             });
         }
@@ -440,6 +449,15 @@ public final class AppUI extends UITemplate {
         cluster = new Button(applicationTemplate.manager.getPropertyValue(
           AppPropertyTypes.CLUSTERING.name()));
     }
+    /**
+     * <dt> Precondition:
+     *  <dd> Data (either loaded or entered by user) must be valid
+     * Method contains the initial UI for choosing an algorithm 
+     * 
+     * <dt> Postcondition:
+     *  <dd> One of the two algorithms have been selected 
+     * @return returns a vbox object for the lower left of the workspace
+     */
     public VBox algorithmPane()
     {
         VBox pane = new VBox();
@@ -457,7 +475,7 @@ public final class AppUI extends UITemplate {
        alg.setMinHeight(40);
        clas.setOnAction(e-> {
             
-            ClassContainer.setAlg(clas.getText());;
+            ClassContainer.setAlg(clas.getText());
             
                 
                 if(!loadedData)
@@ -507,6 +525,7 @@ public final class AppUI extends UITemplate {
         return pane;
         
     }
+    
     private void setWorkspaceActions() {
         // TODO for homework 1
         

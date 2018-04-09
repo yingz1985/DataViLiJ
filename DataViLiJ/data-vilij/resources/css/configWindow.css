@@ -32,7 +32,9 @@ and open the template in the editor.
 }
 .button
 {
-    -fx-background-color: #f0dddd;
+    -fx-background-color:  #ccff99;
     -fx-border-radius:20%;
+    -fx-pref-height: 35px;
+    -fx-pref-width: 50px;
     
 }

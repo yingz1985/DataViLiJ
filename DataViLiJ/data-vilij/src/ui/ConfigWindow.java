@@ -19,7 +19,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import runningEvents.AlgorithmContainer;
@@ -50,6 +52,7 @@ public class ConfigWindow
     private Button  done;
     private boolean closed;
     private Button button;
+    private Button close;
     
     
     static double xOffset;
@@ -75,6 +78,14 @@ public class ConfigWindow
     {
         stage.close();
     }
+    /**
+     * <dt>Precondition:
+     *  <dd> user has done setting up configuration at least once
+     * 
+     * <dt>Postcondition:
+     *  <dd> text fields are populated by default values entered by the user
+     *  <dd> and will restore the next time user opens the configuration window
+     */
     public void setupVals()
     {
         if(closed)
@@ -215,17 +226,29 @@ public class ConfigWindow
             app.manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
              app.manager.getPropertyValue(ICONS_RESOURCE_PATH.name())),
             app.manager.getPropertyValue(AppPropertyTypes.DONE_ICON.name()))))));
-        
+        close =  new Button(null, new ImageView(new Image(getClass().getResourceAsStream(
+        String.join(
+            separator, "/" + String.join(separator,
+            app.manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+             app.manager.getPropertyValue(ICONS_RESOURCE_PATH.name())),
+            app.manager.getPropertyValue(AppPropertyTypes.CLOSE_ICON.name()))))));
+        HBox buttons = new HBox(5);
+        buttons.getChildren().addAll(close,done);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
         //pane.addRow(0, title);
         pane.addRow(0, max,maxText);
         pane.addRow(1, update,updateText);
         pane.addRow(3, continuousL,continuous);
         //pane.addRow(3, new Label());
-        pane.add(done, 1, 4);
-        GridPane.setHalignment(done, HPos.RIGHT);
-
+        pane.add(buttons, 1, 4);
+        GridPane.setHalignment(buttons, HPos.RIGHT);
+        
         pane.setHgap(30);
         root.setCenter(pane);
+        close.setOnAction(e-> 
+        {
+            stage.close();
+        });
         done.setOnAction(e->
         {
             closed=true;
@@ -234,6 +257,7 @@ public class ConfigWindow
             stage.close();
             
         });
+        
         pane.setMinSize(350, 250);
         root.setManaged(false);
         Scene scene = new Scene(root,400,300);
@@ -245,7 +269,7 @@ public class ConfigWindow
         title.setStyle("-fx-font-size:18pt; -fx-font-family:Didot;");
         //title.setFont(new Font("Didot",25));
         stage.setScene(scene);
-        
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle( app.manager.getPropertyValue(AppPropertyTypes.CONFIG_WINDOW_TITLE.name()) );
         //stage.show();
