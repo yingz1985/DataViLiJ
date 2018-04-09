@@ -15,6 +15,7 @@ functionality within the main workspace. -->
         <property name="RUN_ICON" value="run.png"/>
         <property name="DONE_ICON" value="done.png"/>
         <property name ="CLOSE_ICON" value ="close.png"/>
+        <property name="BACK_ICON" value = "back.png"/>
 
         <!-- TOOLTIPS FOR BUTTONS -->
         <property name="SCREENSHOT_TOOLTIP" value="Screenshot"/> <!-- will print current view of image to a file -->
@@ -22,6 +23,7 @@ functionality within the main workspace. -->
         <property name="CONFIG_TOOLTIP" value="Configure algorithm"/>
         <property name="RUN_TOOLTIP" value = "Run algorithm"/>
         <property name="DONE_TOOLTIP" value = "Done"/>
+        <property name="BACK_TOOLTIP" value = "Go back to the previous page"/>
         
         <!-- WARNING MESSAGES -->
         <property name="EXIT_WHILE_RUNNING_WARNING"

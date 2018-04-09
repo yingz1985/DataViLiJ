@@ -303,7 +303,7 @@ public class ConfigWindow
             app.manager.getPropertyValue(AppPropertyTypes.CONFIG_ICON.name()));
         
         button = new Button(null, new ImageView(new Image(getClass().getResourceAsStream(configPath)))); 
-        button.setTooltip(new Tooltip(AppPropertyTypes.CONFIG_TOOLTIP.name()));
+        button.setTooltip(new Tooltip(app.manager.getPropertyValue(AppPropertyTypes.CONFIG_TOOLTIP.name())));
         //note that currently only two buttons are enabled 
         button.setDisable(true);
         

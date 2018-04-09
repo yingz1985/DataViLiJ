@@ -296,6 +296,8 @@ public final class AppUI extends UITemplate {
                      done.setText(AppPropertyTypes.EDIT.name());
                      done.setStyle(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EDIT.name()));
                      textArea.setDisable(false);
+                     newPage(); //all previously available algorithm now dissappears 
+                                //label is not available either since user has decided to edit again
                 }
                 else
                 {
@@ -378,11 +380,23 @@ public final class AppUI extends UITemplate {
                                              applicationTemplate.manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
                                              applicationTemplate.manager.getPropertyValue(ICONS_RESOURCE_PATH.name())),
             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_ICON.name()));
-
-        runButton = setToolbarButton(runPath,AppPropertyTypes.RUN_TOOLTIP.name(),true);
-        pane.setBottom(runButton);
+        String backPath = String.join(
+            separator, "/" + String.join(separator,
+                                             applicationTemplate.manager.getPropertyValue(GUI_RESOURCE_PATH.name()),
+                                             applicationTemplate.manager.getPropertyValue(ICONS_RESOURCE_PATH.name())),
+            applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK_ICON.name()));
+        runButton = setToolbarButton(runPath,applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_TOOLTIP.name()),true);
+        Button backButton = setToolbarButton(backPath,applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK_TOOLTIP.name()),false);
+        HBox bot = new HBox(100);
+        bot.getChildren().addAll(backButton,runButton);
+        bot.setAlignment(Pos.CENTER_LEFT);
+        pane.setBottom(bot);
         runButton.setVisible(false);
-        
+        backButton.setOnAction(e->
+        {
+            leftPane.setBottom(algorithmPane());
+        }     
+        );
         Label title = new Label(chosen);
         HBox box = new HBox();
 

@@ -243,6 +243,8 @@ public final class AppActions implements ActionComponent {
             catch(Exception x)
             {
                 //System.out.println(x.getCause());
+                ((AppUI)applicationTemplate.getUIComponent()).initialize();
+                //if data is loaded incorrectly, the page is cleared out
             }
         }
         

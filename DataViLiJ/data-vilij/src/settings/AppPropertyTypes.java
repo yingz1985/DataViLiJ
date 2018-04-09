@@ -20,6 +20,7 @@ public enum AppPropertyTypes {
     RUN_ICON,
     DONE_ICON,
     CLOSE_ICON,
+    BACK_ICON,
 
     /* tooltips for user interface buttons */
     SCREENSHOT_TOOLTIP,
@@ -29,6 +30,7 @@ public enum AppPropertyTypes {
     CONFIG_TOOLTIP,
     RUN_TOOLTIP,
     DONE_TOOLTIP,
+    BACK_TOOLTIP,
 
     /* error messages */
     RESOURCE_SUBDIR_NOT_FOUND,
