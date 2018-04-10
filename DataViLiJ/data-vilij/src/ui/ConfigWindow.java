@@ -133,7 +133,7 @@ public class ConfigWindow
             try
             {
                 int defaultLabel = Integer.valueOf(num.getText());
-                if(defaultLabel>0)
+                if(defaultLabel>0&& defaultLabel<5)
                     defaultLabels = defaultLabel;
             
             }
@@ -146,6 +146,10 @@ public class ConfigWindow
             toCont = true;
     }
     
+    /**
+     * at window opening, checks whether the algorithm type is clustering or 
+     * classification, and prompt corresponding window to open.
+     */
     public void init()
     {
         
@@ -188,7 +192,10 @@ public class ConfigWindow
         
         
     }
-    
+    /**
+     * initializes the stage for classification type configuration window
+     * note: does not prompt user for the number of labels 
+     */
     public void initClass()
     {
         stage = new Stage();
@@ -274,7 +281,9 @@ public class ConfigWindow
         stage.setTitle( app.manager.getPropertyValue(AppPropertyTypes.CONFIG_WINDOW_TITLE.name()) );
         //stage.show();
     }
-    
+    /**
+     * allows user to draw configuration window (undecorated and always on top)
+     */
     public void dragScene()
     {
         
@@ -292,7 +301,9 @@ public class ConfigWindow
             }
         );
     }
-    
+    /**
+     * initializes button for entering configuration window 
+     */
     private void setConfigButton()
     {
 
@@ -305,9 +316,14 @@ public class ConfigWindow
         button = new Button(null, new ImageView(new Image(getClass().getResourceAsStream(configPath)))); 
         button.setTooltip(new Tooltip(app.manager.getPropertyValue(AppPropertyTypes.CONFIG_TOOLTIP.name())));
         //note that currently only two buttons are enabled 
-        button.setDisable(true);
+        //button.setDisable(true);
         
     }
+    /**
+     * Every config window to be prompted by the user is triggered by the gear button
+     * The buttons are unique to each window, but have the same outlooks 
+     * @return returns a config button object 
+     */
     public Button getButton()
     {  
         return button;

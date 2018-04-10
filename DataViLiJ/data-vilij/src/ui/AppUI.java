@@ -397,6 +397,14 @@ public final class AppUI extends UITemplate {
             leftPane.setBottom(algorithmPane());
         }     
         );
+        //runButton enabled only when config had been set 
+        runButton.setOnAction(e->
+        {
+            if(!currentContainer.getWindow((RadioButton)group.getSelectedToggle()).closed())
+            {
+                currentContainer.getWindow((RadioButton)group.getSelectedToggle()).init();
+            }
+        });
         Label title = new Label(chosen);
         HBox box = new HBox();
 
@@ -430,6 +438,10 @@ public final class AppUI extends UITemplate {
             {
                 currentContainer.getWindow((RadioButton)o).getButton().setDisable(false);
                 runButton.setVisible(true);
+                if(currentContainer.getWindow((RadioButton)o).closed())
+                {
+                    enableRun();
+                }
 
             });
         }
