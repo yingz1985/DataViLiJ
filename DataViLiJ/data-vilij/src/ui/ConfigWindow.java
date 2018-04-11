@@ -315,6 +315,8 @@ public class ConfigWindow
         
         button = new Button(null, new ImageView(new Image(getClass().getResourceAsStream(configPath)))); 
         button.setTooltip(new Tooltip(app.manager.getPropertyValue(AppPropertyTypes.CONFIG_TOOLTIP.name())));
+        button.setMinHeight(30);
+        //button.setMaxHeight(25);
         //note that currently only two buttons are enabled 
         //button.setDisable(true);
         

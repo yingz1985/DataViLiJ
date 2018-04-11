@@ -353,10 +353,11 @@ public final class AppUI extends UITemplate {
         group = new ToggleGroup();
         RadioButton c0 = new RadioButton(applicationTemplate.manager.getPropertyValue(
           AppPropertyTypes.RANDOM_CLUSTER.name()));
+        c0.setPrefHeight(30);
         RadioButton c1 = new RadioButton(applicationTemplate.manager.getPropertyValue(
           AppPropertyTypes.RANDOM_CLASS.name()));
-        cluster.setMinHeight(25);
-        clas.setMinHeight(25);
+        c1.setPrefHeight(30);
+
         ClassContainer.addType(c1, new ConfigWindow(applicationTemplate,ClassContainer));
         ClusterContainer.addType(c0, new ConfigWindow(applicationTemplate,ClusterContainer));
         c0.setToggleGroup(group);
@@ -407,6 +408,8 @@ public final class AppUI extends UITemplate {
         });
         Label title = new Label(chosen);
         HBox box = new HBox();
+        box.setPrefHeight(30);
+        
 
         if(chosen.equals("Classification"))
         {
@@ -442,6 +445,8 @@ public final class AppUI extends UITemplate {
                 {
                     enableRun();
                 }
+                else
+                    runButton.setDisable(true);
 
             });
         }

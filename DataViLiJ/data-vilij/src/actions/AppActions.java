@@ -79,6 +79,7 @@ public final class AppActions implements ActionComponent {
                 loaded = false;
                 ((AppUI) applicationTemplate.getUIComponent()).newPage();
              }
+           
        }
        catch(Exception x)
        {
@@ -198,7 +199,7 @@ public final class AppActions implements ActionComponent {
                 {
                     
                     
-                    ErrorDialog dialog = ErrorDialog.getDialog();
+                   /* ErrorDialog dialog = ErrorDialog.getDialog();
                     
                     dialog.show(applicationTemplate.manager.getPropertyValue
                     (AppPropertyTypes.SPECIFIED_FILE.name()), 
@@ -207,7 +208,7 @@ public final class AppActions implements ActionComponent {
                     +processor.lineNum()
                     +applicationTemplate.manager.getPropertyValue
                     (AppPropertyTypes.DATA_OVERFLOW_2.name()));
-                    
+                    */
                     int i = 0;
                     text = "";
                     scanner = new Scanner(tempfile);
@@ -331,6 +332,7 @@ public final class AppActions implements ActionComponent {
         if(((AppUI)applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty())
             return true;
         if(((AppUI) applicationTemplate.getUIComponent()).newText() && !loaded) saved = false;
+        
         if(!saved){
 
         //returns true if the eventHandler should keep executing
@@ -346,9 +348,32 @@ public final class AppActions implements ActionComponent {
            return true;
        }
        else
-       {
+       { 
            if(dialog.getSelectedOption().toString().equals("YES"))   
            {
+               if(savedOnce)
+               {
+                      PrintWriter writer;
+                 try
+                {
+                     writer = new PrintWriter(file);
+                    dataFilePath= Paths.get(file.toURI());
+              
+                    writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
+                    writer.close();
+                    saved = true;
+                    ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
+                    ((AppUI)applicationTemplate.getUIComponent()).setNewText();
+                    return true;
+              
+                }
+                catch (FileNotFoundException ex)
+                {
+             
+                }
+              }
+              else
+               {
               try{
                     AppData processor = new AppData(applicationTemplate);
                     processor.loadData(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
@@ -371,6 +396,7 @@ public final class AppActions implements ActionComponent {
                    //throw new Exception();
                   //System.out.println(x.toString());
               }
+               }
            }
          
        }}

@@ -17,12 +17,7 @@ and open the template in the editor.
     -fx-background-radius: 3px,3px,2px,1px;
     
 }
-.button:pressed
-{
-    -fx-background-color:#99ccff;
-    -fx-scale-y: 0.9;
-    -fx-scale-x: 0.9;
-}
+
 .label
 {
     -fx-border-color: white;
