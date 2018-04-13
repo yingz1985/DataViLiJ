@@ -252,9 +252,9 @@ public final class AppUI extends UITemplate {
                 Pane pane = new Pane();
                 pane.setMinSize(300, 170);
         
-                description.setMaxHeight(140);
+                description.setMaxHeight(155);
                 description.setMaxWidth(330);
-                description.setPrefRowCount(7);
+                description.setPrefRowCount(10);
                 description.getStylesheets().add("css/GridPane.css");
                 description.setEditable(false);
         
@@ -268,9 +268,9 @@ public final class AppUI extends UITemplate {
         Pane pane = new Pane();
         pane.setMinSize(300, 170);
         
-        description.setMaxHeight(140);
+        description.setMaxHeight(155);
         description.setMaxWidth(330);
-        description.setPrefRowCount(7);
+        description.setPrefRowCount(10);
         description.getStylesheets().add("css/GridPane.css");
         description.setEditable(false);
         

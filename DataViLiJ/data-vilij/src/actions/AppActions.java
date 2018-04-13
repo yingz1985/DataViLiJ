@@ -182,9 +182,21 @@ public final class AppActions implements ActionComponent {
                    // System.out.print(s.toString());
                 }
                 
+               String data = dataFilePath.toString();
+               String path = "";
+               for(int i = 0;i<data.length();i++)
+               {
+                   path+=data.charAt(i);
+                   if(i>1){
+                    if(i%40==0)
+                    {
+                       path+="\n";
+                    }
+                   }
+               }
                
                 description.setText(processor.getProcessor().getLineNum()+" instances with "
-                    +processor.getProcessor().returnLabels().length+ " labels from \n"+dataFilePath.toString()
+                    +processor.getProcessor().returnLabels().length+ " labels from \n"+path
                     +". \nThe labels are:"+label);
 
                 ((AppUI)applicationTemplate.getUIComponent()).setDescription(description);
