@@ -43,6 +43,7 @@ public enum AppPropertyTypes {
     NAME_ERROR_MSG,
     NULL_ERROR,
     SELECTION_ERROR,
+    CONFIG_ERRORS,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,

@@ -43,25 +43,8 @@ and open the template in the editor.
     -fx-outline-style: solid;
     -fx-outline-color: black;
 }
-.axis 
-{
-   -fx-tick-label-fill: transparent ;
-   -fx-tick-length: 0;
-   
 
-   
-}
 
-.axis-tick-mark
-{
-    -fx-stroke: transparent;
-    -fx-stroke-width:0;
-
-}
-.axis-minor-tick-mark
-{
-    -fx-stroke:transparent;
-}
 
 .chart-line-symbol { 
     -fx-fill:#ffffff;

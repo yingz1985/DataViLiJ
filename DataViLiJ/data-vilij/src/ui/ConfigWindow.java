@@ -67,7 +67,11 @@ public class ConfigWindow
         maxText = new TextField();
         updateText = new TextField();
         setConfigButton();
- 
+    }
+    public AlgorithmContainer returnContainer()
+    {
+        config.configure(defaultMax, defaultIt, toCont);
+        return config;
     }
     public void configure(AlgorithmContainer container)
     {
@@ -77,6 +81,7 @@ public class ConfigWindow
     public void close()
     {
         stage.close();
+        
     }
     /**
      * <dt>Precondition:
@@ -260,7 +265,6 @@ public class ConfigWindow
         {
             closed=true;
             checkConfig();
-            ((AppUI)app.getUIComponent()).enableRun();
             stage.close();
             
         });

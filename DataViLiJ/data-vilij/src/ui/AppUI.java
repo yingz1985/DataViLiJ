@@ -3,6 +3,8 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 import static java.io.File.separator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -30,6 +32,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import runningEvents.AlgorithmContainer;
+import runningEvents.RandomClassifier;
 import vilij.propertymanager.PropertyManager;
 import settings.AppPropertyTypes;
 import vilij.components.ErrorDialog;
@@ -214,7 +217,10 @@ public final class AppUI extends UITemplate {
         workSpace.setPadding(new Insets(10,10,10,10));
         workSpace.setRight(emptyChart);
        // workSpace.setRight(chart);
-        chart.setMinSize(600, 540);
+        chart.setMinSize(600, 500);
+        chart.setMaxSize(600, 500);
+        
+        
 
         //setLeftPane();
         
@@ -364,7 +370,10 @@ public final class AppUI extends UITemplate {
         c1.setToggleGroup(group);
         
     }
-
+    public void setRun(boolean c)
+    {
+        runButton.setDisable(c);
+    }
     /**
      * <dt>Precondition:
      *  <dd> User has clicked on one of the algorithm types in the algorithm pane
@@ -401,9 +410,45 @@ public final class AppUI extends UITemplate {
         //runButton enabled only when config had been set 
         runButton.setOnAction(e->
         {
+            
             if(!currentContainer.getWindow((RadioButton)group.getSelectedToggle()).closed())
             {
+                ErrorDialog dialog = ErrorDialog.getDialog();
+                dialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIG_TOOLTIP.toString()),
+                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIG_ERRORS.name()));
                 currentContainer.getWindow((RadioButton)group.getSelectedToggle()).init();
+            }
+            else
+            {
+                AlgorithmContainer container = currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer();
+                if(!container.isCluster())
+                {
+                    System.out.print(container.toString());
+                     try
+                    {
+                        
+                        processor.clear();
+                        chart.getData().clear();
+                        processor.loadData(returnActualText());
+                        processor.displayData();
+                        workSpace.setRight(chart);
+                        RandomClassifier classifier = new RandomClassifier(processor.getProcessor(),container);
+                        Thread c = new Thread(classifier);
+                        c.start();
+                        System.out.print(c.isAlive());
+                        //classifier.run();
+                        
+                        chart.setLegendVisible(false);
+                         }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    
+                   
+                   
+                   
+                }
             }
         });
         Label title = new Label(chosen);
@@ -441,12 +486,12 @@ public final class AppUI extends UITemplate {
             {
                 currentContainer.getWindow((RadioButton)o).getButton().setDisable(false);
                 runButton.setVisible(true);
-                if(currentContainer.getWindow((RadioButton)o).closed())
+                /*if(currentContainer.getWindow((RadioButton)o).closed())
                 {
                     enableRun();
                 }
-                else
-                    runButton.setDisable(true);
+                else*/
+                    runButton.setDisable(false);
 
             });
         }
@@ -468,10 +513,6 @@ public final class AppUI extends UITemplate {
         pane.getStylesheets().add("css/GridPane.css");
         return pane;
          
-    }
-    public void enableRun()
-    {
-        runButton.setDisable(false);
     }
     public void setupButtons()
     {

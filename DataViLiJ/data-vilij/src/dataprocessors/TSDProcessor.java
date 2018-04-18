@@ -1,12 +1,12 @@
 package dataprocessors;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.scene.Cursor;
 import javafx.scene.control.Tooltip;
 
@@ -39,15 +39,26 @@ public final class TSDProcessor {
     private Map<String, Point2D> dataPoints;
     private String name;
     private AtomicInteger counter;
-    private double averageY = 0;
+    private double minY=0;
+    private double maxY=0;
     private double minX=0;
     private double maxX=0;
+    XYChart.Data dataMin = new XYChart.Data<>(minX,minY);
+    XYChart.Data dataMax = new XYChart.Data<>(maxX,maxY);
     private boolean hasNull;
+    private XYChart<Number, Number> chart;
+    
     
     public TSDProcessor() {
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
         counter = new AtomicInteger();
+        
+    }
+    public void updateLabel(String instanceName, String newlabel) {
+        if (dataLabels.get(instanceName) == null)
+            throw new NoSuchElementException();
+        dataLabels.put(instanceName, newlabel);
     }
     
     public String getName()
@@ -80,7 +91,7 @@ public final class TSDProcessor {
      * @throws Exception if the input string does not follow the <code>.tsd</code> data format
      */
     public void processString(String tsdString) throws Exception {
-        averageY = 0;
+
         StringBuilder errorMessage = new StringBuilder();
 
         counter = new AtomicInteger();
@@ -113,7 +124,7 @@ public final class TSDProcessor {
                               minX = x;
                       if(x>maxX)
                               maxX = x;
-                      averageY+=Double.parseDouble(pair[1]);
+                      
                       dataLabels.put(name, label);
                       dataPoints.put(name, point);
  
@@ -139,7 +150,7 @@ public final class TSDProcessor {
      * @param chart the specified chart
      */
     public void toChartData(XYChart<Number, Number> chart) {
-
+        this.chart = chart;
         Set<String> labels = new HashSet<>(dataLabels.values());
         Object[] names =  dataPoints.keySet().toArray();
         
@@ -168,32 +179,7 @@ public final class TSDProcessor {
 
         }
             chart.setAnimated(false);
-            XYChart.Series<Number,Number> serie = new XYChart.Series<>();
-            NumberFormat formatter = new DecimalFormat("#0.0"); 
-            averageY = Double.parseDouble(formatter.format(averageY/counter.get()));
-            XYChart.Data dataMin = new XYChart.Data<>(minX,averageY);
-            //dataMin.getNode().setStyle("-fx-fill:transparent;");
-            XYChart.Data dataMax = new XYChart.Data<>(maxX,averageY);
-            //dataMax.getNode().setStyle("-fx-fill:transparent;");
-            
-            
-            
-            serie.getData().add(dataMin);
-            serie.getData().add(dataMax);
-            //serie.setName("average:"+averageY*100/100);
-              
-            serie.setName("averageY:"+formatter.format(averageY));
-            
-            chart.getData().add(serie);
-            
-            dataMin.getNode().setStyle("-fx-background-color: transparent;");
-            dataMax.getNode().setStyle("-fx-background-color: transparent;");
-            
-            
-            serie.getNode().setStyle("-fx-stroke-width: 1px; ");
-            
-           
-           
+            chart.getData().add(new XYChart.Series<Number,Number>());
            
            for (XYChart.Series<Number, Number> s : chart.getData()) {
             for (XYChart.Data<Number, Number> d : s.getData()) {
@@ -216,6 +202,69 @@ public final class TSDProcessor {
            }
           
         
+    }
+    public synchronized void updateChart(List<Integer> data)
+    {
+        //synchronized
+        //chart.getData().get(chart.getData().size()-1);//get the last series and replace it 
+        //chart.getData().clear();
+        //toChartData(chart);
+            
+            minY = ((-minX*data.get(0))+data.get(2))/data.get(1);
+            maxY = ((-maxX*data.get(0))+data.get(2))/data.get(1);
+            System.out.println("("+minX+","+minY+")"+"  ("+maxX+","+maxY+")");
+            dataMin = new XYChart.Data<>(minX,minY);
+            dataMax = new XYChart.Data<>(maxX,maxY);
+            XYChart.Series<Number,Number> serie = new XYChart.Series<>();
+
+            //dataMin.getNode().setStyle("-fx-background-color: transparent;");
+            //dataMax.getNode().setStyle("-fx-background-color: transparent;");
+            
+            //serie.getNode().setStyle("-fx-stroke-width: 1px; ");
+            //serie.setName("average:"+averageY*100/100);
+            serie.getData().add(dataMin);
+            serie.getData().add(dataMax);
+            //serie.setName("average:"+averageY*100/100);
+            
+            //chart.getData().add(serie);
+            //Platform.runLater(()->{
+  
+                 //chart.getData().set(2, serie);
+                 chart.getData().get(chart.getData().size()-1).setData(
+                FXCollections.observableArrayList(dataMin,dataMax));
+         
+
+            
+            dataMin.getNode().setStyle("-fx-background-color: transparent;");
+            dataMax.getNode().setStyle("-fx-background-color: transparent;");
+            
+            chart.getData().get(chart.getData().size()-1).getNode().setStyle("-fx-stroke-width: 1px; ");
+            //serie.getNode().setStyle("-fx-stroke-width: 1px; ");
+
+            //});
+            //Thread.sleep(10);
+
+
+            
+            /*
+            Platform.runLater(() ->
+            {
+                chart.getData().add(serie);
+            });
+           /* try
+            {
+                chart.getData().add(serie);
+                Thread.sleep(500);
+            }
+            catch(Exception x)
+            {
+                System.out.print("chart busted");
+            }
+            
+            */
+            
+            
+           
     }
 
     void clear() {

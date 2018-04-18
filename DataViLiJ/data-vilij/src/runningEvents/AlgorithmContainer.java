@@ -27,6 +27,18 @@ public class AlgorithmContainer
     
     private HashMap<RadioButton,ConfigWindow> types;
     
+    public int getMaxIterations()
+    {
+        return MaxIterations;
+    }
+    public int getUpdateInterval()
+    {
+        return UpdateInterval;
+    }
+    public boolean tocontinue()
+    {
+        return toContinue;
+    }
     public AlgorithmContainer(String algorithm)
     {
         this.algorithm = algorithm;
@@ -80,6 +92,11 @@ public class AlgorithmContainer
     public boolean isCluster()
     {
         return algorithm.equals("Clustering");
+    }
+    public String toString()
+    {
+        return "maxIt: "+MaxIterations+" updateInt: "+UpdateInterval+" toContinue: "+
+                toContinue;
     }
     
 }
