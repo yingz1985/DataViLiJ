@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.TextArea;
@@ -270,20 +272,13 @@ public final class AppActions implements ActionComponent {
                 
             }
         }
-        
-        
-        
+            
         
     }
-
-    @Override
-    public void handleExitRequest() {
-        // TODO for homework 1
-        
-        //I wanted to prompt Confirmation dialog even when exiting 
-       if(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()
-          && !saved)
-       {
+    public boolean exitWhileRunning()
+    {
+         if(((AppUI) applicationTemplate.getUIComponent()).getT()!=null&&
+                 ((AppUI) applicationTemplate.getUIComponent()).getT().isAlive()) {
           ConfirmationDialog dialog = ConfirmationDialog.getDialog();
         
          dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
@@ -295,13 +290,50 @@ public final class AppActions implements ActionComponent {
               ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
               System.exit(0);
          }
+         else
+         {
+             return false;
+         }
         }
-       else
+         return false;
+    }
+    @Override
+    public void handleExitRequest() {
+        // TODO for homework 1
+        
+        //I wanted to prompt Confirmation dialog even when exiting 
+        
+       if(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()
+          && !saved)
        {
+        
+
+            if(!saved)
+            {
+                try
+                {
+                    promptToSave();
+                    
+                }
+                catch (Exception ex)
+                {
+                
+                }
+            }
+
+            
+        }
+      
+        if(!exitWhileRunning())
+        {
+               return;
+        }
+        else{
            ((AppUI) applicationTemplate.getUIComponent()).clear();
            ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
            System.exit(0);
-       }
+        }
+
     }
 
     @Override

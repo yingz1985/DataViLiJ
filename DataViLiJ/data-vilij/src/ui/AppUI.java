@@ -529,6 +529,10 @@ public final class AppUI extends UITemplate {
     {
         return this.run;
     }
+    public Thread getT()
+    {
+        return this.thread;
+    }
     /**
      * <dt> Precondition:
      *  <dd> Data (either loaded or entered by user) must be valid
