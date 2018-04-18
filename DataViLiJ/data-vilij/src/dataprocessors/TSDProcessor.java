@@ -205,6 +205,8 @@ public final class TSDProcessor {
     }
     public synchronized void updateChart(List<Integer> data)
     {
+        if(chart.getData().isEmpty())
+            return;
         //synchronized
         //chart.getData().get(chart.getData().size()-1);//get the last series and replace it 
         //chart.getData().clear();
@@ -230,6 +232,7 @@ public final class TSDProcessor {
             //Platform.runLater(()->{
   
                  //chart.getData().set(2, serie);
+             
                  chart.getData().get(chart.getData().size()-1).setData(
                 FXCollections.observableArrayList(dataMin,dataMax));
          
@@ -244,7 +247,7 @@ public final class TSDProcessor {
             //});
             //Thread.sleep(10);
 
-
+                 
             
             /*
             Platform.runLater(() ->

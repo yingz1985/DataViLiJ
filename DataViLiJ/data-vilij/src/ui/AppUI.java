@@ -64,12 +64,14 @@ public final class AppUI extends UITemplate {
     private BorderPane                   workSpace;
     private BorderPane                   leftPane = new BorderPane();
     private Label                        description;
-    private AlgorithmContainer           ClusterContainer; 
-    private AlgorithmContainer           ClassContainer;
+    private AlgorithmContainer           ClusterContainer;
+    private AlgorithmContainer           ClassContainer; 
     private AlgorithmContainer           currentContainer;
     private Button                       clas;
     private Button                       cluster;
     private ToggleGroup                  group;
+    private Thread                       thread;
+    private RandomClassifier             run;
     
     public void disableClassification()
     {
@@ -89,6 +91,10 @@ public final class AppUI extends UITemplate {
     {
         hasNewText = false;
         //if text loaded 
+    }
+    public void setNewButton()
+    {
+        newButton.setDisable(false);
     }
     public void setActualText(String s)
     {
@@ -164,7 +170,7 @@ public final class AppUI extends UITemplate {
     public void clear() {
         // TODO for homework 1
         clas.setDisable(false);
-        newButton.setDisable(true);
+        //newButton.setDisable(true);
         saveButton.setDisable(true);
         chart.getData().clear();
         actualText = "";
@@ -173,14 +179,11 @@ public final class AppUI extends UITemplate {
         scrnshotButton.setDisable(true);
         workSpace.setRight(emptyChart);
         leftPane = new BorderPane();
+        workSpace.setLeft(leftPane);
         processor = new AppData(applicationTemplate);
         //if(window!=null)
         //    window.close();
-        //window = null;
-        
-        
-        
-        
+        //window = null;  
     }
 
     private void layout() {
@@ -236,10 +239,12 @@ public final class AppUI extends UITemplate {
        
         
     }
+    
     public void newPage()
     {
         leftPane.setBottom(null);
         leftPane.setCenter(null);
+        workSpace.setRight(emptyChart);
     }
     
     public void setDescription()
@@ -432,14 +437,13 @@ public final class AppUI extends UITemplate {
                         processor.loadData(returnActualText());
                         processor.displayData();
                         workSpace.setRight(chart);
-                        RandomClassifier classifier = new RandomClassifier(processor.getProcessor(),container);
-                        Thread c = new Thread(classifier);
-                        c.start();
-                        System.out.print(c.isAlive());
-                        //classifier.run();
-                        
+                        run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate);
+                        thread = new Thread(run);
+                        thread.start();
                         chart.setLegendVisible(false);
-                         }
+                        
+                        
+                      }
                     catch (Exception ex)
                     {
                         
@@ -520,6 +524,10 @@ public final class AppUI extends UITemplate {
           AppPropertyTypes.CLASSIFICATION.name()));
         cluster = new Button(applicationTemplate.manager.getPropertyValue(
           AppPropertyTypes.CLUSTERING.name()));
+    }
+    public Runnable getThread()
+    {
+        return this.run;
     }
     /**
      * <dt> Precondition:

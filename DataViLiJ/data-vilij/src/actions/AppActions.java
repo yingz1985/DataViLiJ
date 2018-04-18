@@ -16,10 +16,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
+import runningEvents.RandomClassifier;
 import settings.AppPropertyTypes;
 import ui.AppUI;
 import vilij.components.ConfirmationDialog;
-import vilij.components.ErrorDialog;
  
 /**
  * This is the concrete implementation of the action handlers required by the application.
@@ -71,6 +71,10 @@ public final class AppActions implements ActionComponent {
            
              if(promptToSave())
             {
+                //RandomClassifier t = (RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread();
+                //t.stop();
+                 if(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread())!=null)
+                    ((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).stop();
                 savedOnce = false;
                 saved = false;
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
@@ -78,6 +82,7 @@ public final class AppActions implements ActionComponent {
                 ((AppUI) applicationTemplate.getUIComponent()).setLeftPane();
                 loaded = false;
                 ((AppUI) applicationTemplate.getUIComponent()).newPage();
+                
              }
            
        }
@@ -160,12 +165,14 @@ public final class AppActions implements ActionComponent {
        // System.out.println(tempfile.toString());
         if (tempfile!=null)
         {
+            if(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread())!=null)
+                    ((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).stop();
             file = tempfile;
             try
             {
                 
                 dataFilePath = Paths.get(file.toURI());
-                
+               
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
                 Scanner scanner = new Scanner(tempfile);
                 while(scanner.hasNextLine())
@@ -252,12 +259,15 @@ public final class AppActions implements ActionComponent {
                // loaded = true; //loaded new data
                
                 saved = true;
+                
             }
             catch(Exception x)
             {
                 //System.out.println(x.getCause());
-                ((AppUI)applicationTemplate.getUIComponent()).initialize();
+                ((AppUI)applicationTemplate.getUIComponent()).newPage();
+                ((AppUI)applicationTemplate.getUIComponent()).setNewButton();
                 //if data is loaded incorrectly, the page is cleared out
+                
             }
         }
         

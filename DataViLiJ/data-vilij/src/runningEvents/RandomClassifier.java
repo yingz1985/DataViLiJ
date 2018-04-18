@@ -15,6 +15,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import ui.AppUI;
+import vilij.templates.ApplicationTemplate;
 
 /**
  * @author Ritwik Banerjee
@@ -28,6 +30,8 @@ public class RandomClassifier extends Classifier {
     private TSDProcessor dataset;
     private final int maxIterations;
     private final int updateInterval;
+    private ApplicationTemplate app;
+    private boolean proceed;
 
     // currently, this value does not change after instantiation
     private final AtomicBoolean tocontinue;
@@ -35,6 +39,10 @@ public class RandomClassifier extends Classifier {
     @Override
     public int getMaxIterations() {
         return maxIterations;
+    }
+    public void stop()
+    {
+        proceed = false;
     }
 
     @Override
@@ -46,12 +54,14 @@ public class RandomClassifier extends Classifier {
     public boolean tocontinue() {
         return tocontinue.get();
     }
-    public RandomClassifier(TSDProcessor dataset,AlgorithmContainer container)
+    public RandomClassifier(TSDProcessor dataset,AlgorithmContainer container,ApplicationTemplate app)
     {
         this.dataset = dataset;
         this.maxIterations = container.getMaxIterations();
         this.updateInterval = container.getUpdateInterval();
         this.tocontinue = new AtomicBoolean(container.tocontinue());
+        this.app = app;
+        this.proceed = true;
     }
     public RandomClassifier(TSDProcessor dataset,
                             int maxIterations,
@@ -66,16 +76,14 @@ public class RandomClassifier extends Classifier {
     @Override
     public void run() {
         
-        for (int i = 1; i <= maxIterations && tocontinue(); i++) {
+        ((AppUI) app.getUIComponent()).setRun(true);
+        for (int i = 1; i <= maxIterations && tocontinue()&&proceed; i++) {
             int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
             int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
             int constant     = new Double(RAND.nextDouble() * 100).intValue();
 
             // this is the real output of the classifier
             output = Arrays.asList(xCoefficient, yCoefficient, constant);
-            
-            
-           
             
             // everything below is just for internal viewing of how the output is changing
             // in the final project, such changes will be dynamically visible in the UI
@@ -85,7 +93,9 @@ public class RandomClassifier extends Classifier {
             {
                 Platform.runLater(()->dataset.updateChart(output));
                 Thread.sleep(800);
-                
+                if(!proceed)
+                   break;
+                           
             }
             
             catch (InterruptedException ex)
@@ -101,6 +111,8 @@ public class RandomClassifier extends Classifier {
             {
                 Platform.runLater(()->dataset.updateChart(output));
                 Thread.sleep(800);
+                if(!proceed)
+                    break;
                 
             }
             
@@ -112,8 +124,9 @@ public class RandomClassifier extends Classifier {
                 break;
             }
         }
+        ((AppUI) app.getUIComponent()).setRun(false);
         
-
+        
     }
 
     // for internal viewing only
