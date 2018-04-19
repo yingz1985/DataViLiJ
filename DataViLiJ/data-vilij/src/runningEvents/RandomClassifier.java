@@ -8,10 +8,10 @@ package runningEvents;
 
 import dataprocessors.TSDProcessor;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -32,9 +32,11 @@ public class RandomClassifier extends Classifier {
     private final int updateInterval;
     private ApplicationTemplate app;
     private boolean proceed;
+    private boolean started;
 
     // currently, this value does not change after instantiation
     private final AtomicBoolean tocontinue;
+    private AtomicInteger currentInt;
 
     @Override
     public int getMaxIterations() {
@@ -54,12 +56,21 @@ public class RandomClassifier extends Classifier {
     public boolean tocontinue() {
         return tocontinue.get();
     }
-    public RandomClassifier(TSDProcessor dataset,AlgorithmContainer container,ApplicationTemplate app)
+    public void setToContinue(boolean cont)
+    {
+        this.tocontinue.set(cont);
+    }
+    public boolean alreadyStarted()
+    {
+        return this.started;
+    }
+    public RandomClassifier(TSDProcessor dataset,AlgorithmContainer container,ApplicationTemplate app,int current)
     {
         this.dataset = dataset;
         this.maxIterations = container.getMaxIterations();
         this.updateInterval = container.getUpdateInterval();
         this.tocontinue = new AtomicBoolean(container.tocontinue());
+        this.currentInt = new AtomicInteger(current);
         this.app = app;
         this.proceed = true;
     }
@@ -75,7 +86,68 @@ public class RandomClassifier extends Classifier {
 
     @Override
     public void run() {
+        if(tocontinue.get())
+        {
+            continuous();
+        }
+        else
+        {
+            notContinuous();
+        }
+      ((AppUI) app.getUIComponent()).setRun(false);
         
+    }
+    public void notContinuous()
+    {
+        if(currentInt.get()<maxIterations)
+        {
+            ((AppUI) app.getUIComponent()).setRun(true);
+                for (int i = 1; i <= updateInterval; i++) {
+                    int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
+                    int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
+                    int constant     = new Double(RAND.nextDouble() * 100).intValue();
+
+            // this is the real output of the classifier
+                    output = Arrays.asList(xCoefficient, yCoefficient, constant);
+            
+            // everything below is just for internal viewing of how the output is changing
+            // in the final project, such changes will be dynamically visible in the UI
+                    if (i % updateInterval == 0) {
+                    System.out.printf("Iteration number %d: ", i); //
+               
+                    Platform.runLater(()->dataset.updateChart(output));
+                    flush();
+                    ((AppUI) app.getUIComponent()).setRun(false);
+                    
+                        try
+                        {
+                            Thread.sleep(5000);
+                        }
+                        catch (InterruptedException ex)
+                        {
+                            Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    
+            }
+                    currentInt.getAndIncrement();
+            if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
+                System.out.printf("Iteration number %d: ", i);
+                Platform.runLater(()->dataset.updateChart(output));
+                if(!proceed)
+                    break;
+                flush();
+                break;
+            }
+        }
+            
+        
+            }
+        
+        ((AppUI) app.getUIComponent()).setRun(false);
+        
+    }
+    public void continuous()
+    {
         ((AppUI) app.getUIComponent()).setRun(true);
         for (int i = 1; i <= maxIterations && tocontinue()&&proceed; i++) {
             int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
@@ -124,8 +196,6 @@ public class RandomClassifier extends Classifier {
                 break;
             }
         }
-        ((AppUI) app.getUIComponent()).setRun(false);
-        
         
     }
 

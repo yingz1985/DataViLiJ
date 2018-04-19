@@ -3,8 +3,6 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 import static java.io.File.separator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -70,8 +68,9 @@ public final class AppUI extends UITemplate {
     private Button                       clas;
     private Button                       cluster;
     private ToggleGroup                  group;
-    private Thread                       thread;
     private RandomClassifier             run;
+    private Thread                       thread;
+    private int                          counter = 0;
     
     public void disableClassification()
     {
@@ -160,6 +159,7 @@ public final class AppUI extends UITemplate {
         processor = new AppData(applicationTemplate);
         setupButtons();
         populateContainers();
+        run = null;
     }
     public void resetSaveButton()
     {
@@ -170,6 +170,7 @@ public final class AppUI extends UITemplate {
     public void clear() {
         // TODO for homework 1
         clas.setDisable(false);
+        thread = null;
         //newButton.setDisable(true);
         saveButton.setDisable(true);
         chart.getData().clear();
@@ -425,6 +426,8 @@ public final class AppUI extends UITemplate {
             }
             else
             {
+                //////////button should be disabled, will be dealt with later 
+                //currentContainer.getWindow((RadioButton)group.getSelectedToggle()).getButton().setDisable(true);
                 AlgorithmContainer container = currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer();
                 if(!container.isCluster())
                 {
@@ -437,13 +440,30 @@ public final class AppUI extends UITemplate {
                         processor.loadData(returnActualText());
                         processor.displayData();
                         workSpace.setRight(chart);
-                        run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate);
-                        thread = new Thread(run);
-                        thread.start();
+               
+                        if(container.tocontinue())
+                        {
+                            run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate,0);
+                            thread = new Thread(run);
+                            thread.start();
+                        }
+                        else
+                        {
+                            if(counter==container.getMaxIterations())    counter = 0;
+                            run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate,counter);
+                            //run.setToContinue(container.tocontinue());
+                            thread = new Thread(run);
+                            thread.start();
+                            counter+=container.getUpdateInterval();
+                             
+                        }
+                        
+                        
                         chart.setLegendVisible(false);
                         
                         
                       }
+                        
                     catch (Exception ex)
                     {
                         
@@ -771,5 +791,9 @@ public final class AppUI extends UITemplate {
         if(!loadedData)
             return textArea.getText();
         return actualText;
+    }
+    public boolean currentRun()
+    {
+        return runButton.isDisabled();
     }
 }

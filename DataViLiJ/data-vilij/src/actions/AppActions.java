@@ -333,7 +333,7 @@ public final class AppActions implements ActionComponent {
            ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
            System.exit(0);
         }
-
+        System.exit(0);
     }
 
     @Override
