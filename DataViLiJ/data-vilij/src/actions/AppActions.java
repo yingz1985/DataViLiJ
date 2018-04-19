@@ -76,7 +76,10 @@ public final class AppActions implements ActionComponent {
                 //RandomClassifier t = (RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread();
                 //t.stop();
                  if(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread())!=null)
+                 {
+                     
                     ((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).stop();
+                 }
                 savedOnce = false;
                 saved = false;
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
@@ -275,28 +278,7 @@ public final class AppActions implements ActionComponent {
             
         
     }
-    public boolean exitWhileRunning()
-    {
-         if(((AppUI) applicationTemplate.getUIComponent()).getT()!=null&&
-                 ((AppUI) applicationTemplate.getUIComponent()).getT().isAlive()) {
-          ConfirmationDialog dialog = ConfirmationDialog.getDialog();
-        
-         dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
-                   applicationTemplate.manager.getPropertyValue(
-                   AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
-         if(dialog.getSelectedOption().toString().equals("YES"))   
-         {
-             ((AppUI) applicationTemplate.getUIComponent()).clear();
-              ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
-              System.exit(0);
-         }
-         else
-         {
-             return false;
-         }
-        }
-         return false;
-    }
+
     @Override
     public void handleExitRequest() {
         // TODO for homework 1
@@ -306,7 +288,6 @@ public final class AppActions implements ActionComponent {
        if(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()
           && !saved)
        {
-        
 
             if(!saved)
             {
@@ -321,19 +302,35 @@ public final class AppActions implements ActionComponent {
                 }
             }
 
+        }
+       else
+       {
+           if(((AppUI) applicationTemplate.getUIComponent()).getT()!=null) {
             
+          ConfirmationDialog dialog = ConfirmationDialog.getDialog();
+        
+         dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
+                   applicationTemplate.manager.getPropertyValue(
+                   AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
+         if(dialog.getSelectedOption().toString().equals("YES"))   
+         {
+             ((AppUI) applicationTemplate.getUIComponent()).clear();
+              ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
+              System.exit(0);
+         }
+         else
+         {
+             return;
+         }
         }
+
+                ((AppUI) applicationTemplate.getUIComponent()).clear();
+                ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
+                System.exit(0);
+        }
+       
       
-        if(!exitWhileRunning())
-        {
-               return;
-        }
-        else{
-           ((AppUI) applicationTemplate.getUIComponent()).clear();
-           ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
-           System.exit(0);
-        }
-        System.exit(0);
+
     }
 
     @Override

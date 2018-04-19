@@ -36,7 +36,6 @@ public class RandomClassifier extends Classifier {
 
     // currently, this value does not change after instantiation
     private final AtomicBoolean tocontinue;
-    private AtomicInteger currentInt;
 
     @Override
     public int getMaxIterations() {
@@ -64,13 +63,12 @@ public class RandomClassifier extends Classifier {
     {
         return this.started;
     }
-    public RandomClassifier(TSDProcessor dataset,AlgorithmContainer container,ApplicationTemplate app,int current)
+    public RandomClassifier(TSDProcessor dataset,AlgorithmContainer container,ApplicationTemplate app)
     {
         this.dataset = dataset;
         this.maxIterations = container.getMaxIterations();
         this.updateInterval = container.getUpdateInterval();
         this.tocontinue = new AtomicBoolean(container.tocontinue());
-        this.currentInt = new AtomicInteger(current);
         this.app = app;
         this.proceed = true;
     }
@@ -94,59 +92,67 @@ public class RandomClassifier extends Classifier {
         {
             notContinuous();
         }
-      ((AppUI) app.getUIComponent()).setRun(false);
-        
-    }
-    public void notContinuous()
-    {
-        if(currentInt.get()<maxIterations)
-        {
-            ((AppUI) app.getUIComponent()).setRun(true);
-                for (int i = 1; i <= updateInterval; i++) {
-                    int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-                    int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-                    int constant     = new Double(RAND.nextDouble() * 100).intValue();
-
-            // this is the real output of the classifier
-                    output = Arrays.asList(xCoefficient, yCoefficient, constant);
-            
-            // everything below is just for internal viewing of how the output is changing
-            // in the final project, such changes will be dynamically visible in the UI
-                    if (i % updateInterval == 0) {
-                    System.out.printf("Iteration number %d: ", i); //
-               
-                    Platform.runLater(()->dataset.updateChart(output));
-                    flush();
-                    ((AppUI) app.getUIComponent()).setRun(false);
-                    
-                        try
-                        {
-                            Thread.sleep(5000);
-                        }
-                        catch (InterruptedException ex)
-                        {
-                            Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    
-            }
-                    currentInt.getAndIncrement();
-            if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
-                System.out.printf("Iteration number %d: ", i);
-                Platform.runLater(()->dataset.updateChart(output));
-                if(!proceed)
-                    break;
-                flush();
-                break;
-            }
-        }
-            
-        
-            }
-        
+        ((AppUI) app.getUIComponent()).running(false);
+        ((AppUI) app.getUIComponent()).setScreenshot(false);
         ((AppUI) app.getUIComponent()).setRun(false);
         
     }
-    public void continuous()
+    public synchronized void notContinuous()
+    {
+       
+            
+                for (int i = 1; i <= maxIterations; i++) {
+                    int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
+                    int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
+                    int constant     = new Double(RAND.nextDouble() * 100).intValue();
+                    
+                    ((AppUI) app.getUIComponent()).setRun(true);
+                    ((AppUI) app.getUIComponent()).running(true);
+                    ((AppUI) app.getUIComponent()).setScreenshot(true);
+            // this is the real output of the classifier
+                    output = Arrays.asList(xCoefficient, yCoefficient, constant);
+                    try
+                        {
+                            Thread.sleep(20);
+                        }
+                        catch (InterruptedException ex)
+                        {
+                           // Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+            // everything below is just for internal viewing of how the output is changing
+            // in the final project, such changes will be dynamically visible in the UI
+                    if (i % updateInterval == 0) {
+                    //System.out.printf("Iteration number %d: ", i); //
+               try{
+                    Platform.runLater(()->dataset.updateChart(output));
+                     flush();
+                    ((AppUI) app.getUIComponent()).setRun(false);
+                    ((AppUI) app.getUIComponent()).setScreenshot(false);
+                    this.wait();
+                   
+               }
+               catch (InterruptedException ex)
+                {
+                  Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
+                }
+               
+                       
+                    
+            }
+            if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
+                //System.out.printf("Iteration number %d: ", i);
+                Platform.runLater(()->dataset.updateChart(output));
+                if(!proceed)
+                    break;
+                //flush();
+                break;
+            }
+        }
+        
+            
+        
+    }
+    public synchronized void continuous()
     {
         ((AppUI) app.getUIComponent()).setRun(true);
         for (int i = 1; i <= maxIterations && tocontinue()&&proceed; i++) {
@@ -197,6 +203,10 @@ public class RandomClassifier extends Classifier {
             }
         }
         
+    }
+    public synchronized void notifyThread()
+    {
+        this.notifyAll();
     }
 
     // for internal viewing only

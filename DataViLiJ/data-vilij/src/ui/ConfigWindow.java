@@ -99,8 +99,7 @@ public class ConfigWindow
             updateText.setText(String.valueOf(defaultIt));
             num.setText(String.valueOf(defaultLabels));
             continuous.setSelected(toCont);
-            
-            
+               
         }
         
     }
@@ -147,8 +146,7 @@ public class ConfigWindow
                 num.setText(String.valueOf(defaultLabels));
             }
         }
-        if(continuous.isSelected())
-            toCont = true;
+        toCont = continuous.isSelected();
     }
     
     /**

@@ -54,7 +54,7 @@ public final class AppUI extends UITemplate {
     private Button                       runButton;  // workspace button to display data on the chart
     private TextArea                     textArea;       // text area for new data input
     private boolean                      hasNewText;     // whether or not the text area has any new data since last display
-    private Button                       done;
+    private Button                       done ;
     private boolean                      loadedData;
     private AppData                      processor;
     private String                       actualText = "";//actual text is used when loading from file 
@@ -71,6 +71,7 @@ public final class AppUI extends UITemplate {
     private RandomClassifier             run;
     private Thread                       thread;
     private int                          counter = 0;
+    private Button                       backButton;
     
     public void disableClassification()
     {
@@ -160,6 +161,7 @@ public final class AppUI extends UITemplate {
         setupButtons();
         populateContainers();
         run = null;
+        done = new Button(AppPropertyTypes.EDIT.name());
     }
     public void resetSaveButton()
     {
@@ -171,6 +173,7 @@ public final class AppUI extends UITemplate {
         // TODO for homework 1
         clas.setDisable(false);
         thread = null;
+        run = null;
         //newButton.setDisable(true);
         saveButton.setDisable(true);
         chart.getData().clear();
@@ -182,9 +185,15 @@ public final class AppUI extends UITemplate {
         leftPane = new BorderPane();
         workSpace.setLeft(leftPane);
         processor = new AppData(applicationTemplate);
+        counter = 0;
         //if(window!=null)
         //    window.close();
         //window = null;  
+    }
+    
+    public void setScreenshot(boolean c)
+    {
+        scrnshotButton.setDisable(c);
     }
 
     private void layout() {
@@ -298,7 +307,6 @@ public final class AppUI extends UITemplate {
         if(!loadedData)
         {
             textArea.setDisable(false);
-            done = new Button(AppPropertyTypes.EDIT.name());
             done.setStyle(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EDIT.name()));
             
             done.setOnAction(e->
@@ -380,6 +388,11 @@ public final class AppUI extends UITemplate {
     {
         runButton.setDisable(c);
     }
+    public void running(boolean c)
+    {
+        backButton.setDisable(c);
+        done.setDisable(c);
+    }
     /**
      * <dt>Precondition:
      *  <dd> User has clicked on one of the algorithm types in the algorithm pane
@@ -402,7 +415,7 @@ public final class AppUI extends UITemplate {
                                              applicationTemplate.manager.getPropertyValue(ICONS_RESOURCE_PATH.name())),
             applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK_ICON.name()));
         runButton = setToolbarButton(runPath,applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUN_TOOLTIP.name()),true);
-        Button backButton = setToolbarButton(backPath,applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK_TOOLTIP.name()),false);
+        backButton = setToolbarButton(backPath,applicationTemplate.manager.getPropertyValue(AppPropertyTypes.BACK_TOOLTIP.name()),false);
         HBox bot = new HBox(100);
         bot.getChildren().addAll(backButton,runButton);
         bot.setAlignment(Pos.CENTER_LEFT);
@@ -410,71 +423,15 @@ public final class AppUI extends UITemplate {
         runButton.setVisible(false);
         backButton.setOnAction(e->
         {
+            if(this.thread!=null)
+            {
+                run.stop();
+            }
             leftPane.setBottom(algorithmPane());
         }     
         );
         //runButton enabled only when config had been set 
-        runButton.setOnAction(e->
-        {
-            
-            if(!currentContainer.getWindow((RadioButton)group.getSelectedToggle()).closed())
-            {
-                ErrorDialog dialog = ErrorDialog.getDialog();
-                dialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIG_TOOLTIP.toString()),
-                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIG_ERRORS.name()));
-                currentContainer.getWindow((RadioButton)group.getSelectedToggle()).init();
-            }
-            else
-            {
-                //////////button should be disabled, will be dealt with later 
-                //currentContainer.getWindow((RadioButton)group.getSelectedToggle()).getButton().setDisable(true);
-                AlgorithmContainer container = currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer();
-                if(!container.isCluster())
-                {
-                    System.out.print(container.toString());
-                     try
-                    {
-                        
-                        processor.clear();
-                        chart.getData().clear();
-                        processor.loadData(returnActualText());
-                        processor.displayData();
-                        workSpace.setRight(chart);
-               
-                        if(container.tocontinue())
-                        {
-                            run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate,0);
-                            thread = new Thread(run);
-                            thread.start();
-                        }
-                        else
-                        {
-                            if(counter==container.getMaxIterations())    counter = 0;
-                            run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate,counter);
-                            //run.setToContinue(container.tocontinue());
-                            thread = new Thread(run);
-                            thread.start();
-                            counter+=container.getUpdateInterval();
-                             
-                        }
-                        
-                        
-                        chart.setLegendVisible(false);
-                        
-                        
-                      }
-                        
-                    catch (Exception ex)
-                    {
-                        
-                    }
-                    
-                   
-                   
-                   
-                }
-            }
-        });
+        runActions();
         Label title = new Label(chosen);
         HBox box = new HBox();
         box.setPrefHeight(30);
@@ -553,6 +510,83 @@ public final class AppUI extends UITemplate {
     {
         return this.thread;
     }
+    public synchronized void runActions()
+    {
+        runButton.setOnAction(e->
+        {
+            
+            if(!currentContainer.getWindow((RadioButton)group.getSelectedToggle()).closed())
+            {
+                ErrorDialog dialog = ErrorDialog.getDialog();
+                dialog.show(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIG_TOOLTIP.toString()),
+                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CONFIG_ERRORS.name()));
+                currentContainer.getWindow((RadioButton)group.getSelectedToggle()).init();
+            }
+            else
+            {
+                //////////button should be disabled, will be dealt with later 
+                //currentContainer.getWindow((RadioButton)group.getSelectedToggle()).getButton().setDisable(true);
+                AlgorithmContainer container = currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer();
+                if(!container.isCluster())
+                {
+                    backButton.setDisable(true);
+                    
+                    System.out.print(container.toString());
+                     try
+                    {
+                        
+                        processor.clear();
+                        chart.getData().clear();
+                        processor.loadData(returnActualText());
+                        processor.displayData();
+                        workSpace.setRight(chart);
+               
+                        if(container.tocontinue())
+                        {
+                            counter = 0;
+                            run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate);
+                            thread = new Thread(run);
+                            thread.start();
+                        }
+                        else
+                        {
+                            if(counter==container.getMaxIterations())    counter = 0;
+                            if(counter!=0)  
+                            {
+                                run.notifyThread();
+                                //synchronized(runButton)
+                                //thread.notifyAll();
+                                //  { runButton.notifyAll();}
+                            }
+                            else{
+                                run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate);
+                            //run.setToContinue(container.tocontinue());
+                                thread = new Thread(run);
+                                thread.start();
+                                counter+=container.getUpdateInterval();
+                            }
+                        }
+                        
+                        
+                        chart.setLegendVisible(false);
+                        
+                        
+                      }
+                        
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    
+                   
+                   
+                   
+                }
+            }
+        });
+        
+    }
+
     /**
      * <dt> Precondition:
      *  <dd> Data (either loaded or entered by user) must be valid
