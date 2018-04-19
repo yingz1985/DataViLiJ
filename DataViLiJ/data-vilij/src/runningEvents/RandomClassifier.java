@@ -84,6 +84,7 @@ public class RandomClassifier extends Classifier {
 
     @Override
     public void run() {
+        ((AppUI) app.getUIComponent()).running(true);
         if(tocontinue.get())
         {
             continuous();
@@ -100,7 +101,6 @@ public class RandomClassifier extends Classifier {
     public synchronized void notContinuous()
     {
        
-            
                 for (int i = 1; i <= maxIterations; i++) {
                     int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
                     int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();

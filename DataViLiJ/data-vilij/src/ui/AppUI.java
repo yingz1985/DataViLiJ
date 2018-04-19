@@ -177,6 +177,7 @@ public final class AppUI extends UITemplate {
         //newButton.setDisable(true);
         saveButton.setDisable(true);
         chart.getData().clear();
+        scrnshotButton.setDisable(true);
         actualText = "";
         textArea.clear();
         loadedData = false;
@@ -186,6 +187,7 @@ public final class AppUI extends UITemplate {
         workSpace.setLeft(leftPane);
         processor = new AppData(applicationTemplate);
         counter = 0;
+        done.setDisable(false);
         //if(window!=null)
         //    window.close();
         //window = null;  

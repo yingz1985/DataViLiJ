@@ -78,7 +78,21 @@ public final class AppActions implements ActionComponent {
                  if(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread())!=null)
                  {
                      
+                     ConfirmationDialog dialog = ConfirmationDialog.getDialog();
+        
+                    dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
+                        applicationTemplate.manager.getPropertyValue(
+                        AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
+                    if(dialog.getSelectedOption().toString().equals("YES"))   
+                {
                     ((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).stop();
+                }
+                else
+                {
+                    return;
+                }
+                       
+                    
                  }
                 savedOnce = false;
                 saved = false;
@@ -165,17 +179,43 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleLoadRequest() {
         String text = "";
+        if(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread())!=null)
+                   
+            {
+                ConfirmationDialog dialog = ConfirmationDialog.getDialog();
+        
+                    dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
+                        applicationTemplate.manager.getPropertyValue(
+                        AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
+                    if(dialog.getSelectedOption().toString().equals("YES"))   
+                {
+                    ((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).stop();
+                }
+                else
+                {
+                    return;
+                }
+                
+                
+                
+            }
+        try
+        {
+            promptToSave();
+        }
+        catch (Exception ex)
+        {
+            
+        }
         //TSDProcessor processor = new TSDProcessor();
         File  tempfile = fileChooser.showOpenDialog(((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
        // System.out.println(tempfile.toString());
         if (tempfile!=null)
         {
-            if(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread())!=null)
-                    ((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).stop();
             file = tempfile;
             try
             {
-                
+                 
                 dataFilePath = Paths.get(file.toURI());
                
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
@@ -441,7 +481,10 @@ public final class AppActions implements ActionComponent {
               writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
               writer.close();}
               saved = true;
-              return file != null;}
+              ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
+              ((AppUI)applicationTemplate.getUIComponent()).setNewText();
+              return file != null;
+              }
               catch(Exception x)
               {
                    //throw new Exception();
