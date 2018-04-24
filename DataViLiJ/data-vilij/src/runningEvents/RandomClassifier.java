@@ -33,6 +33,7 @@ public class RandomClassifier extends Classifier {
     private ApplicationTemplate app;
     private boolean proceed;
     private boolean started;
+    private boolean done;
 
     // currently, this value does not change after instantiation
     private final AtomicBoolean tocontinue;
@@ -71,6 +72,7 @@ public class RandomClassifier extends Classifier {
         this.tocontinue = new AtomicBoolean(container.tocontinue());
         this.app = app;
         this.proceed = true;
+        done = true;
     }
     public RandomClassifier(TSDProcessor dataset,
                             int maxIterations,
@@ -80,10 +82,16 @@ public class RandomClassifier extends Classifier {
         this.maxIterations = maxIterations;
         this.updateInterval = updateInterval;
         this.tocontinue = new AtomicBoolean(tocontinue);
+        done = true;
+    }
+    public boolean done()
+    {
+        return done;
     }
 
     @Override
     public void run() {
+        done = false;
         ((AppUI) app.getUIComponent()).running(true);
         if(tocontinue.get())
         {
@@ -93,6 +101,7 @@ public class RandomClassifier extends Classifier {
         {
             notContinuous();
         }
+        done = true;
         ((AppUI) app.getUIComponent()).running(false);
         ((AppUI) app.getUIComponent()).setScreenshot(false);
         ((AppUI) app.getUIComponent()).setRun(false);
@@ -155,6 +164,7 @@ public class RandomClassifier extends Classifier {
     public synchronized void continuous()
     {
         ((AppUI) app.getUIComponent()).setRun(true);
+        ((AppUI) app.getUIComponent()).setScreenshot(true);
         for (int i = 1; i <= maxIterations && tocontinue()&&proceed; i++) {
             int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
             int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();

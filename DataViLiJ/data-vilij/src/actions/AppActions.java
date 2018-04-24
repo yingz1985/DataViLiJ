@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.TextArea;
@@ -75,7 +73,7 @@ public final class AppActions implements ActionComponent {
             {
                 //RandomClassifier t = (RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread();
                 //t.stop();
-                 if(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread())!=null)
+                 if(!(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done()))
                  {
                      
                      ConfirmationDialog dialog = ConfirmationDialog.getDialog();
@@ -179,7 +177,7 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleLoadRequest() {
         String text = "";
-        if(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread())!=null)
+        if(!((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done())
                    
             {
                 ConfirmationDialog dialog = ConfirmationDialog.getDialog();
@@ -196,8 +194,7 @@ public final class AppActions implements ActionComponent {
                     return;
                 }
                 
-                
-                
+
             }
         try
         {
@@ -345,7 +342,7 @@ public final class AppActions implements ActionComponent {
         }
        else
        {
-           if(((AppUI) applicationTemplate.getUIComponent()).getT()!=null) {
+           if(!((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done()) {
             
           ConfirmationDialog dialog = ConfirmationDialog.getDialog();
         

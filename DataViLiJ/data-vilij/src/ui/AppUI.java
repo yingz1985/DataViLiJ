@@ -160,7 +160,7 @@ public final class AppUI extends UITemplate {
         processor = new AppData(applicationTemplate);
         setupButtons();
         populateContainers();
-        run = null;
+        run = new RandomClassifier(processor.getProcessor(),0,0,false);
         done = new Button(AppPropertyTypes.EDIT.name());
     }
     public void resetSaveButton()
@@ -173,7 +173,6 @@ public final class AppUI extends UITemplate {
         // TODO for homework 1
         clas.setDisable(false);
         thread = null;
-        run = null;
         //newButton.setDisable(true);
         saveButton.setDisable(true);
         chart.getData().clear();
@@ -394,6 +393,8 @@ public final class AppUI extends UITemplate {
     {
         backButton.setDisable(c);
         done.setDisable(c);
+        currentContainer.getWindow((RadioButton)group.getSelectedToggle()).getButton().setDisable(c);
+        
     }
     /**
      * <dt>Precondition:
@@ -428,6 +429,7 @@ public final class AppUI extends UITemplate {
             if(this.thread!=null)
             {
                 run.stop();
+                thread = null;
             }
             leftPane.setBottom(algorithmPane());
         }     
@@ -528,6 +530,7 @@ public final class AppUI extends UITemplate {
             {
                 //////////button should be disabled, will be dealt with later 
                 //currentContainer.getWindow((RadioButton)group.getSelectedToggle()).getButton().setDisable(true);
+                
                 AlgorithmContainer container = currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer();
                 if(!container.isCluster())
                 {
@@ -552,15 +555,17 @@ public final class AppUI extends UITemplate {
                         }
                         else
                         {
-                            if(counter==container.getMaxIterations())    counter = 0;
                             if(counter!=0)  
                             {
-                                run.notifyThread();
+                                if(!run.done())
+                                    run.notifyThread();
+                                else
+                                    counter = 0;
                                 //synchronized(runButton)
                                 //thread.notifyAll();
                                 //  { runButton.notifyAll();}
                             }
-                            else{
+                            if(counter ==0){
                                 run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate);
                             //run.setToContinue(container.tocontinue());
                                 thread = new Thread(run);
