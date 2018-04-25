@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -111,9 +110,9 @@ public class RandomClassifier extends Classifier {
     {
        
                 for (int i = 1; i <= maxIterations; i++) {
-                    int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-                    int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-                    int constant     = new Double(RAND.nextDouble() * 100).intValue();
+                    int xCoefficient =  new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
+                    int yCoefficient = 10;
+                    int constant     = RAND.nextInt(11);
                     
                     ((AppUI) app.getUIComponent()).setRun(true);
                     ((AppUI) app.getUIComponent()).running(true);
@@ -134,7 +133,7 @@ public class RandomClassifier extends Classifier {
                     //System.out.printf("Iteration number %d: ", i); //
                try{
                     Platform.runLater(()->dataset.updateChart(output));
-                     flush();
+                    // flush();
                     ((AppUI) app.getUIComponent()).setRun(false);
                     ((AppUI) app.getUIComponent()).setScreenshot(false);
                     this.wait();
@@ -166,9 +165,9 @@ public class RandomClassifier extends Classifier {
         ((AppUI) app.getUIComponent()).setRun(true);
         ((AppUI) app.getUIComponent()).setScreenshot(true);
         for (int i = 1; i <= maxIterations && tocontinue()&&proceed; i++) {
-            int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-            int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-            int constant     = new Double(RAND.nextDouble() * 100).intValue();
+            int xCoefficient =  new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
+            int yCoefficient = 10;
+            int constant     = RAND.nextInt(11);
 
             // this is the real output of the classifier
             output = Arrays.asList(xCoefficient, yCoefficient, constant);
@@ -176,7 +175,7 @@ public class RandomClassifier extends Classifier {
             // everything below is just for internal viewing of how the output is changing
             // in the final project, such changes will be dynamically visible in the UI
             if (i % updateInterval == 0) {
-                System.out.printf("Iteration number %d: ", i); //
+               // System.out.printf("Iteration number %d: ", i); //
                  try
             {
                 Platform.runLater(()->dataset.updateChart(output));
@@ -194,7 +193,7 @@ public class RandomClassifier extends Classifier {
                     flush();
             }
             if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
-                System.out.printf("Iteration number %d: ", i);
+                //System.out.printf("Iteration number %d: ", i);
                    try
             {
                 Platform.runLater(()->dataset.updateChart(output));

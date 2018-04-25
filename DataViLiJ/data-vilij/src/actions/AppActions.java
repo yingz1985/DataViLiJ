@@ -60,6 +60,7 @@ public final class AppActions implements ActionComponent {
                      applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DATA_FILE_EXT.name()));
         fileChooser.getExtensionFilters().add(save);
         fileChooser.setInitialDirectory(file);
+        savedOnce = false;
               
     }
 
@@ -100,6 +101,7 @@ public final class AppActions implements ActionComponent {
                 loaded = false;
                 ((AppUI) applicationTemplate.getUIComponent()).newPage();
                 
+                ((AppUI) applicationTemplate.getUIComponent()).setScreenshot(true);
              }
            
        }
@@ -137,13 +139,20 @@ public final class AppActions implements ActionComponent {
               saved = true;
               ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
               ((AppUI)applicationTemplate.getUIComponent()).setNewText();
-              }
               savedOnce = true;
+              }
+              else
+              {
+                  saved = false;
+                  savedOnce = false;
+              }
+              
               //disables the save button
               
         }
               catch(Exception x)
               {
+                  savedOnce = false;
                    //throw new Exception();
                  // System.out.println(x.toString());
               }
@@ -340,8 +349,8 @@ public final class AppActions implements ActionComponent {
             }
 
         }
-       else
-       {
+       //else
+       //{
            if(!((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done()) {
             
           ConfirmationDialog dialog = ConfirmationDialog.getDialog();
@@ -364,7 +373,8 @@ public final class AppActions implements ActionComponent {
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
                 ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
                 System.exit(0);
-        }
+       // }
+       System.exit(0);
        
       
 
@@ -397,7 +407,7 @@ public final class AppActions implements ActionComponent {
         } 
         catch (Exception e) {
             
-            System.out.print(e.getCause());
+            //System.out.print(e.getCause());
         
         }
        }
@@ -472,14 +482,23 @@ public final class AppActions implements ActionComponent {
               
                file = fileChooser.showSaveDialog((
                       (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
-              if(file!=null){
+              if(file!=null)
+              {
               PrintWriter writer = new PrintWriter(file);
               //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
               writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
-              writer.close();}
+              writer.close();
               saved = true;
               ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
               ((AppUI)applicationTemplate.getUIComponent()).setNewText();
+              savedOnce = true;
+              }
+              else
+              {
+                  saved = false;
+                  savedOnce = false;
+              }
+              
               return file != null;
               }
               catch(Exception x)

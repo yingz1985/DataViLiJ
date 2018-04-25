@@ -256,6 +256,7 @@ public final class AppUI extends UITemplate {
         leftPane.setBottom(null);
         leftPane.setCenter(null);
         workSpace.setRight(emptyChart);
+        done.setText("Edit");
     }
     
     public void setDescription()
@@ -510,10 +511,7 @@ public final class AppUI extends UITemplate {
     {
         return this.run;
     }
-    public Thread getT()
-    {
-        return this.thread;
-    }
+
     public synchronized void runActions()
     {
         runButton.setOnAction(e->
@@ -536,7 +534,7 @@ public final class AppUI extends UITemplate {
                 {
                     backButton.setDisable(true);
                     
-                    System.out.print(container.toString());
+                    //System.out.print(container.toString());
                      try
                     {
                         

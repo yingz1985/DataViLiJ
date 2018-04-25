@@ -205,16 +205,16 @@ public final class TSDProcessor {
     }
     public synchronized void updateChart(List<Integer> data)
     {
-        if(chart.getData().isEmpty())
-            return;
+            if(chart.getData().isEmpty())
+                return;
         //synchronized
         //chart.getData().get(chart.getData().size()-1);//get the last series and replace it 
         //chart.getData().clear();
         //toChartData(chart);
             
-            minY = ((-minX*data.get(0))+data.get(2))/data.get(1);
-            maxY = ((-maxX*data.get(0))+data.get(2))/data.get(1);
-            System.out.println("("+minX+","+minY+")"+"  ("+maxX+","+maxY+")");
+            minY = ((-minX*data.get(0))-data.get(2))/data.get(1);
+            maxY = ((-maxX*data.get(0))-data.get(2))/data.get(1);
+           // System.out.println("("+minX+","+minY+")"+"  ("+maxX+","+maxY+")");
             dataMin = new XYChart.Data<>(minX,minY);
             dataMax = new XYChart.Data<>(maxX,maxY);
             XYChart.Series<Number,Number> serie = new XYChart.Series<>();
