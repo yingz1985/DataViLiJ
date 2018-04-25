@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -44,6 +45,7 @@ public class RandomClassifier extends Classifier {
     public void stop()
     {
         proceed = false;
+        done = true;
     }
 
     @Override
@@ -102,8 +104,11 @@ public class RandomClassifier extends Classifier {
         }
         done = true;
         ((AppUI) app.getUIComponent()).running(false);
-        ((AppUI) app.getUIComponent()).setScreenshot(false);
         ((AppUI) app.getUIComponent()).setRun(false);
+        if(proceed)
+        {
+            ((AppUI) app.getUIComponent()).setScreenshot(false);
+        }
         
     }
     public synchronized void notContinuous()
@@ -117,6 +122,8 @@ public class RandomClassifier extends Classifier {
                     ((AppUI) app.getUIComponent()).setRun(true);
                     ((AppUI) app.getUIComponent()).running(true);
                     ((AppUI) app.getUIComponent()).setScreenshot(true);
+                     AtomicInteger k = new AtomicInteger(i);
+                    Platform.runLater(()->((AppUI) app.getUIComponent()).setIteration(k.intValue()));
             // this is the real output of the classifier
                     output = Arrays.asList(xCoefficient, yCoefficient, constant);
                     try
@@ -127,6 +134,7 @@ public class RandomClassifier extends Classifier {
                         {
                            // Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    
             // everything below is just for internal viewing of how the output is changing
             // in the final project, such changes will be dynamically visible in the UI
                     if (i % updateInterval == 0) {
@@ -141,7 +149,7 @@ public class RandomClassifier extends Classifier {
                }
                catch (InterruptedException ex)
                 {
-                  Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
+                  //Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
                 }
                
                        
@@ -168,9 +176,19 @@ public class RandomClassifier extends Classifier {
             int xCoefficient =  new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
             int yCoefficient = 10;
             int constant     = RAND.nextInt(11);
-
+            AtomicInteger k = new AtomicInteger(i);
             // this is the real output of the classifier
+            Platform.runLater(()->((AppUI) app.getUIComponent()).setIteration(k.intValue()));
+
             output = Arrays.asList(xCoefficient, yCoefficient, constant);
+            try
+            {
+                            Thread.sleep(20);
+            }
+            catch (InterruptedException ex)
+            {
+                           // Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             // everything below is just for internal viewing of how the output is changing
             // in the final project, such changes will be dynamically visible in the UI
@@ -190,7 +208,7 @@ public class RandomClassifier extends Classifier {
                 Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
             }
                 
-                    flush();
+                   // flush();
             }
             if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
                 //System.out.printf("Iteration number %d: ", i);
@@ -205,9 +223,9 @@ public class RandomClassifier extends Classifier {
             
             catch (InterruptedException ex)
             {
-                Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
             }
-                flush();
+               // flush();
                 break;
             }
         }

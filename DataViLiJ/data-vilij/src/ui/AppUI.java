@@ -72,6 +72,8 @@ public final class AppUI extends UITemplate {
     private Thread                       thread;
     private int                          counter = 0;
     private Button                       backButton;
+    private VBox                        chartSpace;
+    private Label                       iteration;
     
     public void disableClassification()
     {
@@ -162,16 +164,25 @@ public final class AppUI extends UITemplate {
         populateContainers();
         run = new RandomClassifier(processor.getProcessor(),0,0,false);
         done = new Button(AppPropertyTypes.EDIT.name());
+        iteration = new Label();
+        chartSpace = new VBox();
+        chartSpace.getChildren().addAll(chart,iteration);
     }
+    
     public void resetSaveButton()
     {
         saveButton.setDisable(true);
+    }
+    public void setIteration(int i)
+    {
+        iteration.setText("Iteration "+i);
     }
     
     @Override
     public void clear() {
         // TODO for homework 1
         clas.setDisable(false);
+        iteration.setText("");
         thread = null;
         //newButton.setDisable(true);
         saveButton.setDisable(true);
@@ -542,7 +553,7 @@ public final class AppUI extends UITemplate {
                         chart.getData().clear();
                         processor.loadData(returnActualText());
                         processor.displayData();
-                        workSpace.setRight(chart);
+                        workSpace.setRight(chartSpace);
                
                         if(container.tocontinue())
                         {
