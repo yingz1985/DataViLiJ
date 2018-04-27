@@ -480,10 +480,11 @@ public final class AppActions implements ActionComponent {
               fileChooser.setInitialFileName(file.getName());
               
               
-               file = fileChooser.showSaveDialog((
+               File tempFile = fileChooser.showSaveDialog((
                       (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
-              if(file!=null)
+              if(tempFile!=null)
               {
+                  file = tempFile;
               PrintWriter writer = new PrintWriter(file);
               //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
               writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
@@ -499,7 +500,7 @@ public final class AppActions implements ActionComponent {
                   savedOnce = false;
               }
               
-              return file != null;
+              return tempFile != null;
               }
               catch(Exception x)
               {
