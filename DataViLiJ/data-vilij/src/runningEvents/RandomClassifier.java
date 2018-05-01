@@ -6,6 +6,7 @@
 package runningEvents;
 
 
+import dataprocessors.DataSet;
 import dataprocessors.TSDProcessor;
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class RandomClassifier extends Classifier {
 
     @SuppressWarnings("FieldCanBeLocal")
     // this mock classifier doesn't actually use the data, but a real classifier will
-    private TSDProcessor dataset;
+    private DataSet dataset;
     private final int maxIterations;
     private final int updateInterval;
     private ApplicationTemplate app;
@@ -65,7 +66,7 @@ public class RandomClassifier extends Classifier {
     {
         return this.started;
     }
-    public RandomClassifier(TSDProcessor dataset,AlgorithmContainer container,ApplicationTemplate app)
+    public RandomClassifier(DataSet dataset,AlgorithmContainer container,ApplicationTemplate app)
     {
         this.dataset = dataset;
         this.maxIterations = container.getMaxIterations();
@@ -75,15 +76,19 @@ public class RandomClassifier extends Classifier {
         this.proceed = true;
         done = true;
     }
-    public RandomClassifier(TSDProcessor dataset,
+    public RandomClassifier(DataSet dataset,
                             int maxIterations,
                             int updateInterval,
-                            boolean tocontinue) {
+                            boolean tocontinue,int rand,ApplicationTemplate app) {
         this.dataset = dataset;
         this.maxIterations = maxIterations;
         this.updateInterval = updateInterval;
         this.tocontinue = new AtomicBoolean(tocontinue);
         done = true;
+        this.app = app;
+        this.proceed = true;
+        done = true;
+        
     }
     public boolean done()
     {
@@ -241,10 +246,4 @@ public class RandomClassifier extends Classifier {
         System.out.printf("%d\t%d\t%d%n", output.get(0), output.get(1), output.get(2));
     }
 
-    /** A placeholder main method to just make sure this code runs smoothly */
-    public static void main(String... args) throws IOException {
-        //TSDProcessor dataset    = DataSet.fromTSDFile(Paths.get("/path/to/some-data.tsd"));
-       // RandomClassifier classifier = new RandomClassifier(dataset, 100, 5, true);
-       // classifier.run(); // no multithreading yet
-    }
 }

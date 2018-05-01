@@ -2,6 +2,7 @@ package ui;
 //@author Ying Zhang
 import actions.AppActions;
 import dataprocessors.AppData;
+import dataprocessors.DataSet;
 import static java.io.File.separator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -30,7 +31,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import runningEvents.AlgorithmContainer;
+import runningEvents.Classifier;
+import runningEvents.Clusterer;
+import runningEvents.KMeansClusterer;
 import runningEvents.RandomClassifier;
+import runningEvents.RandomClusterer;
 import vilij.propertymanager.PropertyManager;
 import settings.AppPropertyTypes;
 import vilij.components.ErrorDialog;
@@ -68,7 +73,10 @@ public final class AppUI extends UITemplate {
     private Button                       clas;
     private Button                       cluster;
     private ToggleGroup                  group;
-    private RandomClassifier             run;
+    
+    private Classifier                   run;
+    private Clusterer                    clust;
+    
     private Thread                       thread;
     private int                          counter = 0;
     private Button                       backButton;
@@ -162,7 +170,7 @@ public final class AppUI extends UITemplate {
         processor = new AppData(applicationTemplate);
         setupButtons();
         populateContainers();
-        run = new RandomClassifier(processor.getProcessor(),0,0,false);
+        run = new RandomClassifier(null,0,0,false,0,applicationTemplate);;
         done = new Button(AppPropertyTypes.EDIT.name());
         iteration = new Label();
         chartSpace = new VBox();
@@ -236,6 +244,7 @@ public final class AppUI extends UITemplate {
         description = new Label();
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
+        
         chart = new LineChart<Number,Number>(xAxis,yAxis);
 
         workSpace = new BorderPane();
@@ -440,7 +449,10 @@ public final class AppUI extends UITemplate {
         {
             if(this.thread!=null)
             {
+                
                 run.stop();
+                clust.stop();
+                
                 thread = null;
             }
             leftPane.setBottom(algorithmPane());
@@ -520,7 +532,12 @@ public final class AppUI extends UITemplate {
     }
     public Runnable getThread()
     {
-        return this.run;
+        if(currentContainer == null) return null;
+        if(currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer().isCluster())
+            return this.clust;
+        else
+            return this.run;
+        
     }
 
     public synchronized void runActions()
@@ -541,6 +558,7 @@ public final class AppUI extends UITemplate {
                 //currentContainer.getWindow((RadioButton)group.getSelectedToggle()).getButton().setDisable(true);
                 
                 AlgorithmContainer container = currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer();
+                workSpace.setRight(chartSpace);
                 if(!container.isCluster())
                 {
                     backButton.setDisable(true);
@@ -548,17 +566,21 @@ public final class AppUI extends UITemplate {
                     //System.out.print(container.toString());
                      try
                     {
-                        
-                        processor.clear();
+                        DataSet dataset= new DataSet();
+                        dataset.fromTSDFile(this.returnActualText());
+                        dataset.setChart(chart);
+                        //dataset.toChartData();
+                        /*processor.clear();
                         chart.getData().clear();
                         processor.loadData(returnActualText());
                         processor.displayData();
-                        workSpace.setRight(chartSpace);
-               
+                        
+                        */
                         if(container.tocontinue())
                         {
                             counter = 0;
-                            run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate);
+                            run = new RandomClassifier(dataset,container.getMaxIterations(),container.getUpdateInterval(),
+                                    container.tocontinue(),0,applicationTemplate);
                             thread = new Thread(run);
                             thread.start();
                         }
@@ -566,8 +588,8 @@ public final class AppUI extends UITemplate {
                         {
                             if(counter!=0)  
                             {
-                                if(!run.done())
-                                    run.notifyThread();
+                                if(!((RandomClassifier)run).done())
+                                    ((RandomClassifier)run).notifyThread();
                                 else
                                     counter = 0;
                                 //synchronized(runButton)
@@ -575,7 +597,8 @@ public final class AppUI extends UITemplate {
                                 //  { runButton.notifyAll();}
                             }
                             if(counter ==0){
-                                run = new RandomClassifier(processor.getProcessor(),container,applicationTemplate);
+                                run = new RandomClassifier(dataset,container.getMaxIterations(),container.getUpdateInterval(),
+                                    container.tocontinue(),0,applicationTemplate);
                             //run.setToContinue(container.tocontinue());
                                 thread = new Thread(run);
                                 thread.start();
@@ -597,6 +620,39 @@ public final class AppUI extends UITemplate {
                    
                    
                    
+                }
+                else
+                {
+                    DataSet dataset= new DataSet();
+                    dataset.fromTSDFile(this.returnActualText());
+                    dataset.setChart(chart);
+                    dataset.toChartData();
+                    
+                    
+                    if(counter!=0)  
+                    {
+                                if(!clust.done())
+                                    clust.notifyThread();
+                                else
+                                    counter = 0;
+                                //synchronized(runButton)
+                                //thread.notifyAll();
+                                //  { runButton.notifyAll();}
+                    }
+                    if(counter ==0){
+                                clust = new RandomClusterer(dataset,container.getMaxIterations(),container.getUpdateInterval(),
+                                container.tocontinue(),container.getLabelNum(),applicationTemplate);
+                                //new KMeansClusterer(dataset,container.getMaxIterations(),container.getUpdateInterval(),
+                                //container.tocontinue(),container.getLabelNum(),applicationTemplate);
+                                thread = new Thread(clust);
+                                thread.start();
+                                chart.setLegendVisible(false);
+                                counter+=container.getUpdateInterval();
+                    }
+                    //chart.getXAxis().setAutoRanging(true);
+                    //chart.getYAxis().setAutoRanging(true);
+                    
+                    
                 }
             }
         });

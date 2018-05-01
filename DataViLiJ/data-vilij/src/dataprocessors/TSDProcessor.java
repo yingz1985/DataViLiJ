@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.Cursor;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Tooltip;
 
 /**
@@ -246,8 +247,12 @@ public final class TSDProcessor {
 
             //});
             //Thread.sleep(10);
-
-                 
+            chart.getXAxis().setAutoRanging(false);
+            //chart.getYAxis().setAutoRanging(false);
+            ((NumberAxis)chart.getXAxis()).setLowerBound(minX-1);
+            ((NumberAxis)chart.getXAxis()).setUpperBound(maxX+1);
+            //((NumberAxis)chart.getYAxis()).setLowerBound(minY);
+            //((NumberAxis)chart.getYAxis()).setUpperBound(maxY);
             
             /*
             Platform.runLater(() ->

@@ -70,7 +70,7 @@ public class ConfigWindow
     }
     public AlgorithmContainer returnContainer()
     {
-        config.configure(defaultMax, defaultIt, toCont);
+        config.configure(defaultMax, defaultIt, toCont,defaultLabels);
         return config;
     }
     public void configure(AlgorithmContainer container)

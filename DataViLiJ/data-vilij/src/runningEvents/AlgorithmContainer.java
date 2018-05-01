@@ -24,6 +24,7 @@ public class AlgorithmContainer
     private boolean toContinue;
     
     private boolean configured;
+    private int label;
     
     private HashMap<RadioButton,ConfigWindow> types;
     
@@ -77,13 +78,18 @@ public class AlgorithmContainer
         
     }
             
-    public void configure(int max,int update,boolean cont)
+    public void configure(int max,int update,boolean cont,int label)
     {
         
         MaxIterations = max;
         UpdateInterval = update;
         toContinue = cont;
         configured = true;
+        this.label = label;
+    }
+    public int getLabelNum()
+    {
+        return label;
     }
     public boolean emptyData()
     {

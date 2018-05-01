@@ -186,7 +186,7 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleLoadRequest() {
         String text = "";
-        if(!((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done())
+        /*if(!((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done())
                    
             {
                 ConfirmationDialog dialog = ConfirmationDialog.getDialog();
@@ -204,7 +204,7 @@ public final class AppActions implements ActionComponent {
                 }
                 
 
-            }
+            }*/
         try
         {
             promptToSave();
@@ -286,38 +286,36 @@ public final class AppActions implements ActionComponent {
                     while(i<10)
                     {
                         text+=scanner.nextLine()+"\n";
-                        //load only the first 10 lines into the textArea
+
                         i++;
                     }
                     
                     
                 }
-                //System.out.println(text);
+
                 ((AppUI) applicationTemplate.getUIComponent()).setLeftPane();
                 if(processor.getProcessor().hasNull() || processor.getProcessor().returnLabels().length!=2)
                 {
                     ((AppUI) applicationTemplate.getUIComponent()).disableClassification();
-                    //System.out.print("disabled from app actions");
                 }
                 else
                     ((AppUI) applicationTemplate.getUIComponent()).enableClassification();
                 ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(text);
                 loaded = true;
                 ((AppUI) applicationTemplate.getUIComponent()).setProcessor(processor);
-                //if read correctly without errors paste it into the text area
-                //saved = true; //no need to save it when you first load it, since it was originally saved
+
                 ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
-               // loaded = true; //loaded new data
+
                
                 saved = true;
                 
             }
             catch(Exception x)
             {
-                //System.out.println(x.getCause());
+   
                 ((AppUI)applicationTemplate.getUIComponent()).newPage();
                 ((AppUI)applicationTemplate.getUIComponent()).setNewButton();
-                //if data is loaded incorrectly, the page is cleared out
+
                 
             }
         }
@@ -329,7 +327,7 @@ public final class AppActions implements ActionComponent {
     public void handleExitRequest() {
         // TODO for homework 1
         
-        //I wanted to prompt Confirmation dialog even when exiting 
+
         
        if(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()
           && !saved)
@@ -349,8 +347,7 @@ public final class AppActions implements ActionComponent {
             }
 
         }
-       //else
-       //{
+       /*
            if(!((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done()) {
             
           ConfirmationDialog dialog = ConfirmationDialog.getDialog();
@@ -373,7 +370,7 @@ public final class AppActions implements ActionComponent {
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
                 ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
                 System.exit(0);
-       // }
+       */
        System.exit(0);
        
       
