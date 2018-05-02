@@ -627,7 +627,7 @@ public final class AppUI extends UITemplate {
                         
 
                     
-                    System.out.println("workinggggg");
+                    //System.out.println("workinggggg");
                     
                     
                 }
@@ -793,6 +793,7 @@ public final class AppUI extends UITemplate {
                         else 
                         {
                             leftPane.setBottom(choicePane(clas.getText()));
+                            isolateChoice(false);
                         }
                         
                     }
@@ -991,5 +992,14 @@ public final class AppUI extends UITemplate {
         {
             ((RadioButton)o).setDisable(c);
         }
+    }
+    
+    public boolean done()
+    {
+        return run.done();
+    }
+    public void stop()
+    {
+        run.stop();
     }
 }

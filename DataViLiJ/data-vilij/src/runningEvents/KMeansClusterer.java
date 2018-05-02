@@ -122,6 +122,15 @@ public class KMeansClusterer extends Clusterer {
                             Logger.getLogger(KMeansClusterer.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    else
+                        try
+                        {
+                            Thread.sleep(500);
+                        }
+                        catch(InterruptedException ex)
+                        {
+                        
+                        }
                     
                    // Thread.sleep(500);
                 //}

@@ -6,19 +6,10 @@
 package runningEvents;
 
 import dataprocessors.DataSet;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javafx.application.Platform;
-import javafx.geometry.Point2D;
 import ui.AppUI;
 import vilij.templates.ApplicationTemplate;
 
@@ -100,7 +91,7 @@ public class RandomClusterer extends Clusterer
             }
             if (i % updateInterval == 0) {
                      if(!proceed)break;
-                     System.out.print(k.intValue());
+                     //System.out.print(k.intValue());
                     Platform.runLater(()->
                     {
                        

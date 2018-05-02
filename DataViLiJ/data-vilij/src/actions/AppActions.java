@@ -74,7 +74,7 @@ public final class AppActions implements ActionComponent {
             {
                 //RandomClassifier t = (RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread();
                 //t.stop();
-                 if(!(((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done()))
+                 if(!(((AppUI) applicationTemplate.getUIComponent()).done()))
                  {
                      
                      ConfirmationDialog dialog = ConfirmationDialog.getDialog();
@@ -84,7 +84,7 @@ public final class AppActions implements ActionComponent {
                         AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
                     if(dialog.getSelectedOption().toString().equals("YES"))   
                 {
-                    ((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).stop();
+                    ((AppUI) applicationTemplate.getUIComponent()).stop();
                 }
                 else
                 {
@@ -186,7 +186,7 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleLoadRequest() {
         String text = "";
-        /*if(!((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done())
+        if(!((AppUI) applicationTemplate.getUIComponent()).done())
                    
             {
                 ConfirmationDialog dialog = ConfirmationDialog.getDialog();
@@ -196,7 +196,7 @@ public final class AppActions implements ActionComponent {
                         AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
                     if(dialog.getSelectedOption().toString().equals("YES"))   
                 {
-                    ((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).stop();
+                    ((AppUI) applicationTemplate.getUIComponent()).stop();
                 }
                 else
                 {
@@ -204,7 +204,7 @@ public final class AppActions implements ActionComponent {
                 }
                 
 
-            }*/
+            }
         try
         {
             promptToSave();
@@ -347,8 +347,8 @@ public final class AppActions implements ActionComponent {
             }
 
         }
-       /*
-           if(!((RandomClassifier)((AppUI) applicationTemplate.getUIComponent()).getThread()).done()) {
+       
+           if(!((AppUI) applicationTemplate.getUIComponent()).done()) {
             
           ConfirmationDialog dialog = ConfirmationDialog.getDialog();
         
@@ -357,6 +357,7 @@ public final class AppActions implements ActionComponent {
                    AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
          if(dialog.getSelectedOption().toString().equals("YES"))   
          {
+             ((AppUI) applicationTemplate.getUIComponent()).stop();
              ((AppUI) applicationTemplate.getUIComponent()).clear();
               ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
               System.exit(0);
@@ -370,7 +371,7 @@ public final class AppActions implements ActionComponent {
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
                 ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
                 System.exit(0);
-       */
+       
        System.exit(0);
        
       
