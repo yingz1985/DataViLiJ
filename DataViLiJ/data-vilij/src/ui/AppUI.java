@@ -4,6 +4,11 @@ import actions.AppActions;
 import dataprocessors.AppData;
 import dataprocessors.DataSet;
 import static java.io.File.separator;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -14,6 +19,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
@@ -30,6 +36,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import runningEvents.Algorithm;
 import runningEvents.AlgorithmContainer;
 import runningEvents.Classifier;
 import runningEvents.Clusterer;
@@ -74,8 +81,7 @@ public final class AppUI extends UITemplate {
     private Button                       cluster;
     private ToggleGroup                  group;
     
-    private Classifier                   run;
-    private Clusterer                    clust;
+    private Algorithm                    run;
     
     private Thread                       thread;
     private int                          counter = 0;
@@ -393,17 +399,23 @@ public final class AppUI extends UITemplate {
     public void populateContainers()
     {
         group = new ToggleGroup();
-        RadioButton c0 = new RadioButton(applicationTemplate.manager.getPropertyValue(
-          AppPropertyTypes.RANDOM_CLUSTER.name()));
-        c0.setPrefHeight(30);
-        RadioButton c1 = new RadioButton(applicationTemplate.manager.getPropertyValue(
-          AppPropertyTypes.RANDOM_CLASS.name()));
-        c1.setPrefHeight(30);
-
-        ClassContainer.addType(c1, new ConfigWindow(applicationTemplate,ClassContainer));
-        ClusterContainer.addType(c0, new ConfigWindow(applicationTemplate,ClusterContainer));
-        c0.setToggleGroup(group);
-        c1.setToggleGroup(group);
+        String[] classifier = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLASSIFIER_ALG.name()).split(",");
+        String[] clusterer = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLUSTERER_ALG.name()).split(",");
+        for(int i = 0;i<classifier.length;i++)
+        {
+            RadioButton c0 = new RadioButton(classifier[i]);
+            ClassContainer.addType(c0, new ConfigWindow(applicationTemplate,ClassContainer));
+            c0.setPrefHeight(30);
+            c0.setToggleGroup(group);
+        }
+        for(int i = 0;i<clusterer.length;i++)
+        {
+            RadioButton c0 = new RadioButton(clusterer[i]);
+            ClusterContainer.addType(c0, new ConfigWindow(applicationTemplate,ClusterContainer));
+            c0.setPrefHeight(30);
+            c0.setToggleGroup(group);
+        }
+        
         
     }
     public void setRun(boolean c)
@@ -451,8 +463,6 @@ public final class AppUI extends UITemplate {
             {
                 
                 run.stop();
-                clust.stop();
-                
                 thread = null;
             }
             leftPane.setBottom(algorithmPane());
@@ -463,8 +473,8 @@ public final class AppUI extends UITemplate {
         Label title = new Label(chosen);
         HBox box = new HBox();
         box.setPrefHeight(30);
-        
-
+        VBox midBox = new VBox();
+        ScrollPane mid = new ScrollPane();
         if(chosen.equals("Classification"))
         {
             currentContainer = ClassContainer;
@@ -476,8 +486,13 @@ public final class AppUI extends UITemplate {
         }
         for(Object o : currentContainer.returnTypes())
             {
+                    box = new HBox();
                     box.getChildren().addAll((RadioButton)o,currentContainer.getWindow((RadioButton)o).getButton());
+                    midBox.getChildren().add(box);
             }
+        mid.setContent(midBox);
+        mid.setPannable(true);
+        mid.setPrefViewportHeight(40);
         //config.setDisable(true);
         for(Object o: currentContainer.returnWindows())
         {
@@ -514,7 +529,7 @@ public final class AppUI extends UITemplate {
          
         pane.setTop(title);
 
-        pane.setCenter(box);
+        pane.setCenter(mid);
         BorderPane.setAlignment(box, Pos.TOP_CENTER);
         //pane.setBottom(runButton);
         BorderPane.setMargin(box, new Insets(10));
@@ -532,11 +547,7 @@ public final class AppUI extends UITemplate {
     }
     public Runnable getThread()
     {
-        if(currentContainer == null) return null;
-        if(currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer().isCluster())
-            return this.clust;
-        else
-            return this.run;
+        return run;
         
     }
 
@@ -559,6 +570,85 @@ public final class AppUI extends UITemplate {
                 
                 AlgorithmContainer container = currentContainer.getWindow((RadioButton)group.getSelectedToggle()).returnContainer();
                 workSpace.setRight(chartSpace);
+                ClassLoader loader = ClassLoader.getSystemClassLoader();
+                try
+                {
+                    backButton.setDisable(true);
+                    DataSet dataset= new DataSet();
+                    dataset.fromTSDFile(this.returnActualText());
+                    dataset.setChart(chart);
+                    Class c = loader.loadClass(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUNNINGEVENT.name())+((RadioButton)group.getSelectedToggle()).getText());
+                    Constructor con = c.getConstructors()[0];
+                    //run = (Algorithm)con.newInstance(dataset,container.getMaxIterations(),container.getUpdateInterval(),
+                             //   container.tocontinue(),container.getLabelNum(),applicationTemplate);
+                    //Method method = c.getMethod("run");
+                    //thread = new Thread((Runnable)k);
+                    //thread.start();
+                    if(container.tocontinue())
+                    {
+                            isolateChoice(true);
+                            counter = 0;
+
+                            run = (Algorithm)con.newInstance(dataset,container.getMaxIterations(),container.getUpdateInterval(),
+                                container.tocontinue(),container.getLabelNum(),applicationTemplate);
+                            thread = new Thread(run);
+                            thread.start();
+                    }
+                     else
+                        {
+                            if(counter!=0)  
+                            {
+                                
+                                if(!(boolean)c.getMethod("done").invoke(run))
+                                    c.getMethod("notifyThread").invoke(run);
+                                else
+                                    counter = 0;
+                                    
+                                //if(!((RandomClassifier)run).done())
+                                  //  ((RandomClassifier)run).notifyThread();
+                                //else
+                                  //  counter = 0;
+                                
+                            }
+                            if(counter ==0){
+                                isolateChoice(true);
+                                run = (Algorithm)con.newInstance(dataset,container.getMaxIterations(),container.getUpdateInterval(),
+                                container.tocontinue(),container.getLabelNum(),applicationTemplate);
+                                thread = new Thread(run);
+                                thread.start();  
+                                counter+=container.getUpdateInterval();
+                            
+                            }
+                        }
+                        
+                        
+                        chart.setLegendVisible(false);
+                        
+                        
+
+                    
+                    System.out.println("workinggggg");
+                    
+                    
+                }
+                catch (ClassNotFoundException ex)
+                {
+                   System.out.println("could not find class");
+                }
+                catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex)
+                {
+                    System.out.println("constructor invoked wronggg");
+                }
+                catch (NoSuchMethodException ex)
+                {
+                    System.out.println("cannot find method");
+                }
+                catch (SecurityException ex)
+                {
+                    System.out.println("security issues");
+                }
+                
+             /*   
                 if(!container.isCluster())
                 {
                     backButton.setDisable(true);
@@ -569,13 +659,7 @@ public final class AppUI extends UITemplate {
                         DataSet dataset= new DataSet();
                         dataset.fromTSDFile(this.returnActualText());
                         dataset.setChart(chart);
-                        //dataset.toChartData();
-                        /*processor.clear();
-                        chart.getData().clear();
-                        processor.loadData(returnActualText());
-                        processor.displayData();
-                        
-                        */
+
                         if(container.tocontinue())
                         {
                             counter = 0;
@@ -626,7 +710,6 @@ public final class AppUI extends UITemplate {
                     DataSet dataset= new DataSet();
                     dataset.fromTSDFile(this.returnActualText());
                     dataset.setChart(chart);
-                    dataset.toChartData();
                     
                     
                     if(counter!=0)  
@@ -653,7 +736,7 @@ public final class AppUI extends UITemplate {
                     //chart.getYAxis().setAutoRanging(true);
                     
                     
-                }
+                }*/
             }
         });
         
@@ -901,5 +984,12 @@ public final class AppUI extends UITemplate {
     public boolean currentRun()
     {
         return runButton.isDisabled();
+    }
+    public void isolateChoice(boolean c)
+    {
+        for(Object o:currentContainer.returnTypes())
+        {
+            ((RadioButton)o).setDisable(c);
+        }
     }
 }

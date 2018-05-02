@@ -23,6 +23,7 @@ public abstract class Clusterer implements Algorithm {
     }
     
     public void stop(){};
+    
     public boolean done()
     {
         return true;

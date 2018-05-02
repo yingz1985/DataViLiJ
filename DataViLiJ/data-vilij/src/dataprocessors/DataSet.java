@@ -140,8 +140,8 @@ public class DataSet {
                           maxY = y;
                       }
                               
-                      System.out.println("x="+x);
-                      System.out.println("maxX="+dataset.getMaxX());
+                      //System.out.println("x="+x);
+                      //System.out.println("maxX="+dataset.getMaxX());
                       
                       Point2D  point = locationOf(list.get(2));
 
@@ -235,7 +235,7 @@ public class DataSet {
            }
         getChart().getXAxis().setAutoRanging(false);
         getChart().getYAxis().setAutoRanging(false);
-        System.out.print(minX+" "+maxX+" "+minY+" "+maxY);
+        //System.out.print(minX+" "+maxX+" "+minY+" "+maxY);
         ((NumberAxis)getChart().getXAxis()).setLowerBound(getMinX()-1);
         ((NumberAxis)getChart().getXAxis()).setUpperBound(getMaxX()+1);
         ((NumberAxis)getChart().getYAxis()).setLowerBound(getMinY()-1);

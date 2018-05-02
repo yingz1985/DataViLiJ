@@ -82,16 +82,16 @@ public class RandomClusterer extends Clusterer
             ((AppUI) app.getUIComponent()).setRun(true);
             ((AppUI) app.getUIComponent()).running(true);
             ((AppUI) app.getUIComponent()).setScreenshot(true);
-            
-            assignLabels();
-             if(!proceed)break;
-            try
-            {
-                Platform.runLater(()->
+            Platform.runLater(()->
                     {
                         ((AppUI) app.getUIComponent()).setIteration(k.intValue());
                         
                     });
+            assignLabels();
+             if(!proceed)break;
+            try
+            {
+
                 Thread.sleep(20);
             }
             catch (InterruptedException ex)
@@ -100,9 +100,10 @@ public class RandomClusterer extends Clusterer
             }
             if (i % updateInterval == 0) {
                      if(!proceed)break;
+                     System.out.print(k.intValue());
                     Platform.runLater(()->
                     {
-                        //((AppUI) app.getUIComponent()).setIteration(k.intValue());
+                       
                         dataset.toChartData();
                     });
                     if(!tocontinue.get())
@@ -136,6 +137,7 @@ public class RandomClusterer extends Clusterer
         {
             ((AppUI) app.getUIComponent()).setScreenshot(false);
         }
+        ((AppUI) app.getUIComponent()).isolateChoice(false);
     }
 
 

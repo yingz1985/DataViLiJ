@@ -75,6 +75,13 @@ functionality within the main workspace. -->
         <property name="EDIT" value = "-fx-background-color: yellowgreen; -fx-text-fill:black; -fx-background-radius: 40%;"/>
         <property name="DONE" value = "-fx-background-color: grey; -fx-text-fill:black; -fx-background-radius: 40%;"/>
     
+        
+        <!-- ALGORITHM-LIST -->
+        <property name="CLASSIFIER_ALG" value = "RandomClassifier"/>
+        <property name="CLUSTERER_ALG" value = "RandomClusterer,KMeansClusterer"/>
+        <property name="RUNNINGEVENT" value = "runningEvents."/>
+        
+        
     </property_list>
     <property_options_list/>
 </properties>

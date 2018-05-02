@@ -78,4 +78,8 @@ public enum AppPropertyTypes {
     DONE,
     EDIT,
     
+    /*algorithm names*/
+    CLASSIFIER_ALG,
+    CLUSTERER_ALG,
+    RUNNINGEVENT,
 }

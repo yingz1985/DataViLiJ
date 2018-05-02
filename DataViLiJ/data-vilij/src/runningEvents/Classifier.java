@@ -28,6 +28,6 @@ public abstract class Classifier implements Algorithm {
 
     public List<Integer> getOutput() { return output; }
     
-    public void stop(){};
+
 
 }

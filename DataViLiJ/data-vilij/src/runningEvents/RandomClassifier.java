@@ -66,7 +66,7 @@ public class RandomClassifier extends Classifier {
     {
         return this.started;
     }
-    public RandomClassifier(DataSet dataset,AlgorithmContainer container,ApplicationTemplate app)
+   /* public RandomClassifier(DataSet dataset,AlgorithmContainer container,ApplicationTemplate app)
     {
         this.dataset = dataset;
         this.maxIterations = container.getMaxIterations();
@@ -75,7 +75,7 @@ public class RandomClassifier extends Classifier {
         this.app = app;
         this.proceed = true;
         done = true;
-    }
+    }*/
     public RandomClassifier(DataSet dataset,
                             int maxIterations,
                             int updateInterval,
@@ -99,6 +99,7 @@ public class RandomClassifier extends Classifier {
     public void run() {
         done = false;
         ((AppUI) app.getUIComponent()).running(true);
+        Platform.runLater(()->dataset.toChartData());
         if(tocontinue.get())
         {
             continuous();
@@ -114,12 +115,13 @@ public class RandomClassifier extends Classifier {
         {
             ((AppUI) app.getUIComponent()).setScreenshot(false);
         }
+        ((AppUI) app.getUIComponent()).isolateChoice(false);
         
     }
     public synchronized void notContinuous()
     {
        
-                for (int i = 1; i <= maxIterations; i++) {
+                for (int i = 1; i <= maxIterations&&proceed; i++) {
                     int xCoefficient =  new Long(-1 * Math.round((2 * RAND.nextDouble() - 1) * 10)).intValue();
                     int yCoefficient = 10;
                     int constant     = RAND.nextInt(11);

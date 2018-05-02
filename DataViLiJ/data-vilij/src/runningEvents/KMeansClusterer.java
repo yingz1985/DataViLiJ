@@ -146,6 +146,7 @@ public class KMeansClusterer extends Clusterer {
         {
             ((AppUI) app.getUIComponent()).setScreenshot(false);
         }
+        ((AppUI) app.getUIComponent()).isolateChoice(false);
     }
 
     private synchronized void initializeCentroids() {

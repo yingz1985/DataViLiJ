@@ -46,7 +46,7 @@ and open the template in the editor.
 }
 
 .scroll-pane {
-    -fx-background-color: black;
+    -fx-background-color: transparent;
 }
 
 .scroll-bar:horizontal, .scroll-bar:vertical{

@@ -17,5 +17,11 @@ public interface Algorithm extends Runnable {
     int getUpdateInterval();
 
     boolean tocontinue();
+    
+    public void stop();
+    
+    public boolean done();
+    
+    public void notifyThread();
 
 }
