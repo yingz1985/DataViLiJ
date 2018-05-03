@@ -5,7 +5,6 @@ import javafx.scene.chart.XYChart;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.Cursor;
 import javafx.scene.chart.NumberAxis;
@@ -104,7 +103,11 @@ public final class TSDProcessor {
                       counter.incrementAndGet();
                       name  = list.get(0);
                       if (!name.startsWith("@"))
-                            throw new IllegalArgumentException();
+                      {
+                          
+                          throw new IllegalArgumentException();
+                          
+                      }
                       String   label = list.get(1);
                       if(label.equals("null"))
                       {
@@ -113,9 +116,16 @@ public final class TSDProcessor {
                       String[] pair  = list.get(2).split(",");
                       Double x = Double.parseDouble(pair[0]);
                       Double y = Double.parseDouble(pair[1]);
+                      if(x.isNaN()||y.isNaN()||x.isInfinite()||y.isInfinite())
+                      {
+                          throw new NumberFormatException();
+                          
+                      }
                       Point2D  point = new Point2D(x,y);
                       if(dataLabels.containsKey(name))    //if name already exists in hash, throw new exception
+                      {
                           throw new NullPointerException();
+                      }
                       if(counter.get()==1)
                       {
                           minX = x;

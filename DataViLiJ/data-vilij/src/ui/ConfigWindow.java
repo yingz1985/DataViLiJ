@@ -103,6 +103,11 @@ public class ConfigWindow
         }
         
     }
+    
+    public void setLabelNum(int k)
+    {
+        this.defaultLabels = k;
+    }
     //if closed at least once, that means the user has changed config
     //if closed without configuring, the algorithm filsl the default data
     public boolean closed()

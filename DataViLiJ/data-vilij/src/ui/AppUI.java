@@ -6,9 +6,6 @@ import dataprocessors.DataSet;
 import static java.io.File.separator;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -38,11 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import runningEvents.Algorithm;
 import runningEvents.AlgorithmContainer;
-import runningEvents.Classifier;
-import runningEvents.Clusterer;
-import runningEvents.KMeansClusterer;
 import runningEvents.RandomClassifier;
-import runningEvents.RandomClusterer;
 import vilij.propertymanager.PropertyManager;
 import settings.AppPropertyTypes;
 import vilij.components.ErrorDialog;
@@ -115,6 +108,10 @@ public final class AppUI extends UITemplate {
     public void setActualText(String s)
     {
         this.actualText = s;
+    }
+    public void setText(String s)
+    {
+        textArea.setText(s);
     }
     public void setProcessor(AppData processor)
     {
@@ -554,7 +551,7 @@ public final class AppUI extends UITemplate {
     public synchronized void runActions()
     {
         runButton.setOnAction(e->
-        {
+        {   
             
             if(!currentContainer.getWindow((RadioButton)group.getSelectedToggle()).closed())
             {
@@ -577,6 +574,7 @@ public final class AppUI extends UITemplate {
                     DataSet dataset= new DataSet();
                     dataset.fromTSDFile(this.returnActualText());
                     dataset.setChart(chart);
+
                     Class c = loader.loadClass(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUNNINGEVENT.name())+((RadioButton)group.getSelectedToggle()).getText());
                     Constructor con = c.getConstructors()[0];
                     //run = (Algorithm)con.newInstance(dataset,container.getMaxIterations(),container.getUpdateInterval(),

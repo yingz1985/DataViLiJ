@@ -24,7 +24,6 @@ public class RandomClusterer extends Clusterer
     private final int           maxIterations;
     private final int           updateInterval;
     private final AtomicBoolean tocontinue;
-    private final int numberOfClusters;
     private boolean proceed;
     private boolean done;
 
@@ -38,10 +37,14 @@ public class RandomClusterer extends Clusterer
         this.updateInterval = updateInterval;
         this.tocontinue = new AtomicBoolean(toContinue);
         this.app = app;
-        this.numberOfClusters = numberOfClusters;
         done = true;
         proceed = true;
         RAND = new Random();
+        /* if(numberOfClusters>dataset.getLocations().size())
+        {  
+            int k = dataset.getLocations().size()-1;
+            numberOfClusters = dataset.getLocations().size();
+        }*/
     }
 
     @Override

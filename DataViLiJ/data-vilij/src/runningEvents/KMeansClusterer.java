@@ -34,7 +34,6 @@ public class KMeansClusterer extends Clusterer {
     private final int           maxIterations;
     private final int           updateInterval;
     private final AtomicBoolean tocontinue;
-    private final int numberOfClusters;
     private boolean proceed;
     private boolean done;
     private boolean interrupt;
@@ -49,10 +48,16 @@ public class KMeansClusterer extends Clusterer {
         this.updateInterval = updateInterval;
         this.tocontinue = new AtomicBoolean(false);
         this.app = app;
-        this.numberOfClusters = numberOfClusters;
         done = true;
         proceed = toContinue;
         interrupt = false;
+        if(numberOfClusters>=dataset.getLocations().size())
+        {  
+            int k = dataset.getLocations().size();
+            if(numberOfClusters==dataset.getLocations().size())
+                k--;
+            numberOfClusters = dataset.getLocations().size();
+        }
     }
 
     @Override
@@ -78,9 +83,12 @@ public class KMeansClusterer extends Clusterer {
     @Override
     public synchronized void run() {
         done = false;
+        
         ((AppUI) app.getUIComponent()).running(true);
-        initializeCentroids();
+        if(numberOfClusters!=0)
+            initializeCentroids();
         for (int i = 0; i <= maxIterations&&tocontinue.get()&&!interrupt; i++){//& tocontinue.get()) {
+            
              AtomicInteger k = new AtomicInteger(i);
             try
             {
@@ -95,8 +103,6 @@ public class KMeansClusterer extends Clusterer {
             {
                            // Logger.getLogger(RandomClassifier.class.getName()).log(Level.SEVERE, null, ex);
             }
-            assignLabels();
-            recomputeCentroids();
             
             if (i % updateInterval == 0) {
             
@@ -138,6 +144,9 @@ public class KMeansClusterer extends Clusterer {
                 //{
                 //}
             }
+            if(numberOfClusters==0) break;
+            assignLabels();
+            recomputeCentroids();
             if(!tocontinue.get())
             {
                 Platform.runLater(()->

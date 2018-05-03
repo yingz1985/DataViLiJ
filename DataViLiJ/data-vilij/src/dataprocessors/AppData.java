@@ -8,6 +8,7 @@ import vilij.components.DataComponent;
 import vilij.templates.ApplicationTemplate;
 
 import java.nio.file.Path;
+import javafx.stage.Stage;
 import settings.AppPropertyTypes;
 import vilij.components.ErrorDialog;
 
@@ -112,8 +113,18 @@ public class AppData implements DataComponent {
     public void saveData(Path dataFilePath) {
         // TODO: NOT A PART OF HW 1
         
+        
         try (PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath))) {
-            writer.write(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
+            writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    public void saveData(Path dataFilePath, String text)
+    {
+        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath))) {
+            writer.write(text);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
