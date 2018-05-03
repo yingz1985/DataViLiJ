@@ -51,12 +51,14 @@ public class KMeansClusterer extends Clusterer {
         done = true;
         proceed = toContinue;
         interrupt = false;
-        if(numberOfClusters>=dataset.getLocations().size())
-        {  
-            int k = dataset.getLocations().size();
-            if(numberOfClusters==dataset.getLocations().size())
-                k--;
-            numberOfClusters = dataset.getLocations().size();
+        if(dataset!=null){
+            if(numberOfClusters>=dataset.getLocations().size())
+            {     
+                int k = dataset.getLocations().size();
+                if(numberOfClusters==dataset.getLocations().size())
+                    k--;
+                numberOfClusters = dataset.getLocations().size();
+            }
         }
     }
 

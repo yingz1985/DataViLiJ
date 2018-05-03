@@ -81,7 +81,7 @@ public class RandomClusterer extends Clusterer
                         ((AppUI) app.getUIComponent()).setIteration(k.intValue());
                         
                     });
-            assignLabels();
+            
              if(!proceed)break;
             try
             {
@@ -115,6 +115,7 @@ public class RandomClusterer extends Clusterer
                     }
 
             }
+            assignLabels();
             if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
                 //System.out.printf("Iteration number %d: ", i);
                 Platform.runLater(()->  dataset.toChartData());

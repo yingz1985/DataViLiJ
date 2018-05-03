@@ -6,6 +6,8 @@ import dataprocessors.DataSet;
 import static java.io.File.separator;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -400,17 +402,46 @@ public final class AppUI extends UITemplate {
         String[] clusterer = applicationTemplate.manager.getPropertyValue(AppPropertyTypes.CLUSTERER_ALG.name()).split(",");
         for(int i = 0;i<classifier.length;i++)
         {
-            RadioButton c0 = new RadioButton(classifier[i]);
-            ClassContainer.addType(c0, new ConfigWindow(applicationTemplate,ClassContainer));
-            c0.setPrefHeight(30);
-            c0.setToggleGroup(group);
+            ClassLoader loader = ClassLoader.getSystemClassLoader();
+            try
+            {
+                Class c = loader.loadClass(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUNNINGEVENT.name())+classifier[i]);
+                RadioButton c0 = new RadioButton(classifier[i]);
+                ClassContainer.addType(c0, new ConfigWindow(applicationTemplate,ClassContainer));
+                c0.setPrefHeight(30);
+                c0.setToggleGroup(group);
+            }
+            catch (ClassNotFoundException ex)
+            {
+                //IF not found, do nothing
+                System.out.println(classifier[i]+" not found");
+            }
+                    
+            
+            
+            
         }
         for(int i = 0;i<clusterer.length;i++)
         {
-            RadioButton c0 = new RadioButton(clusterer[i]);
-            ClusterContainer.addType(c0, new ConfigWindow(applicationTemplate,ClusterContainer));
-            c0.setPrefHeight(30);
-            c0.setToggleGroup(group);
+            ClassLoader loader = ClassLoader.getSystemClassLoader();
+            
+            {
+                try
+                {
+                    Class c = loader.loadClass(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUNNINGEVENT.name())+clusterer[i]);
+                    RadioButton c0 = new RadioButton(clusterer[i]);
+                    ClusterContainer.addType(c0, new ConfigWindow(applicationTemplate,ClusterContainer));
+                    c0.setPrefHeight(30);
+                    c0.setToggleGroup(group);
+                }
+                catch (ClassNotFoundException ex)
+                {
+                   System.out.println(clusterer[i]+" not found");
+                }
+               
+            }
+            
+            
         }
         
         

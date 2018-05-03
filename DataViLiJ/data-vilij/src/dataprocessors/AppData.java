@@ -1,5 +1,6 @@
 package dataprocessors;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -123,11 +124,19 @@ public class AppData implements DataComponent {
     
     public void saveData(Path dataFilePath, String text)
     {
-        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath))) {
+        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath))) 
+        {
             writer.write(text);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
+        } 
+                catch(FileNotFoundException k)
+        {
+            
         }
+        catch (IOException e) 
+        {
+            
+        }
+
     }
 
     

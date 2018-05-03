@@ -44,6 +44,7 @@ public class AlgorithmContainer
     {
         this.algorithm = algorithm;
         types = new HashMap<>();
+        
     }
     public void setAlg(String alg)
     {
@@ -87,6 +88,51 @@ public class AlgorithmContainer
         configured = true;
         this.label = label;
     }
+    public void configure(String maxText,String updateText, boolean cont, String num,Algorithm alg)
+    {
+        try
+        {
+            int max = Integer.valueOf(maxText);
+            if(max>0)
+                MaxIterations = max;
+            else
+                MaxIterations = 1000;
+            
+        }
+        catch(NumberFormatException x)
+        {
+            MaxIterations = 1000;
+        }
+        try
+        {
+           int update = Integer.valueOf(updateText);
+           if(update>0)
+             UpdateInterval = update;
+           else
+               UpdateInterval = 1;
+        }
+        catch(NumberFormatException x)
+        {
+            UpdateInterval = 1;
+        }
+        
+            try
+            {
+                int defaultLabel = Integer.valueOf(num);
+                if(defaultLabel>0&& defaultLabel<5)
+                    label = defaultLabel;
+                else 
+                    label = defaultLabel;
+            
+            }
+            catch(NumberFormatException x)
+            {
+                label = 2;
+            }
+        
+        toContinue = cont;
+    }
+
     public int getLabelNum()
     {
         return label;

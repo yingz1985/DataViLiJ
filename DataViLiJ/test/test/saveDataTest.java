@@ -6,23 +6,14 @@
 package test;
 
 import dataprocessors.AppData;
-import dataprocessors.TSDProcessor;
 import java.awt.TextArea;
 import java.io.File;
-import static java.io.File.separator;
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
-import javafx.stage.Stage;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import settings.AppPropertyTypes;
-import ui.AppUI;
-import vilij.templates.ApplicationTemplate;
 
 /**
  *
@@ -49,6 +40,13 @@ public class saveDataTest
 
     /**
      * Test of saveData method, of class AppData.
+     * @throws java.io.FileNotFoundException
+     * @Precondition:
+     *     file path exists in the source folder
+     * 
+     * @PostCondition:
+     *     text in text area is saved in designated file successfully   
+     *     
      * 
      */
     @Test
@@ -72,6 +70,39 @@ public class saveDataTest
         assertEquals(m,text.getText());
         
         // TODO review the generated test code and remove the default call to fail.
+    }
+    
+     /**
+     * @Precondition:
+     *     file path exists in the source folder
+     * Test of saveData method, of class AppData using invalid data path.
+     * @PostCondition:
+     *     text is not saved in file 
+     * 
+     */
+    @Test (expected = FileNotFoundException.class)
+    public void testSaveBadData() throws FileNotFoundException {
+        System.out.println("* saveDataTest: saveToInvalidPathCheck");
+        TextArea text = new TextArea();
+        text.setText("@instance1	label1	10,10");
+        
+        String filePath  = "";
+        
+        //Path p = Paths.get(filePath);
+        File file = new File(filePath);
+        AppData instance = new AppData(null);
+        //String str = "save data test";
+        instance.saveData(file.toPath(),text.getText());
+        
+        Scanner k = new Scanner(file);
+        String m = "";
+        while(k.hasNextLine())
+        {
+            m+=k.nextLine();
+        }
+        assertNotEquals(m,text.getText());
+        
+
     }
 
 
