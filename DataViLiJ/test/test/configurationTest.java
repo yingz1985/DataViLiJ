@@ -5,6 +5,7 @@
  */
 package test;
 
+import dataprocessors.DataSet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class configurationTest
     @Test
     public void testConfigureRandomClassifier() {
         System.out.println("* configurationTest: RandomClassifierConfigCheck");
-        RandomClassifier c = new RandomClassifier(null,0,0,false,0,null);
+        RandomClassifier c = new RandomClassifier(new DataSet(),0,0,false,0,null);
         String maxText = "2147483647";
         String updateText = "2147483647";
         boolean cont = false;
@@ -150,14 +151,14 @@ public class configurationTest
     @Test
     public void testConfigureRandomClusterer() {
         System.out.println("* configurationTest: RandomClustererConfigCheck");
-        RandomClusterer c = new RandomClusterer(null,0,0,false,0,null);
+        RandomClusterer c = new RandomClusterer(new DataSet(),0,0,false,0,null);
         String maxText = "2147483647";
         String updateText = "2147483647";
         boolean cont = false;
         String num = "2";
         AlgorithmContainer instance = new AlgorithmContainer("");
         instance.configure(maxText, updateText, cont, num, c);
-        c = new RandomClusterer(null,instance.getMaxIterations(),
+        c = new RandomClusterer(new DataSet(),instance.getMaxIterations(),
                 instance.getUpdateInterval(),instance.tocontinue(),instance.getLabelNum(),null);
         assertEquals(true,Double.valueOf(maxText)==c.getMaxIterations());
         assertEquals(true,Double.valueOf(updateText)==c.getUpdateInterval());
@@ -172,14 +173,19 @@ public class configurationTest
     @Test
     public void testConfigureRandomClustererWithOutOfRangeinputs() {
         System.out.println("* configurationTest: RandomClustererConfigCheckWithOutOfRangeInputs");
-        RandomClusterer c = new RandomClusterer(null,0,0,false,0,null);
+        RandomClusterer c = new RandomClusterer(new DataSet(),0,0,false,0,null);
         String maxText = "0";
         String updateText = "0";
         boolean cont = false;
         String num = "5";
         AlgorithmContainer instance = new AlgorithmContainer("");
+        DataSet n = new DataSet();
+        n.fromTSDFile("@male#1	male	96.3,70\n" +
+        "@male#2	male	96.7,71\n" +
+        "@male#3	male	96.9,74\n" +
+        "@male#4	male	97.0,80");
         instance.configure(maxText, updateText, cont, num, c);
-        c = new RandomClusterer(null,instance.getMaxIterations(),
+        c = new RandomClusterer(n,instance.getMaxIterations(),
                 instance.getUpdateInterval(),instance.tocontinue(),instance.getLabelNum(),null);
         assertEquals(true,1000==c.getMaxIterations());  //bad inputs are set to default
         assertEquals(true,1==c.getUpdateInterval());
@@ -194,14 +200,14 @@ public class configurationTest
     @Test
     public void testConfigureRandomClustererWithNegativeinputs() {
         System.out.println("* configurationTest: RandomClustererConfigCheckWithNegativeInputs");
-        RandomClusterer c = new RandomClusterer(null,0,0,false,0,null);
+        RandomClusterer c = new RandomClusterer(new DataSet(),0,0,false,0,null);
         String maxText = "-5";
         String updateText = "-10";
         boolean cont = false;
         String num = "-5";
         AlgorithmContainer instance = new AlgorithmContainer("");
         instance.configure(maxText, updateText, cont, num, c);
-        c = new RandomClusterer(null,instance.getMaxIterations(),
+        c = new RandomClusterer(new DataSet(),instance.getMaxIterations(),
                 instance.getUpdateInterval(),instance.tocontinue(),instance.getLabelNum(),null);
         assertEquals(true,1000==c.getMaxIterations());  //bad inputs are set to default
         assertEquals(true,1==c.getUpdateInterval());
@@ -222,14 +228,14 @@ public class configurationTest
     @Test
     public void testConfigureRandomClustererWithBoundaryValues() {
         System.out.println("* configurationTest: RandomClustererConfigCheckWithBoundaryValues");
-        RandomClusterer c = new RandomClusterer(null,0,0,false,0,null);
+        RandomClusterer c = new RandomClusterer(new DataSet(),0,0,false,0,null);
         String maxText = "1";
         String updateText = "1";
         boolean cont = false;
         String num = "2";
         AlgorithmContainer instance = new AlgorithmContainer("");
         instance.configure(maxText, updateText, cont, num, c);
-        c = new RandomClusterer(null,instance.getMaxIterations(),
+        c = new RandomClusterer(new DataSet(),instance.getMaxIterations(),
                 instance.getUpdateInterval(),instance.tocontinue(),instance.getLabelNum(),null);
         assertEquals(true,1==c.getMaxIterations());  //bad inputs are set to default
         assertEquals(true,1==c.getUpdateInterval());
@@ -250,14 +256,14 @@ public class configurationTest
     @Test
     public void testConfigureKMeansClusterer() {
         System.out.println("* configurationTest: KMeansClustererConfigCheck");
-        KMeansClusterer c = new KMeansClusterer(null,0,0,false,0,null);
+        KMeansClusterer c = new KMeansClusterer(new DataSet(),0,0,false,0,null);
         String maxText = "2147483647";
         String updateText = "2147483647";
         boolean cont = false;
         String num = "2";
         AlgorithmContainer instance = new AlgorithmContainer("");
         instance.configure(maxText, updateText, cont, num, c);
-        c = new KMeansClusterer(null,instance.getMaxIterations(),
+        c = new KMeansClusterer(new DataSet(),instance.getMaxIterations(),
                 instance.getUpdateInterval(),instance.tocontinue(),instance.getLabelNum(),null);
         assertEquals(true,Double.valueOf(maxText)==c.getMaxIterations());
         assertEquals(true,Double.valueOf(updateText)==c.getUpdateInterval());
@@ -272,14 +278,19 @@ public class configurationTest
     @Test
     public void testConfigureKMeansClustererWithOutOfRangeinputs() {
         System.out.println("* configurationTest: KMeansClustererConfigCheckWithOutOfRangeInputs");
-        KMeansClusterer c = new KMeansClusterer(null,0,0,false,0,null);
+        KMeansClusterer c = new KMeansClusterer(new DataSet(),0,0,false,0,null);
         String maxText = "0";
         String updateText = "0";
         boolean cont = false;
         String num = "5";
         AlgorithmContainer instance = new AlgorithmContainer("");
         instance.configure(maxText, updateText, cont, num, c);
-        c = new KMeansClusterer(null,instance.getMaxIterations(),
+        DataSet n = new DataSet();
+        n.fromTSDFile("@male#1	male	96.3,70\n" +
+        "@male#2	male	96.7,71\n" +
+        "@male#3	male	96.9,74\n" +
+        "@male#4	male	97.0,80");
+        c = new KMeansClusterer(n,instance.getMaxIterations(),
                 instance.getUpdateInterval(),instance.tocontinue(),instance.getLabelNum(),null);
         assertEquals(true,1000==c.getMaxIterations());  //bad inputs are set to default
         assertEquals(true,1==c.getUpdateInterval());
@@ -294,14 +305,14 @@ public class configurationTest
     @Test
     public void testConfigureKMeansClustererWithNegativeinputs() {
         System.out.println("* configurationTest: KMeansClustererConfigCheckWithNegativeInputs");
-        KMeansClusterer c = new KMeansClusterer(null,0,0,false,0,null);
+        KMeansClusterer c = new KMeansClusterer(new DataSet(),0,0,false,0,null);
         String maxText = "-5";
         String updateText = "-10";
         boolean cont = false;
         String num = "-5";
         AlgorithmContainer instance = new AlgorithmContainer("");
         instance.configure(maxText, updateText, cont, num, c);
-        c = new KMeansClusterer(null,instance.getMaxIterations(),
+        c = new KMeansClusterer(new DataSet(),instance.getMaxIterations(),
                 instance.getUpdateInterval(),instance.tocontinue(),instance.getLabelNum(),null);
         assertEquals(true,1000==c.getMaxIterations());  //bad inputs are set to default
         assertEquals(true,1==c.getUpdateInterval());
@@ -322,14 +333,19 @@ public class configurationTest
     @Test
     public void testConfigureKMeansClustererWithBoundaryValues() {
         System.out.println("* configurationTest: KMeansClustererConfigCheckWithBoundaryValues");
-        KMeansClusterer c = new KMeansClusterer(null,0,0,false,0,null);
+        KMeansClusterer c = new KMeansClusterer(new DataSet(),0,0,false,0,null);
         String maxText = "1";
         String updateText = "1";
         boolean cont = false;
         String num = "2";
         AlgorithmContainer instance = new AlgorithmContainer("");
         instance.configure(maxText, updateText, cont, num, c);
-        c = new KMeansClusterer(null,instance.getMaxIterations(),
+        DataSet n = new DataSet();
+        n.fromTSDFile("@male#1	male	96.3,70\n" +
+        "@male#2	male	96.7,71\n" +
+        "@male#3	male	96.9,74\n" +
+        "@male#4	male	97.0,80");
+        c = new KMeansClusterer(n,instance.getMaxIterations(),
                 instance.getUpdateInterval(),instance.tocontinue(),instance.getLabelNum(),null);
         assertEquals(true,1==c.getMaxIterations());  //bad inputs are set to default
         assertEquals(true,1==c.getUpdateInterval());

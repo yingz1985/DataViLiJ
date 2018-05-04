@@ -16,7 +16,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
-import runningEvents.RandomClassifier;
 import settings.AppPropertyTypes;
 import ui.AppUI;
 import vilij.components.ConfirmationDialog;
@@ -300,6 +299,12 @@ public final class AppActions implements ActionComponent {
                 }
                 else
                     ((AppUI) applicationTemplate.getUIComponent()).enableClassification();
+                if(processor.getProcessor().getLineNum()<=1)
+                        
+                            ((AppUI) applicationTemplate.getUIComponent()).disableClustering();
+                        
+                        else
+                            ((AppUI) applicationTemplate.getUIComponent()).enableClustering()  ;
                 ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(text);
                 loaded = true;
                 ((AppUI) applicationTemplate.getUIComponent()).setProcessor(processor);

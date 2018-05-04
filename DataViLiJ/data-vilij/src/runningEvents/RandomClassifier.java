@@ -47,6 +47,12 @@ public class RandomClassifier extends Classifier {
     {
         proceed = false;
         done = true;
+        
+        ((AppUI) app.getUIComponent()).running(false);
+        ((AppUI) app.getUIComponent()).setRun(false);
+        ((AppUI) app.getUIComponent()).setScreenshot(true);
+
+        ((AppUI) app.getUIComponent()).isolateChoice(false);
     }
 
     @Override

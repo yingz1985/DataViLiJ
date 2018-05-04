@@ -31,7 +31,7 @@ public class RandomClusterer extends Clusterer
 
 
     public RandomClusterer(DataSet dataset, int maxIterations, int updateInterval, boolean toContinue,int numberOfClusters,ApplicationTemplate app) {
-        super(numberOfClusters);
+        super(numberOfClusters>dataset.getLocations().size()?dataset.getLocations().size():numberOfClusters);
         this.dataset = dataset;
         this.maxIterations = maxIterations;
         this.updateInterval = updateInterval;
@@ -66,6 +66,13 @@ public class RandomClusterer extends Clusterer
     {
         proceed = false;
         done = true;
+        
+        ((AppUI) app.getUIComponent()).running(false);
+        ((AppUI) app.getUIComponent()).setRun(false);
+        ((AppUI) app.getUIComponent()).setScreenshot(true);
+
+        ((AppUI) app.getUIComponent()).isolateChoice(false);
+        
     }
     @Override
     public synchronized void run() {

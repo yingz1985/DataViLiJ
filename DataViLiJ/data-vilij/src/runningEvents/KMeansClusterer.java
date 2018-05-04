@@ -42,7 +42,7 @@ public class KMeansClusterer extends Clusterer {
 
 
     public KMeansClusterer(DataSet dataset, int maxIterations, int updateInterval, boolean toContinue,int numberOfClusters,ApplicationTemplate app) {
-        super(numberOfClusters);
+        super(numberOfClusters>dataset.getLocations().size()?dataset.getLocations().size():numberOfClusters);
         this.dataset = dataset;
         this.maxIterations = maxIterations;
         this.updateInterval = updateInterval;
@@ -51,15 +51,7 @@ public class KMeansClusterer extends Clusterer {
         done = true;
         proceed = toContinue;
         interrupt = false;
-        if(dataset!=null){
-            if(numberOfClusters>=dataset.getLocations().size())
-            {     
-                int k = dataset.getLocations().size();
-                if(numberOfClusters==dataset.getLocations().size())
-                    k--;
-                numberOfClusters = dataset.getLocations().size();
-            }
-        }
+
     }
 
     @Override
@@ -81,6 +73,13 @@ public class KMeansClusterer extends Clusterer {
     {
         interrupt = true;
         done = true;
+        
+        ((AppUI) app.getUIComponent()).running(false);
+        ((AppUI) app.getUIComponent()).setRun(false);
+        ((AppUI) app.getUIComponent()).setScreenshot(true);
+
+        ((AppUI) app.getUIComponent()).isolateChoice(false);
+        
     }
     @Override
     public synchronized void run() {
@@ -88,9 +87,12 @@ public class KMeansClusterer extends Clusterer {
         
         ((AppUI) app.getUIComponent()).running(true);
         if(numberOfClusters!=0)
-            initializeCentroids();
+                initializeCentroids();
         for (int i = 0; i <= maxIterations&&tocontinue.get()&&!interrupt; i++){//& tocontinue.get()) {
-            
+            ((AppUI) app.getUIComponent()).setRun(true);
+            ((AppUI) app.getUIComponent()).running(true);
+            ((AppUI) app.getUIComponent()).setScreenshot(true);
+             
              AtomicInteger k = new AtomicInteger(i);
             try
             {
@@ -176,8 +178,9 @@ public class KMeansClusterer extends Clusterer {
         while (chosen.size() < numberOfClusters) {
             int i = r.nextInt(instanceNames.size());
             while (chosen.contains(instanceNames.get(i)))
-                ++i;
-            chosen.add(instanceNames.get(i));
+               i = (++i % instanceNames.size());
+            if(dataset.getLabels().size()>i)
+                chosen.add(instanceNames.get(i));
         }
         centroids = chosen.stream().map(name -> dataset.getLocations().get(name)).collect(Collectors.toList());
         tocontinue.set(true);

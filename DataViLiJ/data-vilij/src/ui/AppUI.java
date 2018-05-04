@@ -348,29 +348,37 @@ public final class AppUI extends UITemplate {
                 }
                 else
                 {
-                    if(!textArea.getText().isEmpty()){
-                    try
+                    if(!textArea.getText().isEmpty())
                     {
-                        processor = new AppData(applicationTemplate);
-                        processor.loadData(textArea.getText());
-                        leftPane.setBottom(algorithmPane());
-                        done.setText(AppPropertyTypes.DONE.name());
-                        done.setStyle(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DONE.name()));
-                        textArea.setDisable(true);
-                        setDescription();
-                    }
-                    catch (Exception ex)
-                    {
-                        newPage();
-                    }
-                    if(processor.getProcessor().hasNull() || processor.getProcessor().returnLabels().length!=2)
-                {
-                    ((AppUI) applicationTemplate.getUIComponent()).disableClassification();
-                }
-                    else
-                    {
-                        clas.setDisable(false);
-                    }
+                        try
+                        {
+                            processor = new AppData(applicationTemplate);
+                            processor.loadData(textArea.getText());
+                            leftPane.setBottom(algorithmPane());
+                            done.setText(AppPropertyTypes.DONE.name());
+                            done.setStyle(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.DONE.name()));
+                            textArea.setDisable(true);
+                            setDescription();
+                        }
+                        catch (Exception ex)
+                        {
+                            newPage();
+                        }
+                        if(processor.getProcessor().hasNull() || processor.getProcessor().returnLabels().length!=2)
+                        {
+                        ((AppUI) applicationTemplate.getUIComponent()).disableClassification();
+                        }
+                        else
+                        {
+                            clas.setDisable(false);
+                        }
+                        if(processor.getProcessor().getLineNum()<=1)
+                        
+                            cluster.setDisable(true);
+                        
+                        else
+                            cluster.setDisable(false);
+                    
                     }
                     
                 }
@@ -414,7 +422,7 @@ public final class AppUI extends UITemplate {
             catch (ClassNotFoundException ex)
             {
                 //IF not found, do nothing
-                System.out.println(classifier[i]+" not found");
+                //System.out.println(classifier[i]+" not found");
             }
                     
             
@@ -1030,5 +1038,13 @@ public final class AppUI extends UITemplate {
     public void stop()
     {
         run.stop();
+    }
+    public void disableClustering()
+    {
+        cluster.setDisable(true);
+    }
+    public void enableClustering()
+    {
+        cluster.setDisable(false);
     }
 }
