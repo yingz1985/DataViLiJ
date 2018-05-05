@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.TextArea;
@@ -164,6 +166,9 @@ public final class AppActions implements ActionComponent {
               writer = new PrintWriter(file);
               dataFilePath= Paths.get(file.toURI());
               
+             AppData processor = new AppData(applicationTemplate);
+             processor.loadData(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
+             
               writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
               writer.close();
               saved = true;
@@ -174,6 +179,10 @@ public final class AppActions implements ActionComponent {
           catch (FileNotFoundException ex)
           {
              
+          }
+          catch (Exception ex)
+          {
+              //Logger.getLogger(AppActions.class.getName()).log(Level.SEVERE, null, ex);
           }
               //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
               
@@ -342,7 +351,13 @@ public final class AppActions implements ActionComponent {
             {
                 try
                 {
-                    promptToSave();
+                    if(promptToSave())
+                    {
+                        
+                        ((AppUI) applicationTemplate.getUIComponent()).clear();
+                        ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
+                        System.exit(0);
+                    }
                     
                 }
                 catch (Exception ex)
@@ -372,13 +387,14 @@ public final class AppActions implements ActionComponent {
              return;
          }
         }
-
+         /*  if(saved||savedOnce)
+           {
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
                 ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
                 System.exit(0);
+           }
        
-       System.exit(0);
-       
+       */
       
 
     }
@@ -457,9 +473,11 @@ public final class AppActions implements ActionComponent {
                       PrintWriter writer;
                  try
                 {
+                    AppData processor = new AppData(applicationTemplate);
+                    processor.loadData(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
                      writer = new PrintWriter(file);
                     dataFilePath= Paths.get(file.toURI());
-              
+                    
                     writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
                     writer.close();
                     saved = true;
@@ -468,45 +486,46 @@ public final class AppActions implements ActionComponent {
                     return true;
               
                 }
-                catch (FileNotFoundException ex)
+                catch (Exception ex)
                 {
-             
+                    saved = false;
                 }
               }
               else
                {
               try{
                     AppData processor = new AppData(applicationTemplate);
-                    processor.loadData(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText());
+                    processor.loadData(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
                 //process string and see if there's an error 
               
-              fileChooser.setInitialFileName(file.getName());
+                    fileChooser.setInitialFileName(file.getName());
               
               
-               File tempFile = fileChooser.showSaveDialog((
-                      (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
-              if(tempFile!=null)
-              {
+                    File tempFile = fileChooser.showSaveDialog((
+                        (AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow());
+                if(tempFile!=null)
+                {
                   file = tempFile;
-              PrintWriter writer = new PrintWriter(file);
+                PrintWriter writer = new PrintWriter(file);
               //System.out.print(((AppUI) applicationTemplate.getUIComponent()).getText());
-              writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
-              writer.close();
-              saved = true;
-              ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
-              ((AppUI)applicationTemplate.getUIComponent()).setNewText();
-              savedOnce = true;
-              }
-              else
-              {
+                writer.write(((AppUI) applicationTemplate.getUIComponent()).returnActualText());
+                writer.close();
+                saved = true;
+                ((AppUI)applicationTemplate.getUIComponent()).resetSaveButton();
+                ((AppUI)applicationTemplate.getUIComponent()).setNewText();
+                savedOnce = true;
+                }
+                else
+                {
                   saved = false;
                   savedOnce = false;
-              }
+                }
               
-              return tempFile != null;
+                return tempFile != null;
               }
               catch(Exception x)
               {
+                  saved = false;
                    //throw new Exception();
                   //System.out.println(x.toString());
               }

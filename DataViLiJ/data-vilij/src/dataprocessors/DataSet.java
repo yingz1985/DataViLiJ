@@ -268,6 +268,11 @@ public class DataSet {
         //chart.getData().get(chart.getData().size()-1);//get the last series and replace it 
         //chart.getData().clear();
         //toChartData(chart);
+            if(minX==maxX) 
+            {
+                minX --;
+                maxX ++;
+            }
             
             Double minY = ((-minX*data.get(0))-data.get(2))/data.get(1);
             Double maxY = ((-maxX*data.get(0))-data.get(2))/data.get(1);

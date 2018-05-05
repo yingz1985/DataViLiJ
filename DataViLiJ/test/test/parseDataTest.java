@@ -203,6 +203,26 @@ public class parseDataTest
 
     }
     
+     /**
+     * Test of processString method using null labels, of class TSDProcessor.
+     * @throws java.lang.Exception
+     * @PostCondition:
+     *   A single instance of a data point has been added to the processor
+     *   no exception is expected to be thrown 
+     *   line number should be incremented and ==1 
+     *   
+     */
+    @Test
+    public void testProcessString10() throws Exception {
+        System.out.println("* parseDataTest: nullLabelCheck");
+        String tsdString = "@male#1	null	10,-10";
+        TSDProcessor instance = new TSDProcessor();
+        instance.processString(tsdString);
+        assertEquals(instance.getLineNum(),1);
+        assertEquals(instance.hasNull(),true);
+
+    }
+    
     
     
     
