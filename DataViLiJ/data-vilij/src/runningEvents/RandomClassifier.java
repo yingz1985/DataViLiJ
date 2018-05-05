@@ -68,10 +68,7 @@ public class RandomClassifier extends Classifier {
     {
         this.tocontinue.set(cont);
     }
-    public boolean alreadyStarted()
-    {
-        return this.started;
-    }
+
    /* public RandomClassifier(DataSet dataset,AlgorithmContainer container,ApplicationTemplate app)
     {
         this.dataset = dataset;

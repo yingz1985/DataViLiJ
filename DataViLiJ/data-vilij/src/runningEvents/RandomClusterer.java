@@ -78,7 +78,7 @@ public class RandomClusterer extends Clusterer
     public synchronized void run() {
         done = false;
         ((AppUI) app.getUIComponent()).running(true);
-        for (int i = 0; i <= maxIterations&&proceed; i++){//& tocontinue.get()) {
+        for (int i = 1; i <= maxIterations&&proceed; i++){//& tocontinue.get()) {
              AtomicInteger k = new AtomicInteger(i);
             ((AppUI) app.getUIComponent()).setRun(true);
             ((AppUI) app.getUIComponent()).running(true);

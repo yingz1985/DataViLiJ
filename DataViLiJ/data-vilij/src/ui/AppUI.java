@@ -6,8 +6,6 @@ import dataprocessors.DataSet;
 import static java.io.File.separator;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -613,9 +611,9 @@ public final class AppUI extends UITemplate {
                     DataSet dataset= new DataSet();
                     dataset.fromTSDFile(this.returnActualText());
                     dataset.setChart(chart);
-
                     Class c = loader.loadClass(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUNNINGEVENT.name())+((RadioButton)group.getSelectedToggle()).getText());
                     Constructor con = c.getConstructors()[0];
+               
                     //run = (Algorithm)con.newInstance(dataset,container.getMaxIterations(),container.getUpdateInterval(),
                              //   container.tocontinue(),container.getLabelNum(),applicationTemplate);
                     //Method method = c.getMethod("run");
@@ -625,7 +623,7 @@ public final class AppUI extends UITemplate {
                     {
                             isolateChoice(true);
                             counter = 0;
-
+                            dataset.toChartData();
                             run = (Algorithm)con.newInstance(dataset,container.getMaxIterations(),container.getUpdateInterval(),
                                 container.tocontinue(),container.getLabelNum(),applicationTemplate);
                             thread = new Thread(run);
@@ -635,9 +633,16 @@ public final class AppUI extends UITemplate {
                         {
                             if(counter!=0)  
                             {
+                                //Class m = c.asSubclass(loader.loadClass(applicationTemplate.manager.getPropertyValue(AppPropertyTypes.RUNNINGEVENT.name())+((RadioButton)group.getSelectedToggle()).getText()));
+                                //System.out.println(m.getName());
                                 
-                                if(!(boolean)c.getMethod("done").invoke(run))
+                                //System.out.println(!(boolean)m.getMethod("done").invoke(run));
+                                if(!done()) 
                                     c.getMethod("notifyThread").invoke(run);
+                                    
+                                //if(!(boolean)c.getMethod("done").invoke(run))
+                                  //  c.getMethod("notifyThread").invoke(run);
+                                
                                 else
                                     counter = 0;
                                     
@@ -647,8 +652,9 @@ public final class AppUI extends UITemplate {
                                   //  counter = 0;
                                 
                             }
-                            if(counter ==0){
+                            if(counter == 0){
                                 isolateChoice(true);
+                                dataset.toChartData();
                                 run = (Algorithm)con.newInstance(dataset,container.getMaxIterations(),container.getUpdateInterval(),
                                 container.tocontinue(),container.getLabelNum(),applicationTemplate);
                                 thread = new Thread(run);

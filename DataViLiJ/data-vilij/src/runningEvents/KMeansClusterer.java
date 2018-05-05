@@ -88,7 +88,7 @@ public class KMeansClusterer extends Clusterer {
         ((AppUI) app.getUIComponent()).running(true);
         if(numberOfClusters!=0)
                 initializeCentroids();
-        for (int i = 0; i <= maxIterations&&tocontinue.get()&&!interrupt; i++){//& tocontinue.get()) {
+        for (int i = 1; i <= maxIterations&&tocontinue.get()&&!interrupt; i++){//& tocontinue.get()) {
             ((AppUI) app.getUIComponent()).setRun(true);
             ((AppUI) app.getUIComponent()).running(true);
             ((AppUI) app.getUIComponent()).setScreenshot(true);
