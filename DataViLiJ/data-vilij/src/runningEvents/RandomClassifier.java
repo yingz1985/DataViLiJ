@@ -225,7 +225,7 @@ public class RandomClassifier extends Classifier {
                    try
             {
                 Platform.runLater(()->dataset.updateChart(output));
-                Thread.sleep(800);
+                Thread.sleep(5);
                 if(!proceed)
                     break;
                 

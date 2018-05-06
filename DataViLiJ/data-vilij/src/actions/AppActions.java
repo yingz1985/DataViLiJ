@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.TextArea;
@@ -83,6 +81,7 @@ public final class AppActions implements ActionComponent {
                     dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
                         applicationTemplate.manager.getPropertyValue(
                         AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
+                    try{
                     if(dialog.getSelectedOption().toString().equals("YES"))   
                 {
                     ((AppUI) applicationTemplate.getUIComponent()).stop();
@@ -91,7 +90,11 @@ public final class AppActions implements ActionComponent {
                 {
                     return;
                 }
-                       
+                    }
+                    catch(Exception x)
+                    {
+                        
+                    }
                     
                  }
                 savedOnce = false;
@@ -202,6 +205,7 @@ public final class AppActions implements ActionComponent {
                     dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
                         applicationTemplate.manager.getPropertyValue(
                         AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
+                    try{
                     if(dialog.getSelectedOption().toString().equals("YES"))   
                 {
                     ((AppUI) applicationTemplate.getUIComponent()).stop();
@@ -210,7 +214,11 @@ public final class AppActions implements ActionComponent {
                 {
                     return;
                 }
-                
+                    }
+                    catch(Exception x)
+                    {
+                        
+                    }
 
             }
         try
@@ -229,7 +237,7 @@ public final class AppActions implements ActionComponent {
             file = tempfile;
             try
             {
-                 
+                
                 dataFilePath = Paths.get(file.toURI());
                
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
@@ -340,7 +348,7 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleExitRequest() {
         // TODO for homework 1
-        
+        if(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()) System.exit(0);
 
         
        if(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()
@@ -376,6 +384,8 @@ public final class AppActions implements ActionComponent {
          dialog.show(AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name(),
                    applicationTemplate.manager.getPropertyValue(
                    AppPropertyTypes.EXIT_WHILE_RUNNING_WARNING .name()));
+         try
+         {
          if(dialog.getSelectedOption().toString().equals("YES"))   
          {
              ((AppUI) applicationTemplate.getUIComponent()).stop();
@@ -387,11 +397,16 @@ public final class AppActions implements ActionComponent {
          {
              return;
          }
+         }
+         catch(Exception x)
+         {
+             return;
+         }
         }
 
-                ((AppUI) applicationTemplate.getUIComponent()).clear();
-                ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
-                System.exit(0);
+                //((AppUI) applicationTemplate.getUIComponent()).clear();
+                //((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
+                //System.exit(0);
 
       
       
@@ -448,7 +463,7 @@ public final class AppActions implements ActionComponent {
         if(((AppUI)applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty())
             return true;
         if(((AppUI) applicationTemplate.getUIComponent()).newText() && !loaded) saved = false;
-        
+        if(loaded) return true;
         if(!saved){
 
         //returns true if the eventHandler should keep executing

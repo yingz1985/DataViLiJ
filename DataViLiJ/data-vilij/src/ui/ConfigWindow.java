@@ -57,6 +57,7 @@ public class ConfigWindow
     
     static double xOffset;
     static double yOffset;
+    private boolean good;
     
     public ConfigWindow(ApplicationTemplate app,AlgorithmContainer container)
     {
@@ -67,6 +68,8 @@ public class ConfigWindow
         maxText = new TextField();
         updateText = new TextField();
         setConfigButton();
+        good = true;
+        closed = false;
     }
     public AlgorithmContainer returnContainer()
     {
@@ -93,7 +96,7 @@ public class ConfigWindow
      */
     public void setupVals()
     {
-        if(closed)
+        //if(closed)
         {
             maxText.setText(String.valueOf(defaultMax));
             updateText.setText(String.valueOf(defaultIt));
@@ -121,37 +124,58 @@ public class ConfigWindow
             int max = Integer.valueOf(maxText.getText());
             if(max>0)
                 defaultMax = max;
+            else
+                good = false;
+            if(max<0)
+                defaultMax = 0-max;
+
             
             
         }
         catch(NumberFormatException x)
         {
             maxText.setText(String.valueOf(defaultMax));
+            good = false;
         }
         try
         {
            int update = Integer.valueOf( updateText.getText());
            if(update>0)
              defaultIt = update;
+           else
+                good = false;
+           if(update<0)
+               defaultIt = 0-update;
         }
         catch(NumberFormatException x)
         {
             updateText.setText(String.valueOf(defaultIt));
+            good = false;
         }
         if(config.isCluster()){
             try
             {
                 int defaultLabel = Integer.valueOf(num.getText());
-                if(defaultLabel>0&& defaultLabel<5)
+                if(defaultLabel>1&& defaultLabel<5)
                     defaultLabels = defaultLabel;
+                else
+                    good = false;
+                
+                if(defaultLabel<1)
+                    defaultLabels = 2;
+                if(defaultLabel>4)
+                    defaultLabels = 4;
+                
             
             }
             catch(NumberFormatException x)
             {
                 num.setText(String.valueOf(defaultLabels));
+                good = false;
             }
         }
         toCont = continuous.isSelected();
+        setupVals();
     }
     
     /**
@@ -268,7 +292,9 @@ public class ConfigWindow
         {
             closed=true;
             checkConfig();
-            stage.close();
+            if(good)
+                stage.close();
+            good = true;
             
         });
         
