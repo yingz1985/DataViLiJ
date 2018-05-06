@@ -75,7 +75,7 @@ public final class AppUI extends UITemplate {
     private ToggleGroup                  group;
     
     private Algorithm                    run;
-    
+    private boolean                      initial;
     private Thread                       thread;
     private int                          counter = 0;
     private Button                       backButton;
@@ -173,7 +173,7 @@ public final class AppUI extends UITemplate {
         processor = new AppData(applicationTemplate);
         setupButtons();
         populateContainers();
-        run = new RandomClassifier(null,0,0,false,0,applicationTemplate);;
+        initial = true;
         done = new Button(AppPropertyTypes.EDIT.name());
         iteration = new Label();
         chartSpace = new VBox();
@@ -607,6 +607,7 @@ public final class AppUI extends UITemplate {
                 ClassLoader loader = ClassLoader.getSystemClassLoader();
                 try
                 {
+                    initial = false;
                     backButton.setDisable(true);
                     DataSet dataset= new DataSet();
                     dataset.fromTSDFile(this.returnActualText());
@@ -1039,7 +1040,9 @@ public final class AppUI extends UITemplate {
     
     public boolean done()
     {
-        return run.done();
+        if(initial) return true;
+        else
+            return run.done();
     }
     public void stop()
     {
