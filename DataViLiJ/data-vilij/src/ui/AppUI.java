@@ -442,7 +442,7 @@ public final class AppUI extends UITemplate {
                 }
                 catch (ClassNotFoundException ex)
                 {
-                   System.out.println(clusterer[i]+" not found");
+                   //System.out.println(clusterer[i]+" not found");
                 }
                
             }
