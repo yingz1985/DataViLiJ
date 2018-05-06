@@ -44,6 +44,7 @@ public enum AppPropertyTypes {
     NULL_ERROR,
     SELECTION_ERROR,
     CONFIG_ERRORS,
+    EMPTY_LABEL_EXCEPTION,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,

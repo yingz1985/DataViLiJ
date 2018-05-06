@@ -24,7 +24,7 @@ public final class TSDProcessor {
 
     public static class InvalidDataNameException extends Exception {
 
-        private static final String NAME_ERROR_MSG = "All data instance names must start with the @ character.";
+        private static final String NAME_ERROR_MSG = "All data label names must not be empty.";
 
         public InvalidDataNameException(String name) {
             super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
@@ -100,7 +100,8 @@ public final class TSDProcessor {
         Stream.of(tsdString.split("\n"))
               .map(line -> Arrays.asList(line.split("\t")))
               .forEach((List<String> list) -> {
-                    
+                      if(list.size()>3)
+                          throw new IndexOutOfBoundsException();
                       counter.incrementAndGet();
                       name  = list.get(0);
                       if (!name.startsWith("@"))
@@ -114,9 +115,14 @@ public final class TSDProcessor {
                       {
                           hasNull = true;
                       }
+                      if(label.isEmpty())
+                          throw new NullPointerException("2");
+                      
                       String[] pair  = list.get(2).split(",");
                       Double x = Double.parseDouble(pair[0]);
                       Double y = Double.parseDouble(pair[1]);
+                      if(pair.length>2)
+                          throw new IndexOutOfBoundsException();
                       if(x.isNaN()||y.isNaN()||x.isInfinite()||y.isInfinite())
                       {
                           throw new NumberFormatException();
@@ -125,7 +131,7 @@ public final class TSDProcessor {
                       Point2D  point = new Point2D(x,y);
                       if(dataLabels.containsKey(name))    //if name already exists in hash, throw new exception
                       {
-                          throw new NullPointerException();
+                          throw new NullPointerException("1");
                       }
                       if(counter.get()==1)
                       {

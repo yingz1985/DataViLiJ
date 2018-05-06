@@ -82,7 +82,7 @@ public class configurationTest
      
     /**
      * Test of configure method, of class AlgorithmContainer.
-     *     Tested with numeric values out of range
+     *     Tested with numeric values that are negative
      */
     @Test
     public void testConfigureRandomClassifierWithNegativeinputs() {
@@ -193,7 +193,7 @@ public class configurationTest
         
     }
     
-        /**
+     /**
      * Test of configure method, of class AlgorithmContainer.
      *     Tested with numeric values out of range
      */
@@ -245,8 +245,6 @@ public class configurationTest
     
 
 
-    
-    
     
     
          /**

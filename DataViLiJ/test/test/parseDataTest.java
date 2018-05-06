@@ -223,6 +223,68 @@ public class parseDataTest
 
     }
     
+     /**
+     * Test of processString method by entering more data on the same line that conforms to the tab-separated format
+     *  ,of class TSDProcessor.
+     * @throws java.lang.Exception
+     * @PostCondition:
+     *   ArrayIndexOutOfBoundsException exception should be thrown 
+     *     note: the parser method will expect the line of data to be valid
+     *           and will parse according to correct format
+     *   
+     */
+    @Test (expected = IndexOutOfBoundsException.class)
+    public void testProcessString11() throws Exception {
+        System.out.println("* parseDataTest: TooMuchInfoCheck");
+        String tsdString = "@male#1	null	10,-10	hjakshdkjashdk";
+        TSDProcessor instance = new TSDProcessor();
+        instance.processString(tsdString);
+        assertEquals(instance.getLineNum(),0);
+
+
+    }
+    
+     /**
+     * Test of processString method using 3-dimensional coordinates, of class TSDProcessor.
+     * @throws java.lang.Exception
+     * @PostCondition:
+     *   ArrayIndexOutOfBoundsException exception should be thrown 
+     *     note: the parser method will expect the line of data to be valid
+     *           and will parse according to correct format
+     *   
+     */
+    @Test (expected = IndexOutOfBoundsException.class)
+    public void testProcessString12() throws Exception {
+        System.out.println("* parseDataTest: 3-DCoordinateCheck");
+        String tsdString = "@male#1	null	10,-10,10";
+        TSDProcessor instance = new TSDProcessor();
+        instance.processString(tsdString);
+        assertEquals(instance.getLineNum(),0);
+
+
+    }
+    
+        /**
+     * Test of processString method using an empty label name, of class TSDProcessor.
+     * @throws java.lang.Exception
+     * @PostCondition:
+     *   ArrayIndexOutOfBoundsException exception should be thrown 
+     *     note: the parser method will expect the line of data to be valid
+     *           and will parse according to correct format
+     *   
+     */
+    @Test (expected = NullPointerException.class)
+    public void testProcessString13() throws Exception {
+        System.out.println("* parseDataTest: emptyLabelNameCheck");
+        String tsdString = "@male#1		10,-10,10";
+        TSDProcessor instance = new TSDProcessor();
+        instance.processString(tsdString);
+        assertEquals(instance.getLineNum(),0);
+
+
+    }
+    
+    
     
     
     

@@ -74,6 +74,7 @@ public class AppData implements DataComponent {
                   
         catch(NullPointerException k)
         {
+            if(k.getMessage().equals("1")){
                         caught=true;
                         ErrorDialog dialog = ErrorDialog.getDialog();
                           dialog.show(AppPropertyTypes.IDENTICAL_NAME_EXCEPTION.toString(),
@@ -81,6 +82,19 @@ public class AppData implements DataComponent {
                                   processor.getName()+"\n"+applicationTemplate.manager.getPropertyValue(
                                 AppPropertyTypes.ERROR_LINE.name())+processor.getLineNum()+
                                           "\n");
+            }
+            else
+            {
+                caught = true;
+                ErrorDialog dialog = ErrorDialog.getDialog();
+                          dialog.show(AppPropertyTypes.EMPTY_LABEL_EXCEPTION.toString(),
+                                  applicationTemplate.manager.getPropertyValue(AppPropertyTypes.EMPTY_LABEL_EXCEPTION.name())+
+                                  processor.getName()+"\n"+applicationTemplate.manager.getPropertyValue(
+                                AppPropertyTypes.ERROR_LINE.name())+processor.getLineNum()+
+                                          "\n");
+
+            }
+                    
         }
         catch (Exception e)
         {

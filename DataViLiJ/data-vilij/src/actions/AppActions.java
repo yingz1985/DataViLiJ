@@ -359,6 +359,7 @@ public final class AppActions implements ActionComponent {
                         System.exit(0);
                     }
                     
+                    
                 }
                 catch (Exception ex)
                 {
@@ -387,14 +388,12 @@ public final class AppActions implements ActionComponent {
              return;
          }
         }
-         /*  if(saved||savedOnce)
-           {
+
                 ((AppUI) applicationTemplate.getUIComponent()).clear();
                 ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
                 System.exit(0);
-           }
-       
-       */
+
+      
       
 
     }

@@ -40,7 +40,7 @@ public class ConfigWindow
     private AlgorithmContainer config;
     private int defaultMax = 1000;
     private int defaultIt = 1;
-    private int defaultLabels = 1;
+    private int defaultLabels = 2;
     private boolean toCont;
     private TextField maxText;
     private TextField updateText;

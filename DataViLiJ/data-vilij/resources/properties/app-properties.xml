@@ -34,6 +34,7 @@ functionality within the main workspace. -->
         <property name="NUMBER_FORMAT_EXCEPTION" value="Invalid Coordinates entered."/>
         <property name="INVALID_SPACING_ERRORS" value = "Text must be in tab-separated format."/>
         <property name="INVALID_DATA_EXCEPTION" value = "Invalid Data Name Exception"/>
+        <property name="EMPTY_LABEL_EXCEPTION" value = "All data label names must not be empty."/>
         <property name="IDENTICAL_NAME_EXCEPTION" value = "Duplicated names found "/>
         <property name="CONFIG_ERRORS" value = "Please finish setting up the run configuration before performing the current action."/>
         

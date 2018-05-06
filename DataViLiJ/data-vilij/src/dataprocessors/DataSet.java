@@ -121,22 +121,22 @@ public class DataSet {
                              
                       {
                           minX = x;
-                         // dataset.setMinX(x);
+                         dataset.setMinX(x);
                       }
                       if(x>maxX)
                       {
-                           //dataset.setMaxX(x);
+                           dataset.setMaxX(x);
                            maxX = x;
                       }
                              
                       if(y<minY)
                       {
                               minY = y;
-                              //dataset.setMinY(y);
+                              dataset.setMinY(y);
                       }
                       if(y>maxY)
                       {
-                          //dataset.setMaxY(y);
+                          dataset.setMaxY(y);
                           maxY = y;
                       }
                               
@@ -233,13 +233,59 @@ public class DataSet {
             }
             
            }
-        getChart().getXAxis().setAutoRanging(false);
-        getChart().getYAxis().setAutoRanging(false);
+           
+
+            
+           /* getChart().getXAxis().setAutoRanging(false);
+            getChart().getYAxis().setAutoRanging(false);
         //System.out.print(minX+" "+maxX+" "+minY+" "+maxY);
-        ((NumberAxis)getChart().getXAxis()).setLowerBound(getMinX()-1);
-        ((NumberAxis)getChart().getXAxis()).setUpperBound(getMaxX()+1);
-        ((NumberAxis)getChart().getYAxis()).setLowerBound(getMinY()-1);
-        ((NumberAxis)getChart().getYAxis()).setUpperBound(getMaxY()+1);
+            double deltaX = maxX-minX;
+            double deltaY = maxY-minY;
+            double lowerY = deltaY>1?minY-deltaY*0.05:minY*0.1;
+            double upperY = deltaY>1?maxY+deltaY*0.05:maxY*0.1;
+            if(deltaY==0)
+            {
+                lowerY = -0.5;
+                upperY = 0.5;
+            }
+            double lowerX = deltaX>1?minX-deltaX*0.05:minX*0.1;
+            double upperX = deltaX>1?minX+deltaX*0.05:maxX*0.1;
+            if(deltaX == 0)
+            {
+                lowerX = -0.5;
+                upperX = 0.5;
+            }
+            
+            ((NumberAxis)getChart().getXAxis()).setLowerBound(lowerX);
+            ((NumberAxis)getChart().getXAxis()).setUpperBound(upperX);
+            ((NumberAxis)getChart().getYAxis()).setLowerBound(lowerY);
+            ((NumberAxis)getChart().getYAxis()).setUpperBound(upperY);
+           */
+            getChart().getXAxis().setAutoRanging(false);
+            getChart().getYAxis().setAutoRanging(false);
+            
+           double deltaY = getMaxY()-getMinY();
+            double deltaX = getMaxX()-getMinX();
+            if(deltaX==0) 
+            {
+                deltaX = getMinX()*0.1;
+                setMinX(getMinX()*0.1-1);
+                setMaxX(getMaxX()*0.1+1);
+            }
+            if(deltaY==0)
+            {
+                deltaY = getMinY()*0.1;
+                setMinY(getMinY()*0.1-1);
+                setMaxY(getMaxY()*0.1+1);
+            }
+
+            getChart().getXAxis().setAutoRanging(false);
+            getChart().getYAxis().setAutoRanging(false);
+            ((NumberAxis)getChart().getXAxis()).setLowerBound(getMinX()-Math.abs(deltaX/10));
+            ((NumberAxis)getChart().getXAxis()).setUpperBound(getMaxX()+Math.abs(deltaX/10));
+            ((NumberAxis)getChart().getYAxis()).setLowerBound(getMinY()-Math.abs(deltaY/10));
+            ((NumberAxis)getChart().getYAxis()).setUpperBound(getMaxY()+Math.abs(deltaY/10));
+
              
     }
     public double getMinX()
@@ -268,17 +314,13 @@ public class DataSet {
         //chart.getData().get(chart.getData().size()-1);//get the last series and replace it 
         //chart.getData().clear();
         //toChartData(chart);
-            if(minX==maxX) 
-            {
-                minX --;
-                maxX ++;
-            }
+
             
-            Double minY = ((-minX*data.get(0))-data.get(2))/data.get(1);
-            Double maxY = ((-maxX*data.get(0))-data.get(2))/data.get(1);
+            Double miY = ((-minX*data.get(0))-data.get(2))/data.get(1);
+            Double maY = ((-maxX*data.get(0))-data.get(2))/data.get(1);
            // System.out.println("("+minX+","+minY+")"+"  ("+maxX+","+maxY+")");
-            XYChart.Data dataMin = new XYChart.Data<>(minX,minY);
-            XYChart.Data dataMax = new XYChart.Data<>(maxX,maxY);
+            XYChart.Data dataMin = new XYChart.Data<>(minX,miY);
+            XYChart.Data dataMax = new XYChart.Data<>(maxX,maY);
             XYChart.Series<Number,Number> serie = new XYChart.Series<>();
 
             //dataMin.getNode().setStyle("-fx-background-color: transparent;");
@@ -306,30 +348,32 @@ public class DataSet {
             chart.getData().get(chart.getData().size()-1).getNode().setStyle("-fx-stroke-width: 1px; ");
             //serie.getNode().setStyle("-fx-stroke-width: 1px; ");
 
-            //});
-            //Thread.sleep(10);
 
-                 
             
-            /*
-            Platform.runLater(() ->
+            double miny = getMinY()>miY?miY:getMinY();
+            double maxy = getMaxY()>maY?getMaxY():maY;
+            double deltaY = maxy-miny;
+            double deltaX = getMaxX()-getMinX();
+                        if(deltaX==0) 
             {
-                chart.getData().add(serie);
-            });
-           /* try
-            {
-                chart.getData().add(serie);
-                Thread.sleep(500);
+                deltaX = getMinX()*0.1;
+                setMinX(getMinX()*0.1-1);
+                setMaxX(getMaxX()*0.1+1);
             }
-            catch(Exception x)
+            if(deltaY==0)
             {
-                System.out.print("chart busted");
+                deltaY = miny*0.1;
+                setMinY(miny*0.1-1);
+                setMaxY(miny*0.1+1);
             }
-            
-            */
-            
-            chart.getYAxis().setAutoRanging(true);
-           
+
+
+            getChart().getXAxis().setAutoRanging(false);
+            getChart().getYAxis().setAutoRanging(false);
+            ((NumberAxis)getChart().getXAxis()).setLowerBound(getMinX()-Math.abs(deltaX/10));
+            ((NumberAxis)getChart().getXAxis()).setUpperBound(getMaxX()+Math.abs(deltaX/10));
+            ((NumberAxis)getChart().getYAxis()).setLowerBound(miny-Math.abs(deltaY/10));
+            ((NumberAxis)getChart().getYAxis()).setUpperBound(maxy+Math.abs(deltaY/10));
     }
     
 }

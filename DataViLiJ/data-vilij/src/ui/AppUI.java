@@ -493,7 +493,7 @@ public final class AppUI extends UITemplate {
         runButton.setVisible(false);
         backButton.setOnAction(e->
         {
-            if(this.thread!=null)
+            if(!done())
             {
                 
                 run.stop();
