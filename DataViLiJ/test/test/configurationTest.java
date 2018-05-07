@@ -41,6 +41,7 @@ public class configurationTest
     /**
      * Test of configure method, of class AlgorithmContainer.
      *     Tested with Integer.Max_Value for maxIterations and UpdateIntervals
+     *     Boundary value test: any number greater than Integer.Max_value would not work
      */
     @Test
     public void testConfigureRandomClassifier() {
@@ -147,6 +148,7 @@ public class configurationTest
      /**
      * Test of configure method, of class AlgorithmContainer.
      *     Tested with Integer.Max_Value for maxIterations and UpdateIntervals
+     * Boundary value test: any number greater than Integer.Max_value would not work
      */
     @Test
     public void testConfigureRandomClusterer() {
@@ -250,6 +252,7 @@ public class configurationTest
          /**
      * Test of configure method, of class AlgorithmContainer.
      *     Tested with Integer.Max_Value for maxIterations and UpdateIntervals
+     * Boundary value test: any number greater than Integer.Max_value would not work
      */
     @Test
     public void testConfigureKMeansClusterer() {
