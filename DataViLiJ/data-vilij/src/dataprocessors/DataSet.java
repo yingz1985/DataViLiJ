@@ -356,15 +356,15 @@ public class DataSet {
             double deltaX = getMaxX()-getMinX();
                         if(deltaX==0) 
             {
-                deltaX = getMinX()*0.1;
-                setMinX(getMinX()*0.1-1);
-                setMaxX(getMaxX()*0.1+1);
+                deltaX = 1;
+                setMinX(getMinX()-getMinX()*0.1-1);
+                setMaxX(getMaxX()+getMaxX()*0.1+1);
             }
             if(deltaY==0)
             {
-                deltaY = miny*0.1;
-                setMinY(miny*0.1-1);
-                setMaxY(miny*0.1+1);
+                deltaY = 1;
+                setMinY(miny-miny*0.1-1);
+                setMaxY(miny+miny*0.1+1);
             }
 
 
