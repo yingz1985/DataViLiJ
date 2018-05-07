@@ -268,15 +268,15 @@ public class DataSet {
             double deltaX = getMaxX()-getMinX();
             if(deltaX==0) 
             {
-                deltaX = getMinX()*0.1;
-                setMinX(getMinX()*0.1-1);
-                setMaxX(getMaxX()*0.1+1);
+                deltaX = 1;
+                setMinX(getMinX()-getMinX()*0.1-1);
+                setMaxX(getMaxX()+getMaxX()*0.1+1);
             }
             if(deltaY==0)
             {
-                deltaY = getMinY()*0.1;
-                setMinY(getMinY()*0.1-1);
-                setMaxY(getMaxY()*0.1+1);
+                deltaY = 1;
+                setMinY(getMinY()-getMinY()*0.1-1);
+                setMaxY(getMaxY()+getMaxY()*0.1+1);
             }
 
             getChart().getXAxis().setAutoRanging(false);

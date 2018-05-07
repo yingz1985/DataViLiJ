@@ -122,11 +122,11 @@ public class ConfigWindow
         try
         {
             int max = Integer.valueOf(maxText.getText());
-            if(max>0)
+            if(max>0 && max <=Integer.MAX_VALUE)
                 defaultMax = max;
             else
                 good = false;
-            if(max<0)
+            if(max<0 && max>=Integer.MIN_VALUE && max <=Integer.MAX_VALUE)
                 defaultMax = 0-max;
 
             
@@ -140,11 +140,11 @@ public class ConfigWindow
         try
         {
            int update = Integer.valueOf( updateText.getText());
-           if(update>0)
+           if(update>0 && update <=Integer.MAX_VALUE)
              defaultIt = update;
            else
                 good = false;
-           if(update<0)
+           if(update<0&&update>=Integer.MIN_VALUE&& update <=Integer.MAX_VALUE)
                defaultIt = 0-update;
         }
         catch(NumberFormatException x)
