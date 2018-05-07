@@ -209,6 +209,10 @@ public final class AppActions implements ActionComponent {
                     if(dialog.getSelectedOption().toString().equals("YES"))   
                 {
                     ((AppUI) applicationTemplate.getUIComponent()).stop();
+                    if(!((AppUI) applicationTemplate.getUIComponent()).getChart().getData().isEmpty())
+                    {
+                        ((AppUI) applicationTemplate.getUIComponent()).setScreenshot(false);
+                    }
                 }
                 else
                 {
@@ -349,7 +353,13 @@ public final class AppActions implements ActionComponent {
     public void handleExitRequest() {
         // TODO for homework 1
         if(((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()) System.exit(0);
+        if(saved&&((AppUI) applicationTemplate.getUIComponent()).done())
+            {
+                ((AppUI) applicationTemplate.getUIComponent()).clear();
+                ((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
+                System.exit(0);
 
+            }
         
        if(!((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().isEmpty()
           && !saved)
@@ -403,12 +413,7 @@ public final class AppActions implements ActionComponent {
              return;
          }
         }
-
-                //((AppUI) applicationTemplate.getUIComponent()).clear();
-                //((AppUI) applicationTemplate.getUIComponent()).getPrimaryWindow().close();
-                //System.exit(0);
-
-      
+           
       
 
     }

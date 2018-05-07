@@ -35,7 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import runningEvents.Algorithm;
 import runningEvents.AlgorithmContainer;
-import runningEvents.RandomClassifier;
 import vilij.propertymanager.PropertyManager;
 import settings.AppPropertyTypes;
 import vilij.components.ErrorDialog;
@@ -343,6 +342,7 @@ public final class AppUI extends UITemplate {
                      textArea.setDisable(false);
                      newPage(); //all previously available algorithm now dissappears 
                                 //label is not available either since user has decided to edit again
+                     scrnshotButton.setDisable(true);
                 }
                 else
                 {
