@@ -1,2 +1,0 @@
-# DataViLiJ
-data visualization project
