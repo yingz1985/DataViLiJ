@@ -5,13 +5,13 @@
  </p>
 
  
-###Summary
- - An application for showing data progressions
- - Import or add however many lines of data as you wish
- - Custom configuration settings for each algorithm
- - Easy to export/import correct file format
+### Summary
+ *: An application for showing data progressions
+ *: Import or add however many lines of data as you wish
+ *: Custom configuration settings for each algorithm
+ *: Easy to export/import correct file format
  
-###Goal
+### Summary
 
 The goal of this project is for students and beginning professionals in AI to have a visual understanding of the
 inner workings of the fundamental algorithms. AI is a vast field, and this project is limited to the visualization
