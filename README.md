@@ -1,17 +1,17 @@
-<p align="center"># DataViLiJ </p>
+<h1 align="center">DataViLiJ</h1>
 
 <p align="center">
 <img width="475" alt="screen shot 2018-05-07 at 1 38 46 pm" src="https://user-images.githubusercontent.com/33076202/39715729-31260854-51fc-11e8-9fb6-974ebebbeac9.png">
  </p>
 
  
-*Summary*
+###Summary
  - An application for showing data progressions
  - Import or add however many lines of data as you wish
  - Custom configuration settings for each algorithm
  - Easy to export/import correct file format
  
-*Goal*
+###Goal
 
 The goal of this project is for students and beginning professionals in AI to have a visual understanding of the
 inner workings of the fundamental algorithms. AI is a vast field, and this project is limited to the visualization
